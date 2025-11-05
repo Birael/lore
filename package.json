@@ -1,0 +1,19 @@
+{
+  "name": "lore",
+  "version": "3.0.0",
+  "description": "CSS compiler for the lore system",
+  "scripts": {
+  "build": "lessc src/scss/lore.less css/lore.css",
+  "watch": "less-watch-compiler src/scss css lore.less"
+  },
+  "browserslist": [
+    "last 3 versions"
+  ],
+  "author": "Asacolips",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "less": "^4.2.0",
+  "less-watch-compiler": "^1.14.6"
+  }
+}
