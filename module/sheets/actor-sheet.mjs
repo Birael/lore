@@ -24,7 +24,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       mainHtml += await renderTemplate(partDef.template, partContext ?? context);
     }
     // Wrap in flex container
-    return `<div class='lore-sheet-flex'><aside class='lore-sidebar'>${sidebarHtml}</aside><div class='lore-main'>${mainHtml}</div></div>`;
+    // sidebar.hbs already includes the <aside class="lore-sidebar"> wrapper
+    return `<div class='lore-sheet-flex'>${sidebarHtml}<div class='lore-main'>${mainHtml}</div></div>`;
   }
   constructor(options = {}) {
     super(options);
@@ -283,16 +284,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
-    // Add flex styling for sidebar layout
-    if (this.element) {
-      this.element[0].style.display = "flex";
-      this.element[0].style.flexDirection = "row";
-      // Sidebar should be 1/3, rest 2/3
-      const sidebar = this.element[0].querySelector('.lore-sidebar');
-      if (sidebar) sidebar.style.flex = "0 0 33.33%";
-      const main = this.element[0].querySelector('.sheet-header, .tab, .items-list');
-      if (main) main.style.flex = "1 1 66.67%";
-    }
+    // Layout is handled by CSS in src/less/components/_actor-sidebar.less
   }
 
   /**************
