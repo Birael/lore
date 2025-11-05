@@ -45,8 +45,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       // Foundry-provided generic template
       template: 'templates/generic/tab-navigation.hbs',
     },
-    features: {
-      template: 'systems/lore/templates/actor/features.hbs',
+    skills: {
+      template: 'systems/lore/templates/actor/skills.hbs',
     },
     biography: {
       template: 'systems/lore/templates/actor/biography.hbs',
@@ -72,10 +72,10 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'Player':
-        options.parts.push('features', 'gear', 'spells', 'effects');
+        options.parts.push('skills', 'gear', 'spells', 'effects');
         break;
       case 'Legend':
-        options.parts.push('features', 'gear', 'spells', 'effects');
+        options.parts.push('skills', 'gear', 'spells', 'effects');
         break;
       case 'Lackey':
         options.parts.push('gear', 'effects');
@@ -115,7 +115,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'features':
+      case 'skills':
       case 'spells':
       case 'gear':
         context.tab = context.tabs[partId];
@@ -179,9 +179,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
           tab.id = 'biography';
           tab.label += 'Biography';
           break;
-        case 'features':
-          tab.id = 'features';
-          tab.label += 'Features';
+        case 'skills':
+          tab.id = 'skills';
+          tab.label += 'Skills';
           break;
         case 'gear':
           tab.id = 'gear';
@@ -212,9 +212,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     // You can just use `this.document.itemTypes` instead
     // if you don't need to subdivide a given type like
     // this sheet does with spells
-    const gear = [];
-    const features = [];
-    const spells = {
+  const gear = [];
+  const skills = [];
+  const spells = {
       0: [],
       1: [],
       2: [],
@@ -233,9 +233,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       if (i.type === 'gear') {
         gear.push(i);
       }
-      // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
+      // Append to skills.
+      else if (i.type === 'skill') {
+        skills.push(i);
       }
       // Append to spells.
       else if (i.type === 'spell') {
@@ -250,9 +250,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     }
 
     // Sort then assign
-    context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.features = features.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.spells = spells;
+  context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+  context.skills = skills.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+  context.spells = spells;
   }
 
   /**

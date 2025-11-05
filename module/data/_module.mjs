@@ -9,5 +9,5 @@ export { default as loreLackey } from './actors/actor-lackey.mjs';
 // Export Items
 export { default as loreItemBase } from './items/base-item.mjs';
 export { default as loreGear } from './items/item-gear.mjs';
-export { default as loreFeature } from './items/item-feature.mjs';
+export { default as loreSkill } from './items/item-skill.mjs';
 export { default as loreSpell } from './items/item-spell.mjs';

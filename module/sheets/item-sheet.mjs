@@ -45,9 +45,9 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     description: {
       template: 'systems/lore/templates/item/description.hbs',
     },
-    attributesFeature: {
+    attributesSkill: {
       template:
-        'systems/lore/templates/item/attribute-parts/feature.hbs',
+        'systems/lore/templates/item/attribute-parts/skill.hbs',
     },
     attributesGear: {
       template: 'systems/lore/templates/item/attribute-parts/gear.hbs',
@@ -69,8 +69,8 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     if (this.document.limited) return;
     // Control which parts show based on document subtype
     switch (this.document.type) {
-      case 'feature':
-        options.parts.push('attributesFeature', 'effects');
+      case 'skill':
+        options.parts.push('attributesSkill', 'effects');
         break;
       case 'gear':
         options.parts.push('attributesGear');
@@ -110,7 +110,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'attributesFeature':
+      case 'attributesSkill':
       case 'attributesGear':
       case 'attributesSpell':
         // Necessary for preserving active tab on re-render
@@ -171,7 +171,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
           tab.id = 'description';
           tab.label += 'Description';
           break;
-        case 'attributesFeature':
+        case 'attributesSkill':
         case 'attributesGear':
         case 'attributesSpell':
           tab.id = 'attributes';

@@ -21,9 +21,9 @@
       }
     },
     "Item": {
-        "feature": {
-            "htmlFields": ["description"]
-        },
+    "skill": {
+      "htmlFields": ["description"]
+    },
         "gear": {
             "htmlFields": ["description"]
         },
