@@ -1,0 +1,43 @@
+// main: "../lore.less", out: false
+
+.sheet-header {
+    background: var(--lore-c-bg1);
+}
+
+.actor-header-first {
+    margin: 0 0 0 0;
+    border-top: 1px solid var(--lore-c-bg2);
+    border-bottom: 1px solid var(--lore-c-bg2);
+    border-right: 1px solid var(--lore-c-bg2);
+}
+
+.actor-name-input {
+    border-radius: 0px;
+    background: none;
+    font-weight: bold;
+    font-size: 1.5em;
+    box-shadow: none;
+    margin: 0;
+    color: var(--lore-c-txt1);
+}
+
+.actor-level {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-left: 1px solid var(--lore-c-bg2);
+    padding-left: 5px;
+
+    label {
+        margin: 0;
+        white-space: nowrap;
+        color: var(--lore-c-txt2);
+    }
+
+    .actor-level-input {
+        margin: 0;
+        width: 34px;
+        color: var(--lore-c-txt1);
+        background: none;
+    }
+}

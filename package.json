@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "description": "CSS compiler for the lore system",
   "scripts": {
-  "build": "lessc src/scss/lore.less css/lore.css",
-  "watch": "less-watch-compiler src/scss css lore.less"
+  "build": "lessc src/less/lore.less css/lore.css",
+  "watch": "less-watch-compiler src/less css lore.less"
   },
   "browserslist": [
     "last 3 versions"

@@ -9,6 +9,23 @@ const { api, sheets } = foundry.applications;
 export class loreActorSheet extends api.HandlebarsApplicationMixin(
   sheets.ActorSheetV2
 ) {
+  /** @override */
+  async _renderInner(...args) {
+    // Prepare context
+    const context = await this._prepareContext(this.options);
+    // Render sidebar
+    const sidebarHtml = await renderTemplate('systems/lore/templates/actor/sidebar.hbs', context);
+    // Render main content (all other parts except sidebar)
+    let mainHtml = '';
+    for (const part of Object.keys(this.constructor.PARTS)) {
+      if (part === 'sidebar') continue;
+      const partDef = this.constructor.PARTS[part];
+      const partContext = await this._preparePartContext?.(part, {...context});
+      mainHtml += await renderTemplate(partDef.template, partContext ?? context);
+    }
+    // Wrap in flex container
+    return `<div class='lore-sheet-flex'><aside class='lore-sidebar'>${sidebarHtml}</aside><div class='lore-main'>${mainHtml}</div></div>`;
+  }
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
@@ -18,8 +35,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ['lore', 'actor'],
     position: {
-      width: 600,
-      height: 600,
+      width: 700,
+      height: 700,
     },
     actions: {
       onEditImage: this._onEditImage,
@@ -38,11 +55,13 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
 
   /** @override */
   static PARTS = {
+    sidebar: {
+      template: 'systems/lore/templates/actor/sidebar.hbs',
+    },
     header: {
       template: 'systems/lore/templates/actor/header.hbs',
     },
     tabs: {
-      // Foundry-provided generic template
       template: 'templates/generic/tab-navigation.hbs',
     },
     skills: {
@@ -65,11 +84,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    // Not all parts always render
-    options.parts = ['header', 'tabs', 'biography'];
-    // Don't show the other tabs if only limited view
+    // Always render sidebar first
+    options.parts = ['sidebar', 'header', 'tabs', 'biography'];
     if (this.document.limited) return;
-    // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'Player':
         options.parts.push('skills', 'gear', 'spells', 'effects');
@@ -266,9 +283,16 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
-    // You may want to add other special handling here
-    // Foundry comes with a large number of utility classes, e.g. SearchFilter
-    // That you may want to implement yourself.
+    // Add flex styling for sidebar layout
+    if (this.element) {
+      this.element[0].style.display = "flex";
+      this.element[0].style.flexDirection = "row";
+      // Sidebar should be 1/3, rest 2/3
+      const sidebar = this.element[0].querySelector('.lore-sidebar');
+      if (sidebar) sidebar.style.flex = "0 0 33.33%";
+      const main = this.element[0].querySelector('.sheet-header, .tab, .items-list');
+      if (main) main.style.flex = "1 1 66.67%";
+    }
   }
 
   /**************

@@ -1,18 +1,21 @@
 {
   "LORE": {
-    "Attribute": {
-      "Ref": { "long": "Reflexes", "abbr": "ref" },
-      "Int": { "long": "Intellect", "abbr": "int" },
-      "Gri": { "long": "Grit", "abbr": "gri" },
-      "Mig": { "long": "Might", "abbr": "mig" },
-      "Tou": { "long": "Tough", "abbr": "tou" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
-    },
     "SheetLabels": {
       "Actor": "lore Actor Sheet",
       "Item": "lore Item Sheet"
     },
     "Actor": {
+      "level": {"label": "Level"},
+      "tags": {"label": "Tags"},
+      "wounds": {"label": "Wounds"},
+      "fatigue": {"label": "Fatigue"},
+      "incapacitated": {"label": "Incapacitated"},
+      "unconscious": {"label": "Unconscious"},
+      "stunned": {"label": "Stunned"},
+      "morale": {"label": "Morale"},
+      "pace": {"label": "Pace"},
+      "parry": {"label": "Parry"},
+      "resist": {"label": "Resist"},
       "Tabs": {
         "Biography": "Biography",
         "Skills": "Skills",
@@ -20,11 +23,17 @@
         "Spells": "Spells",
         "Effects": "Effects"
       },
-      "Player": {
-        "FIELDS": {
-          "attributes.level.value": {"label": "Level"}
-        }
-      }
+      "Attribute": {
+        "Ref": { "long": "Reflexes", "abbr": "ref" },
+        "Int": { "long": "Intellect", "abbr": "int" },
+        "Gri": { "long": "Grit", "abbr": "gri" },
+        "Mig": { "long": "Might", "abbr": "mig" },
+        "Tou": { "long": "Tough", "abbr": "tou" },
+        "Cha": { "long": "Charisma", "abbr": "cha" }
+      },
+      "biography": {"label": "Biography"},
+      "loreCoins": {"label": "Lore Coins"},
+      "playerName": {"label": "Player Name"}
     },
     "Item": {
       "Tabs": {
@@ -60,9 +69,9 @@
   },
   "TYPES": {
     "Actor": {
-    "player": "Player",
-    "legend": "Legend",
-    "lackey": "Lackey"
+      "player": "Player",
+      "legend": "Legend",
+      "lackey": "Lackey"
     },
     "Item": {
       "gear": "Gear",

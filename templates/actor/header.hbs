@@ -1,88 +1,32 @@
 {{! Sheet Header }}
 <header class='sheet-header'>
-  <img
-    class='profile-img'
-    src='{{actor.img}}'
-    data-edit='img'
-    data-action='onEditImage'
-    title='{{actor.name}}'
-    height='100'
-    width='100'
-  />
-  <div class='header-fields'>
-    <div class='document-name'>
+  <div class='actor-header-first grid grid-5col'>
+    
+    <div class='actor-name grid-span-4'>
       <input
-        name='name'
         type='text'
+        name='name'
+        class='actor-name-input'
         value='{{actor.name}}'
+        data-dtype='String'
         placeholder='Name'
+        {{#unless editable}}disabled{{/unless}}
       />
     </div>
-    {{! The grid classes are defined in scss/global/_grid.scss. To use,
-      use both the "grid" and "grid-Ncol" class where "N" can be any number
-      from 1 to 12 and will create that number of columns.  }}
-    <div class='resources grid grid-3col'>
 
-      {{! "flex-group-center" is also defined in the _grid.scss file
-        and it will add a small amount of padding, a border, and will
-        center all of its child elements content and text. }}
-      <div class='resource flex-group-center'>
-        <label for='system.health.value' class='resource-label'>
-         {{localize 'LORE.Actor.Player.FIELDS.health.value.label'}}
-        </label>
-        <div class='resource-content flexrow flex-center flex-between'>
-          <input
-            type='text'
-            name='system.health.value'
-            value='{{system.health.value}}'
-            data-dtype='Number'
-          />
-          <span> / </span>
-          <input
-            type='text'
-            name='system.health.max'
-            value='{{system.health.max}}'
-            data-dtype='Number'
-          />
-        </div>
-      </div>
-
-      <div class='resource flex-group-center'>
-        <label for='system.power.value' class='resource-label'>
-         {{localize 'LORE.Actor.Player.FIELDS.power.value.label'}}
-        </label>
-        <div class='resource-content flexrow flex-center flex-between'>
-          <input
-            type='text'
-            name='system.power.value'
-            value='{{system.power.value}}'
-            data-dtype='Number'
-          />
-          <span> / </span>
-          <input
-            type='text'
-            name='system.power.max'
-            value='{{system.power.max}}'
-            data-dtype='Number'
-          />
-        </div>
-      </div>
-
-      <div class='resource flex-group-center'>
-  {{#if (eq actor.type 'player')}}
-          <label class='resource-label'>
-            {{localize 'LORE.Actor.Player.FIELDS.attributes.level.value.label'}}
-          </label>
-          <div class='resource-content flexrow flex-center flex-between'>
-            <input
-              type='text'
-              name='system.attributes.level.value'
-              value='{{system.attributes.level.value}}'
-              data-dtype='Number'
-            />
-          </div>
-        {{/if}}
-      </div>
+    <div class='actor-level grid-span-1 align-center'>
+      <label for='system-level'>Lvl:</label>
+      <input
+        type='text'
+        name='system.level.value'
+        class='actor-level-input'
+        id='system-level'
+        value='{{system.level.value}}'
+        data-dtype='Number'
+        placeholder='Level'
+        {{#unless editable}}disabled{{/unless}}
+      />
     </div>
+
   </div>
 </header>

@@ -9,7 +9,7 @@ export default class loreActorBase extends foundry.abstract
 
     // Actor Level
     schema.level = new fields.SchemaField({
-      value: new fields.NumberField({ ...requiredInteger, initial: 1 })
+      value: new fields.NumberField({ ...requiredInteger, initial: 1, min: 1 })
     });
 
     // Tags
@@ -17,7 +17,7 @@ export default class loreActorBase extends foundry.abstract
       initial: [],
     });
 
-    // Health and Fatigue
+    // Wounds and Fatigue
     schema.wounds = new fields.SchemaField({
       value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0, }),
       max: new fields.NumberField({ ...requiredInteger, initial: 10 }),

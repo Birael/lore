@@ -1,7 +1,8 @@
+@import '../utils/_typography.less';
 @import '../utils/_variables.less';
 @import '../utils/_colors.less';
 // Section Header
-.items-header {
+.effects-header {
   height: 28px;
   margin: 2px 0;
   padding: 0;
@@ -13,7 +14,7 @@
     font-size: 14px;
     text-align: center;
   }
-  .item-name {
+  .effect-name {
     font-weight: bold;
     padding-left: 5px;
     text-align: left;
@@ -26,23 +27,23 @@
 // Items Lists
 // -----------------------------------------
 
-.items-list {
+.effects-list {
   list-style: none;
   margin: 0;
   padding: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  color: @c-tan;
+  color: var(--lore-c-txt1);
 
   // Child lists
-  .item-list {
+  .effect-list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   // Item Name
-  .item-name {
+  .effect-name {
     flex: 2;
     margin: 0;
     overflow: hidden;
@@ -58,7 +59,7 @@
   }
 
   // Control Buttons
-  .item-controls {
+  .effect-controls {
     display: flex;
     flex: 0 0 100px;
     justify-content: flex-end;
@@ -70,14 +71,14 @@
   }
 
   // Individual Item
-  .item {
+  .effect {
     align-items: center;
     padding: 0 2px; // to align with the header border
-  border-bottom: 1px solid @c-faint;
+  border-bottom: 1px solid var(--lore-c-bg2);
     &:last-child { border-bottom: none; }
-    .item-name {
-  color: @c-dark;
-      .item-image {
+    .effect-name {
+  color: var(--lore-c-txt1);
+      .effect-image {
         flex: 0 0 30px;
         height: 30px;
         background-size: 30px;
@@ -87,7 +88,7 @@
     }
   }
 
-  .item-prop {
+  .effect-prop {
     text-align: center;
     border-left: 1px solid #c9c7b8;
     border-right: 1px solid #c9c7b8;
@@ -95,7 +96,7 @@
   }
 
   // Section Header
-  .items-header {
+  .effects-header {
     height: 28px;
     margin: 2px 0;
     padding: 0;
@@ -107,7 +108,7 @@
       font-size: 12px;
       text-align: center;
     }
-    .item-name {
+    .effect-name {
       padding-left: 5px;
       text-align: left;
       // font-size: 16px;
@@ -116,8 +117,22 @@
 }
 
 // Example style for lore (can be removed if not needed).
-.item-formula {
-  
+.effect-formula {
   flex: 0 0 200px;
   padding: 0 8px;
+}
+
+.effects .item {
+  .effect-source,
+  .effect-duration,
+  .effect-controls {
+    text-align: center;
+    border-left: 1px solid #c9c7b8;
+    border-right: 1px solid #c9c7b8;
+    font-size: 12px;
+  }
+
+  .effect-controls {
+    border: none;
+  }
 }
