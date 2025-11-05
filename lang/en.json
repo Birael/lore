@@ -15,34 +15,15 @@
     "Actor": {
       "Tabs": {
         "Biography": "Biography",
-        "Features": "Features",
+        "Skills": "Skills",
         "Gear": "Gear",
         "Spells": "Spells",
         "Effects": "Effects"
       },
-      "base": {
-        "FIELDS": {
-          "biography": {"label": "Biography"},
-          "health": {
-            "value": {"label": "Health"},
-            "max": {"label": "Maximum Health"}
-          },
-          "power": {
-            "value": {"label": "Power"},
-            "max": {"label": "Maximum Power"}
-          }
-        }
-      },
-  "Player": {
+      "Player": {
         "FIELDS": {
           "attributes.level.value": {"label": "Level"}
         }
-      },
-      "NPC": {
-        "FIELDS": {
-          "cr": {"label": "CR"}
-        },
-        "xp": {"label": "XP"}
       }
     },
     "Item": {
