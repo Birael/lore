@@ -30,9 +30,9 @@ export default class loreGear extends loreItemBase {
         initial: 1,
         min: 1,
       }),
-      diceSize: new fields.StringField({ initial: 'd20' }),
+      diceSize: new fields.StringField({ initial: 'd6' }),
       diceBonus: new fields.StringField({
-        initial: '+@str.mod+ceil(@lvl / 2)',
+        initial: '+@ref.mod+ceil(@lvl / 2)',
       }),
     });
 

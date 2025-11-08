@@ -1,0 +1,39 @@
+// main: "../lore.less", out: false
+
+&.actor {
+    &.application .window-content > nav.tabs.main-tabs,
+    &.window-app .window-content > nav.tabs.main-tabs {
+        grid-row: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        align-items: center;
+        padding: 4px 6px;
+        border-bottom: 1px solid var(--lore-c-bg2) !important;
+        border-top: 1px solid var(--lore-c-bg2) !important;
+        /* Container no longer forces active color; anchors manage active/inactive state */
+        /* (Optional) could set a default here if needed, but we let anchors define it */
+    }
+
+    /* Inactive tab text color */
+    &.application .window-content > nav.tabs.main-tabs a.main-tab,
+    &.window-app .window-content > nav.tabs.main-tabs a.main-tab {
+        color: var(--lore-c-txt2);
+    }
+
+    /* Active tab text color */
+    &.application .window-content > nav.tabs.main-tabs a.main-tab.active,
+    &.window-app .window-content > nav.tabs.main-tabs a.main-tab.active {
+        color: var(--lore-c-txt1);
+    }
+
+    &.application .window-content > .tab,
+    &.window-app .window-content > .tab {
+        grid-row: 3;
+        min-height: 0;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        color: var(--lore-c-txt2);
+    }
+}

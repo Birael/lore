@@ -52,9 +52,6 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     attributesGear: {
       template: 'systems/lore/templates/item/attribute-parts/gear.hbs',
     },
-    attributesSpell: {
-      template: 'systems/lore/templates/item/attribute-parts/spell.hbs',
-    },
     effects: {
       template: 'systems/lore/templates/item/effects.hbs',
     },
@@ -74,9 +71,6 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
         break;
       case 'gear':
         options.parts.push('attributesGear');
-        break;
-      case 'spell':
-        options.parts.push('attributesSpell');
         break;
     }
   }
@@ -112,7 +106,6 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     switch (partId) {
       case 'attributesSkill':
       case 'attributesGear':
-      case 'attributesSpell':
         // Necessary for preserving active tab on re-render
         context.tab = context.tabs[partId];
         break;
@@ -173,7 +166,6 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
           break;
         case 'attributesSkill':
         case 'attributesGear':
-        case 'attributesSpell':
           tab.id = 'attributes';
           tab.label += 'Attributes';
           break;

@@ -71,8 +71,13 @@ body.theme-light {
 .rollable:hover,
 .rollable:focus {
   color: var(--lore-c-txt1);
-  text-shadow: 0 0 10px red;
+  text-shadow: 0 0 10px var(--lore-c-gold);
   cursor: pointer;
+}
+.window-content {
+  padding: 0px;
+  background: var(--lore-c-bg1);
+  border: 2px solid var(--lore-c-bg2);
 }
 .grid,
 .grid-2col {
@@ -226,6 +231,28 @@ body.theme-light {
   text-align: center;
 }
 /* Styles limited to lore sheets */
+.lore {
+  /* Tags row in header */
+  /* Combat stats (wounds, etc.) */
+  /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
+  /* Conditions (Unconscious, Stunned, Incapacitated) styling when used directly in the grid */
+  /* Checkbox visuals, mirroring wounds/fatigue styling */
+  /*
+  Layout notes
+  - ActorSheetV2 renders parts sequentially inside .window-content
+    (sidebar, header, tabs, etc.). Instead of relying on a custom
+    wrapper, place the siblings into a 2-column CSS Grid where the
+    sidebar occupies column 1 (1/3) and everything else flows into
+    column 2 (2/3).
+*/
+  /* Flatten the wrapper so its children become direct grid items */
+  /* Turn the sheet body into a 2/3 grid */
+  /* Sidebar sits in the first column */
+  /* Everything that is not the sidebar flows into the right column */
+  /* A utility class if we ever wrap main content manually */
+  /* Right-side vertical circles */
+  /* Intentionally removing empty rules to satisfy linter */
+}
 .lore .item-form {
   font-family: 'Roboto', sans-serif;
 }
@@ -493,12 +520,19 @@ body.theme-light {
 }
 .lore .sheet-header {
   background: var(--lore-c-bg1);
+  margin-bottom: 0px;
 }
 .lore .actor-header-first {
   margin: 0 0 0 0;
   border-top: 1px solid var(--lore-c-bg2);
   border-bottom: 1px solid var(--lore-c-bg2);
   border-right: 1px solid var(--lore-c-bg2);
+  /* Ensure the header row spans the full width inside the flex-based .sheet-header */
+  width: 100%;
+  /* In case flex sizing applies, allow it to grow to full width */
+  flex: 1 1 100%;
+  /* Match left border for visual consistency */
+  border-left: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-name-input {
   border-radius: 0px;
@@ -508,6 +542,8 @@ body.theme-light {
   box-shadow: none;
   margin: 0;
   color: var(--lore-c-txt1);
+  /* Let the name input fill its grid cell */
+  width: 100%;
 }
 .lore .actor-level {
   display: flex;
@@ -526,4 +562,607 @@ body.theme-light {
   width: 34px;
   color: var(--lore-c-txt1);
   background: none;
+}
+.lore .tags-container {
+  border-right: 1px solid var(--lore-c-bg2);
+  /* Force tags row to occupy full width so following sections wrap below */
+  width: 100%;
+  flex: 1 1 100%;
+}
+.lore .tags-empty {
+  opacity: 0.7;
+  font-size: 12px;
+}
+.lore .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.lore .tag-chip {
+  /* Inline-block + explicit line-height centers text consistently even for glyphs with descenders (e.g., g, y) */
+  display: inline-block;
+  /* Use border-box so our fixed height includes padding + border */
+  box-sizing: border-box;
+  height: 22px;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: 1px solid var(--lore-c-slate);
+  background: var(--lore-c-charcoal);
+  color: var(--lore-c-txt1);
+  font-size: 12px;
+  /* Content box height is 20px (22px minus 2px borders) => set line-height to 20px to vertically center text */
+  line-height: 20px;
+  vertical-align: middle;
+  white-space: nowrap;
+  margin: 0;
+}
+.lore .tag-chip.is-ancestry {
+  border-color: var(--lore-c-green);
+  background-color: rgba(60, 179, 113, 0.2);
+}
+.lore .tag-chip.is-size {
+  border-color: var(--lore-c-gold);
+  background-color: rgba(218, 165, 32, 0.22);
+  color: var(--lore-c-txt1);
+}
+.lore .combat-stats-container {
+  padding: 0.5rem 0.5rem;
+  margin: 0;
+  border-right: 1px solid var(--lore-c-bg2);
+  border-top: 1px solid var(--lore-c-bg2);
+  /* Ensure combat stats also span full width beneath tags */
+  width: 100%;
+  flex: 1 1 100%;
+}
+.lore .combat-stats-container.grid-5col {
+  /* Make Wounds and Fatigue narrow; let center conditions flex */
+  grid-template-columns: max-content 1fr 1fr 1fr max-content;
+  align-items: end;
+  /* align content nicely across the row */
+}
+.lore .wounds-container .wounds-label {
+  font-weight: 600;
+  color: var(--lore-c-txt2);
+  margin-bottom: 2px;
+  display: block;
+}
+.lore .wounds-container .wounds-content {
+  gap: 6px;
+  /* Hide native checkbox but keep it accessible and clickable */
+  /* Visual replacement */
+  /* States */
+}
+.lore .wounds-container .wounds-content label {
+  /* Template adds position/display inline; keep here for resilience */
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+}
+.lore .wounds-container .wounds-content .wounds-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+  /* Keep above the visual circle for click */
+}
+.lore .wounds-container .wounds-content .custom-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--lore-c-slate);
+  background: transparent;
+  vertical-align: middle;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.lore .wounds-container .wounds-content .wounds-checkbox:focus-visible + .custom-circle {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
+  border-color: var(--lore-c-blue);
+}
+.lore .wounds-container .wounds-content .wounds-checkbox:hover + .custom-circle {
+  border-color: var(--lore-c-txt1);
+}
+.lore .wounds-container .wounds-content .wounds-checkbox:checked + .custom-circle {
+  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
+  border-color: var(--lore-c-red);
+}
+.lore .wounds-container .wounds-content .wounds-checkbox:disabled + .custom-circle {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lore .fatigue-container .fatigue-label {
+  font-weight: 600;
+  color: var(--lore-c-txt2);
+  margin-bottom: 2px;
+  display: block;
+}
+.lore .fatigue-container .fatigue-content {
+  gap: 6px;
+  /* Hide native checkbox but keep it accessible and clickable */
+  /* Visual replacement */
+  /* States */
+}
+.lore .fatigue-container .fatigue-content label {
+  /* Template adds position/display inline; keep here for resilience */
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+}
+.lore .fatigue-container .fatigue-content .fatigue-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+  /* Keep above the visual circle for click */
+}
+.lore .fatigue-container .fatigue-content .custom-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--lore-c-slate);
+  background: transparent;
+  vertical-align: middle;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.lore .fatigue-container .fatigue-content .fatigue-checkbox:focus-visible + .custom-circle {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
+  border-color: var(--lore-c-blue);
+}
+.lore .fatigue-container .fatigue-content .fatigue-checkbox:hover + .custom-circle {
+  border-color: var(--lore-c-txt1);
+}
+.lore .fatigue-container .fatigue-content .fatigue-checkbox:checked + .custom-circle {
+  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
+  border-color: var(--lore-c-red);
+}
+.lore .fatigue-container .fatigue-content .fatigue-checkbox:disabled + .custom-circle {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lore .unconscious-container,
+.lore .stunned-container,
+.lore .incapacitated-container {
+  display: flex;
+  flex-direction: column;
+  /* label above circle */
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.lore .unconscious-label,
+.lore .stunned-label,
+.lore .incapacitated-label {
+  margin: 0;
+  font-weight: 600;
+  color: var(--lore-c-txt2);
+  display: block;
+  /* appear above the circle */
+  line-height: 1;
+  text-align: center;
+}
+.lore .unconscious-content,
+.lore .stunned-content,
+.lore .incapacitated-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Visual circle */
+  /* Hide native checkbox but keep it interactive */
+  /* States */
+}
+.lore .unconscious-content label,
+.lore .stunned-content label,
+.lore .incapacitated-content label {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+}
+.lore .unconscious-content .custom-circle,
+.lore .stunned-content .custom-circle,
+.lore .incapacitated-content .custom-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--lore-c-slate);
+  background: transparent;
+  vertical-align: middle;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.lore .unconscious-content .unconscious-checkbox,
+.lore .stunned-content .unconscious-checkbox,
+.lore .incapacitated-content .unconscious-checkbox,
+.lore .unconscious-content .stunned-checkbox,
+.lore .stunned-content .stunned-checkbox,
+.lore .incapacitated-content .stunned-checkbox,
+.lore .unconscious-content .incapacitated-checkbox,
+.lore .stunned-content .incapacitated-checkbox,
+.lore .incapacitated-content .incapacitated-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.lore .unconscious-content .unconscious-checkbox:focus-visible + .custom-circle,
+.lore .stunned-content .unconscious-checkbox:focus-visible + .custom-circle,
+.lore .incapacitated-content .unconscious-checkbox:focus-visible + .custom-circle,
+.lore .unconscious-content .stunned-checkbox:focus-visible + .custom-circle,
+.lore .stunned-content .stunned-checkbox:focus-visible + .custom-circle,
+.lore .incapacitated-content .stunned-checkbox:focus-visible + .custom-circle,
+.lore .unconscious-content .incapacitated-checkbox:focus-visible + .custom-circle,
+.lore .stunned-content .incapacitated-checkbox:focus-visible + .custom-circle,
+.lore .incapacitated-content .incapacitated-checkbox:focus-visible + .custom-circle {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
+  border-color: var(--lore-c-blue);
+}
+.lore .unconscious-content .unconscious-checkbox:hover + .custom-circle,
+.lore .stunned-content .unconscious-checkbox:hover + .custom-circle,
+.lore .incapacitated-content .unconscious-checkbox:hover + .custom-circle,
+.lore .unconscious-content .stunned-checkbox:hover + .custom-circle,
+.lore .stunned-content .stunned-checkbox:hover + .custom-circle,
+.lore .incapacitated-content .stunned-checkbox:hover + .custom-circle,
+.lore .unconscious-content .incapacitated-checkbox:hover + .custom-circle,
+.lore .stunned-content .incapacitated-checkbox:hover + .custom-circle,
+.lore .incapacitated-content .incapacitated-checkbox:hover + .custom-circle {
+  border-color: var(--lore-c-txt1);
+}
+.lore .unconscious-content .unconscious-checkbox:checked + .custom-circle,
+.lore .stunned-content .unconscious-checkbox:checked + .custom-circle,
+.lore .incapacitated-content .unconscious-checkbox:checked + .custom-circle,
+.lore .unconscious-content .stunned-checkbox:checked + .custom-circle,
+.lore .stunned-content .stunned-checkbox:checked + .custom-circle,
+.lore .incapacitated-content .stunned-checkbox:checked + .custom-circle,
+.lore .unconscious-content .incapacitated-checkbox:checked + .custom-circle,
+.lore .stunned-content .incapacitated-checkbox:checked + .custom-circle,
+.lore .incapacitated-content .incapacitated-checkbox:checked + .custom-circle {
+  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
+  border-color: var(--lore-c-red);
+}
+.lore .unconscious-content .unconscious-checkbox:disabled + .custom-circle,
+.lore .stunned-content .unconscious-checkbox:disabled + .custom-circle,
+.lore .incapacitated-content .unconscious-checkbox:disabled + .custom-circle,
+.lore .unconscious-content .stunned-checkbox:disabled + .custom-circle,
+.lore .stunned-content .stunned-checkbox:disabled + .custom-circle,
+.lore .incapacitated-content .stunned-checkbox:disabled + .custom-circle,
+.lore .unconscious-content .incapacitated-checkbox:disabled + .custom-circle,
+.lore .stunned-content .incapacitated-checkbox:disabled + .custom-circle,
+.lore .incapacitated-content .incapacitated-checkbox:disabled + .custom-circle {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lore .morale-label {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: var(--lore-c-txt1);
+}
+.lore .morale-slider-container {
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 10px;
+  border-right: 1px solid var(--lore-c-bg2);
+}
+.lore .morale-slider {
+  position: relative;
+  color: var(--lore-c-bg2);
+}
+.lore .morale-input {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  color: var(--lore-c-bg2);
+  background: transparent;
+  height: 30px;
+}
+.lore .morale-input::-webkit-slider-runnable-track {
+  background: var(--lore-c-bg2);
+  height: 6px;
+  border-radius: 3px;
+  position: relative;
+  z-index: 1;
+}
+.lore .morale-input::-webkit-slider-thumb {
+  background: var(--lore-c-txt1);
+  border: 2px solid var(--lore-c-bg2);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background 0.2s, border 0.2s;
+  position: relative;
+  z-index: 3;
+}
+.lore .morale-input::-ms-fill-lower {
+  background: var(--lore-c-bg2);
+}
+.lore .morale-input::-ms-fill-upper {
+  background: var(--lore-c-bg2);
+}
+.lore .morale-input::-moz-range-track {
+  background: var(--lore-c-bg2);
+  height: 6px;
+  border-radius: 3px;
+  position: relative;
+  z-index: 1;
+}
+.lore .morale-input::-moz-range-thumb {
+  background: var(--lore-c-txt1);
+  border: 2px solid var(--lore-c-bg2);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  position: relative;
+  z-index: 3;
+}
+.lore .morale-input::-ms-thumb {
+  background: var(--lore-c-txt1);
+  border: 2px solid var(--lore-c-bg2);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  position: relative;
+  z-index: 3;
+}
+.lore .morale-input::-ms-tooltip {
+  display: none;
+}
+.lore .morale-input:focus {
+  outline: none;
+}
+.lore .morale-input::-moz-focus-outer {
+  border: 0;
+}
+.lore .morale-input::-moz-focus-inner {
+  border: 0;
+}
+.lore .morale-ticks {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  top: 50%;
+  height: 12px;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+}
+.lore .morale-tick {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-1px);
+}
+.lore .morale-ticks .morale-tick:nth-child(1) {
+  left: 0%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-tick:first-child,
+.lore .morale-tick:first-of-type {
+  left: 0% !important;
+  background-color: var(--lore-c-red) !important;
+}
+.lore .morale-ticks .morale-tick:nth-child(2) {
+  left: 8.333%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-ticks .morale-tick:nth-child(3) {
+  left: 16.666%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-ticks .morale-tick:nth-child(4) {
+  left: 25%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-ticks .morale-tick:nth-child(5) {
+  left: 33.333%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-ticks .morale-tick:nth-child(6) {
+  left: 41.666%;
+  background-color: var(--lore-c-red);
+}
+.lore .morale-ticks .morale-tick:nth-child(7) {
+  left: 50%;
+}
+.lore .morale-ticks .morale-tick:nth-child(8) {
+  left: 58.333%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks .morale-tick:nth-child(9) {
+  left: 66.666%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks .morale-tick:nth-child(10) {
+  left: 75%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks .morale-tick:nth-child(11) {
+  left: 83.333%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks .morale-tick:nth-child(12) {
+  left: 91.666%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks .morale-tick:nth-child(13) {
+  left: 100%;
+  background-color: var(--lore-c-green);
+}
+.lore .morale-ticks::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--lore-c-bg2);
+}
+.lore .lore-sheet-flex {
+  display: contents;
+  /* allows .lore-sidebar and main parts to be grid children */
+}
+.lore .window-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  /* left 1/3, right 2/3 */
+  /* Explicit rows: header (auto), tabs (auto), body (fills remaining) */
+  grid-template-rows: auto auto 1fr;
+  /* Make the grid consume the available height inside the window */
+  height: 100%;
+  /* Ensure children that need to scroll can do so */
+  min-height: 0;
+  gap: 0;
+}
+.lore .window-content > .lore-sidebar {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  /* span all rows */
+  /* Let the grid control width; keep a comfortable min */
+  min-width: 200px;
+  box-sizing: border-box;
+  /* Guarantee the sidebar stretches the full grid height */
+  align-self: stretch;
+  border-right: 2px solid var(--lore-c-bg2);
+}
+.lore .window-content > :not(.lore-sidebar) {
+  grid-column: 2;
+}
+.lore .lore-main {
+  padding: 1em;
+}
+.lore .lore-sidebar-top {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /* align to top */
+  padding: 0px;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore .profile-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-right: 1px solid var(--lore-c-bg2);
+}
+.lore .right-container {
+  padding: 0px;
+}
+.lore .lore-logo {
+  width: 80px;
+  height: auto;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore .lore-coins-label {
+  text-align: center;
+}
+.lore .derived-stat {
+  align-items: center;
+  gap: 5px;
+  padding: 2px;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore .derived-stat-icon {
+  height: 28px;
+  width: 28px;
+}
+.lore .derived-stat-input {
+  background: transparent;
+  text-align: center;
+  color: var(--lore-c-txt2);
+}
+.lore .attributes {
+  padding: 0px;
+}
+.lore .attribute {
+  margin: 0px;
+  height: 30px;
+  color: var(--lore-c-txt2);
+  padding: 10px;
+}
+.lore .attribute-label {
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  color: var(--lore-c-txt1);
+}
+.lore.actor {
+  /* Inactive tab text color */
+  /* Active tab text color */
+}
+.lore.actor.application .window-content > nav.tabs.main-tabs,
+.lore.actor.window-app .window-content > nav.tabs.main-tabs {
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--lore-c-bg2) !important;
+  border-top: 1px solid var(--lore-c-bg2) !important;
+  /* Container no longer forces active color; anchors manage active/inactive state */
+  /* (Optional) could set a default here if needed, but we let anchors define it */
+}
+.lore.actor.application .window-content > nav.tabs.main-tabs a.main-tab,
+.lore.actor.window-app .window-content > nav.tabs.main-tabs a.main-tab {
+  color: var(--lore-c-txt2);
+}
+.lore.actor.application .window-content > nav.tabs.main-tabs a.main-tab.active,
+.lore.actor.window-app .window-content > nav.tabs.main-tabs a.main-tab.active {
+  color: var(--lore-c-txt1);
+}
+.lore.actor.application .window-content > .tab,
+.lore.actor.window-app .window-content > .tab {
+  grid-row: 3;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: var(--lore-c-txt2);
+}
+.lore .lore-context-menu {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid #888;
+  padding: 4px 0;
+  box-shadow: 0 2px 8px #0002;
+  min-width: 120px;
+  background-color: black;
+}
+.lore .lore-context-menu-item {
+  padding: 4px 16px;
+  cursor: pointer;
 }

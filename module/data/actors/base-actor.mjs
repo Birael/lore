@@ -12,15 +12,15 @@ export default class loreActorBase extends foundry.abstract
       value: new fields.NumberField({ ...requiredInteger, initial: 1, min: 1 })
     });
 
-    // Tags
-    schema.tags = new fields.ArrayField(new fields.StringField({ initial: '' }), {
+    // Characteristics
+    schema.characteristics = new fields.ArrayField(new fields.StringField({ initial: '' }), {
       initial: [],
     });
 
     // Wounds and Fatigue
     schema.wounds = new fields.SchemaField({
-      value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0, }),
-      max: new fields.NumberField({ ...requiredInteger, initial: 10 }),
+      value: new fields.NumberField({ ...requiredInteger, initial: 0, min: 0, }),
+      max: new fields.NumberField({ ...requiredInteger, initial: 3 }),
     });
     schema.fatigue = new fields.SchemaField({
       value: new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 }),
@@ -72,28 +72,29 @@ export default class loreActorBase extends foundry.abstract
   prepareDerivedData() {
     // Loop through attribute scores, and add their modifiers to our sheet output.
     for (const key in this.attributes) {
-      // Calculate the modifier using d20 rules.
-      this.attributes[key].mod = Math.floor(
-        (this.attributes[key].value - 10) / 2
-      );
+      // Modifier is (value - 1): value 1 => +0, value 2 => +1, etc.
+      this.attributes[key].mod = Math.max(0, (this.attributes[key].value ?? 0) - 1);
       // Handle attribute label localization.
       this.attributes[key].label =
         game.i18n.localize(CONFIG.LORE.attributes[key]) ?? key;
     }
+
+    
   }
 
   getRollData() {
     const data = {};
 
     // Copy the attribute scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
+    // formulas like `@ref.mod + 4`.
     if (this.attributes) {
       for (let [k, v] of Object.entries(this.attributes)) {
         data[k] = foundry.utils.deepClone(v);
       }
     }
 
-    data.lvl = this.attributes.level.value;
+    // Level is a top-level field on the DataModel, not nested under attributes
+    data.lvl = this.level?.value ?? 0;
 
     return data;
   }

@@ -23,10 +23,119 @@
         id='system-level'
         value='{{system.level.value}}'
         data-dtype='Number'
-        placeholder='Level'
+        placeholder='0'
         {{#unless editable}}disabled{{/unless}}
       />
     </div>
 
   </div>
+
+  <div class='characteristics-container' aria-label="Tags">
+
+    {{#if system.characteristics}}
+      {{#if system.characteristics.length}}
+        <ul class="characteristics-list" role="list">
+          {{#each system.characteristics as |characteristic|}}
+            {{#if characteristic}}
+              <li class="characteristic-chip" role="listitem" data-characteristic="{{characteristic}}">{{characteristicLabel characteristic}}</li>
+            {{/if}}
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="characteristics-empty">No characteristics</div>
+      {{/if}}
+    {{else}}
+      <div class="characteristics-empty">No characteristics</div>
+    {{/if}}
+
+  </div>
+
+  <div class='combat-stats-container grid grid-5col'>
+
+    <div class='wounds-container grid-span-1'>
+      <label class='wounds-label center-text align-center'>
+	      {{localize 'LORE.Actor.wounds.label'}}
+      </label>
+      <div class='wounds-content flexrow flex-center flex-between center-text'>
+        {{#each woundSlots}}
+        <label style="position:relative;display:inline-block;">
+          <input type='checkbox' name='system.wounds.checkboxes' value='{{this}}' class='wounds-checkbox'/><span class='custom-circle'></span>
+        </label>
+        {{/each}}
+      </div>
+    </div>
+    
+    <div class='unconscious-container grid-span-1'>
+      <label class='unconscious-label center-text'>
+        {{localize 'LORE.Actor.unconscious.label'}}
+      </label>
+      <div class='unconscious-content flexrow flex-center flex-between center-text'>
+        <label style="position:relative;display:inline-block;">
+          <input type='checkbox' name='system.unconscious.checkboxes' value='{{this}}' class='unconscious-checkbox'/><span class='custom-circle'></span>
+        </label>
+      </div>
+    </div>
+
+    <div class='stunned-container'>
+      <label class='stunned-label center-text'>
+	     {{localize 'LORE.Actor.stunned.label'}}
+      </label>
+      <div class='stunned-content flexrow flex-center flex-between center-text'>
+        <label style="position:relative;display:inline-block;">
+          <input type='checkbox' name='system.stunned.checkboxes' value='{{this}}' class='stunned-checkbox'/><span class='custom-circle'></span>
+        </label>
+      </div>
+    </div>
+
+    <div class='incapacitated-container grid-span-1'>
+      <label class='incapacitated-label center-text'>
+	      {{localize 'LORE.Actor.incapacitated.label'}}
+      </label>
+      <div class='incapacitated-content flexrow flex-center flex-between center-text'>
+        <label style="position:relative;display:inline-block;">
+          <input type='checkbox' name='system.incapacitated.checkboxes' value='{{this}}' class='incapacitated-checkbox'/><span class='custom-circle'></span>
+        </label>
+      </div>
+    </div>
+    
+    <div class='fatigue-container grid-span-1'>
+      <label class='fatigue-label center-text align-center'>
+	      {{localize 'LORE.Actor.fatigue.label'}}
+      </label>
+      <div class='fatigue-content flexrow flex-center flex-between center-text'>
+        {{#each fatigueSlots}}
+        <label style="position:relative;display:inline-block;">
+          <input type='checkbox' name='system.fatigue.checkboxes' value='{{this}}' class='fatigue-checkbox'/><span class='custom-circle'></span>
+        </label>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class='morale-slider-container'>
+    <label for='system.morale' class='morale-label'>
+      {{localize 'LORE.Actor.morale.label'}}: {{system.morale}}
+    </label>
+    
+    <div class='morale-slider flexrow flex-center' style='gap: 8px;'>
+      <input
+        type='range'
+        class='morale-input'
+        name='system.morale'
+        value='{{system.morale}}'
+        min='-6'
+        max='6'
+        step='1'
+        data-dtype='Number'
+        aria-label='{{localize "LORE.Actor.base.FIELDS.morale.label"}}'
+      />
+      <div class='morale-ticks' aria-hidden='true'>
+        {{#each (range -6 7)}}
+          <span class="morale-tick"></span>
+        {{/each}}
+      </div>
+    </div>
+    
+  </div>
+
 </header>

@@ -1,5 +1,8 @@
 import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
+import { LoreContextMenus } from '../helpers/context-menu.mjs';
 
+
+// Do not use static import for LoreWoundsFatigue; use dynamic import in constructor
 const { api, sheets } = foundry.applications;
 
 /**
@@ -9,6 +12,26 @@ const { api, sheets } = foundry.applications;
 export class loreActorSheet extends api.HandlebarsApplicationMixin(
   sheets.ActorSheetV2
 ) {
+  /**
+   * Instance of LoreWoundsFatigue for this sheet
+   * @type {import('../helpers/wounds-fatigue.mjs').LoreWoundsFatigue}
+   */
+  #woundsFatigue;
+  /**
+   * Instance of LoreTabNavigation for this sheet
+   * @type {import('../helpers/tab-navigation.mjs').LoreTabNavigation}
+   */
+  #tabNavigation;
+  /**
+   * Instance of LoreWoundsFatigue for this sheet
+   * @type {import('../helpers/lore-coins.mjs').LoreCoins}
+   */
+  #loreCoins;
+  /**
+   * Instance of LoreContextMenu for this sheet
+   * @type {import('../helpers/context-menu.mjs').LoreContextMenus}
+   */
+  #contextMenu;
   /** @override */
   async _renderInner(...args) {
     // Prepare context
@@ -23,13 +46,39 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       const partContext = await this._preparePartContext?.(part, {...context});
       mainHtml += await renderTemplate(partDef.template, partContext ?? context);
     }
-    // Wrap in flex container
+    // Wrap in a flattening container so parts become grid children directly
     // sidebar.hbs already includes the <aside class="lore-sidebar"> wrapper
-    return `<div class='lore-sheet-flex'>${sidebarHtml}<div class='lore-main'>${mainHtml}</div></div>`;
+    return `<div class='lore-sheet-flex'>${sidebarHtml}${mainHtml}</div>`;
   }
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    this.#woundsFatigue = null;
+    this.#tabNavigation = null;
+    this.#loreCoins = null;
+    this.#contextMenu = new LoreContextMenus(this);
+
+    // Dynamically import wounds/fatigue handler and store instance
+    import('../helpers/wounds-fatigue.mjs').then(mod => {
+      this.#woundsFatigue = new mod.LoreWoundsFatigue(this);
+      if (this.element) {
+        this.#woundsFatigue.attach(this.element[0] ?? this.element);
+      }
+    });
+    // Import tab navigation and store instance
+    import('../helpers/tab-navigation.mjs').then(mod => {
+      this.#tabNavigation = new mod.LoreTabNavigation(this);
+      if (this.element) {
+        this.#tabNavigation.attach(this.element[0] ?? this.element);
+      }
+    });
+    // Import lore coin handler and store instance
+    import('../helpers/lore-coins.mjs').then(mod => {
+      this.#loreCoins = new mod.LoreCoins(this);
+      if (this.element) {
+        this.#loreCoins.attach(this.element[0] ?? this.element);
+      }
+    });
   }
 
   /** @override */
@@ -63,7 +112,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       template: 'systems/lore/templates/actor/header.hbs',
     },
     tabs: {
-      template: 'templates/generic/tab-navigation.hbs',
+      template: 'systems/lore/templates/tab-navigation.hbs',
     },
     skills: {
       template: 'systems/lore/templates/actor/skills.hbs',
@@ -73,9 +122,6 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     },
     gear: {
       template: 'systems/lore/templates/actor/gear.hbs',
-    },
-    spells: {
-      template: 'systems/lore/templates/actor/spells.hbs',
     },
     effects: {
       template: 'systems/lore/templates/actor/effects.hbs',
@@ -90,10 +136,10 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     if (this.document.limited) return;
     switch (this.document.type) {
       case 'Player':
-        options.parts.push('skills', 'gear', 'spells', 'effects');
+        options.parts.push('skills', 'gear', 'effects');
         break;
       case 'Legend':
-        options.parts.push('skills', 'gear', 'spells', 'effects');
+        options.parts.push('skills', 'gear', 'effects');
         break;
       case 'Lackey':
         options.parts.push('gear', 'effects');
@@ -122,10 +168,36 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema?.fields,
       systemFields: this.document.system?.schema?.fields,
+      editingAttribute: undefined
     };
 
     // Offloading context prep to a helper function
     this._prepareItems(context);
+
+    // Prepare dynamic slot arrays for wounds and fatigue based on actor max values
+    try {
+      const woundsMax = Math.max(0, Number(this.actor.system?.wounds?.max ?? 0));
+      const fatigueMax = Math.max(0, Number(this.actor.system?.fatigue?.max ?? 0));
+      context.woundSlots = Array.from({ length: woundsMax }, (_, i) => i + 1);
+      context.fatigueSlots = Array.from({ length: fatigueMax }, (_, i) => i + 1);
+    } catch (e) {
+      console.warn('LORE | Failed preparing wound/fatigue slots', e);
+      context.woundSlots = [1, 2, 3];
+      context.fatigueSlots = [1, 2, 3];
+    }
+
+    // Prepare Lore Coin slots for Player and Legend actors
+    try {
+      const isCoinActor = this.document.type === 'Player' || this.document.type === 'Legend';
+      if (isCoinActor) {
+        const maxCoins = 4; // visual slots
+        const current = Math.max(0, Math.min(maxCoins, Number(this.actor.system?.loreCoin ?? 0)));
+        context.coinSlots = Array.from({ length: maxCoins }, (_, i) => i + 1);
+        context.loreCoinValue = current;
+      }
+    } catch (e) {
+      console.warn('LORE | Failed preparing lore coin slots', e);
+    }
 
     return context;
   }
@@ -134,7 +206,6 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   async _preparePartContext(partId, context) {
     switch (partId) {
       case 'skills':
-      case 'spells':
       case 'gear':
         context.tab = context.tabs[partId];
         break;
@@ -205,10 +276,6 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
           tab.id = 'gear';
           tab.label += 'Gear';
           break;
-        case 'spells':
-          tab.id = 'spells';
-          tab.label += 'Spells';
-          break;
         case 'effects':
           tab.id = 'effects';
           tab.label += 'Effects';
@@ -227,23 +294,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    */
   _prepareItems(context) {
     // Initialize containers.
-    // You can just use `this.document.itemTypes` instead
-    // if you don't need to subdivide a given type like
-    // this sheet does with spells
-  const gear = [];
-  const skills = [];
-  const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: [],
-    };
+    const gear = [];
+    const skills = [];
 
     // Iterate through items, allocating to containers
     for (let i of this.document.items) {
@@ -255,22 +307,11 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       else if (i.type === 'skill') {
         skills.push(i);
       }
-      // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.system.spellLevel != undefined) {
-          spells[i.system.spellLevel].push(i);
-        }
-      }
-    }
-
-    for (const s of Object.values(spells)) {
-      s.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     }
 
     // Sort then assign
-  context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-  context.skills = skills.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-  context.spells = spells;
+    context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.skills = skills.sort((a, b) => (a.sort || 0) - (b.sort || 0));
   }
 
   /**
@@ -284,7 +325,23 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
+    let rootEl = this.element;
+    if (rootEl && rootEl.jquery) rootEl = rootEl[0];
+    if (this.#woundsFatigue && rootEl) {
+      this.#woundsFatigue.attach(rootEl);
+    }
+    if (this.#tabNavigation && rootEl) {
+      this.#tabNavigation.attach(rootEl);
+    }
+    if (this.#loreCoins && rootEl) {
+      this.#loreCoins.attach(rootEl);
+    }
     // Layout is handled by CSS in src/less/components/_actor-sidebar.less
+
+    // Activate context menu for attributes
+    if (this.#contextMenu && rootEl) {
+      this.#contextMenu.attach(rootEl);
+    }
   }
 
   /**************

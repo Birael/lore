@@ -39,7 +39,7 @@ Hooks.once('init', function () {
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: '2d6 + @attributes.ref.mod',
+    formula: '2d6 + @ref.mod',
     decimals: 2,
   };
 
@@ -50,15 +50,16 @@ Hooks.once('init', function () {
   // for the base actor/item classes - they are included
   // with the Player/Legend/Lackey as part of super.defineSchema()
   CONFIG.Actor.dataModels = {
-    player: models.lorePlayer,
-    legend: models.loreLegend,
-    lackey: models.loreLackey,
+    // Keys must match the Actor document type names defined in system.json
+    // Your system uses capitalized types: "Player", "Legend", "Lackey"
+    Player: models.lorePlayer,
+    Legend: models.loreLegend,
+    Lackey: models.loreLackey,
   };
   CONFIG.Item.documentClass = loreItem;
   CONFIG.Item.dataModels = {
     gear: models.loreGear,
     skill: models.loreSkill,
-    spell: models.loreSpell,
   };
 
   // Active Effects are never copied to the Actor,
@@ -86,6 +87,51 @@ Hooks.once('init', function () {
 // If you need to add Handlebars helpers, here is a useful example:
 Handlebars.registerHelper('toLowerCase', function (str) {
   return str.toLowerCase();
+});
+
+/**
+ * Handlebars helper: range
+ * Generate an inclusive array of numbers suitable for iteration in templates.
+ * Usages:
+ *  - {{#each (range 1 5)}} ... {{/each}}          -> [1,2,3,4,5]
+ *  - {{#each (range 5)}} ... {{/each}}            -> [1,2,3,4,5]
+ *  - {{#each (range 0 10 2)}} ... {{/each}}       -> [0,2,4,6,8,10]
+ *  - {{#each (range 5 1)}} ... {{/each}}          -> [5,4,3,2,1]
+ * Notes:
+ *  - Start and end are inclusive.
+ *  - Step defaults to 1 and its sign is inferred from start/end ordering.
+ */
+Handlebars.registerHelper('range', function (...args) {
+  // Last arg is Handlebars options hash; we don't use it but must remove it.
+  const options = args.pop();
+  const toNum = (v) => (typeof v === 'number' ? v : Number(v));
+
+  let start, end, step = 1;
+  if (args.length === 1) {
+    end = toNum(args[0]);
+    start = 1;
+  } else {
+    start = toNum(args[0]);
+    end = toNum(args[1]);
+    if (args[2] !== undefined) step = toNum(args[2]);
+  }
+
+  // Validate numbers
+  if (!Number.isFinite(start)) start = 0;
+  if (!Number.isFinite(end)) end = 0;
+  if (!Number.isFinite(step) || step === 0) step = 1;
+
+  // Normalize step direction based on range direction
+  const ascending = end >= start;
+  step = Math.abs(step) * (ascending ? 1 : -1);
+
+  const out = [];
+  if (ascending) {
+    for (let i = start; i <= end; i += step) out.push(i);
+  } else {
+    for (let i = start; i >= end; i += step) out.push(i);
+  }
+  return out;
 });
 
 /* -------------------------------------------- */

@@ -21,3 +21,24 @@ LORE.attributeAbbreviations = {
   tou: 'LORE.Actor.Attribute.Tou.abbr',
   cha: 'LORE.Actor.Attribute.Cha.abbr',
 };
+
+/**
+ * The type of each attribute: 'physical' or 'mental'.
+ * @type {Object}
+ */
+LORE.attributeTypes = {
+  ref: 'physical',
+  int: 'mental',
+  gri: 'mental',
+  mig: 'physical',
+  phy: 'physical',
+  cha: 'mental',
+};
+
+/**
+ * Weapon type options
+ */
+LORE.weaponTypes = {
+  melee: 'LORE.Item.Weapon.Types.melee',
+  ranged: 'LORE.Item.Weapon.Types.ranged',
+};

@@ -1,1 +1,115 @@
 // main: "../lore.less", out: false
+/*
+  Layout notes
+  - ActorSheetV2 renders parts sequentially inside .window-content
+    (sidebar, header, tabs, etc.). Instead of relying on a custom
+    wrapper, place the siblings into a 2-column CSS Grid where the
+    sidebar occupies column 1 (1/3) and everything else flows into
+    column 2 (2/3).
+*/
+
+/* Flatten the wrapper so its children become direct grid items */
+.lore-sheet-flex {
+  display: contents; /* allows .lore-sidebar and main parts to be grid children */
+}
+
+/* Turn the sheet body into a 2/3 grid */
+.window-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* left 1/3, right 2/3 */
+  /* Explicit rows: header (auto), tabs (auto), body (fills remaining) */
+  grid-template-rows: auto auto 1fr;
+  /* Make the grid consume the available height inside the window */
+  height: 100%;
+  /* Ensure children that need to scroll can do so */
+  min-height: 0;
+  gap: 0;
+}
+
+/* Sidebar sits in the first column */
+.window-content > .lore-sidebar {
+  grid-column: 1;
+  grid-row: 1 / -1; /* span all rows */
+  /* Let the grid control width; keep a comfortable min */
+  min-width: 200px;
+  box-sizing: border-box;
+  /* Guarantee the sidebar stretches the full grid height */
+  align-self: stretch;
+  border-right: 2px solid var(--lore-c-bg2);
+}
+
+/* Everything that is not the sidebar flows into the right column */
+.window-content > :not(.lore-sidebar) {
+  grid-column: 2;
+}
+
+/* A utility class if we ever wrap main content manually */
+.lore-main { 
+  padding: 1em; 
+}
+
+.lore-sidebar-top {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* align to top */
+  padding: 0px;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+
+.profile-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-right: 1px solid var(--lore-c-bg2);
+}
+
+/* Right-side vertical circles */
+.right-container {
+  padding: 0px;
+}
+
+.lore-logo {
+  width: 80px;
+  height: auto;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+
+.lore-coins-label {
+  text-align: center;
+}
+
+.derived-stat {
+  align-items: center;
+  gap: 5px;
+  padding: 2px;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+
+.derived-stat-icon {
+  height: 28px;
+  width: 28px;
+}
+
+.derived-stat-input {
+  background: transparent;
+  text-align: center;
+  color: var(--lore-c-txt2);
+}
+
+.attributes {
+  padding: 0px;
+}
+.attribute {
+  margin: 0px;
+  height: 30px;
+  color: var(--lore-c-txt2);
+  padding: 10px;
+}
+.attribute-label {
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  color: var(--lore-c-txt1);
+}
+
+/* Intentionally removing empty rules to satisfy linter */

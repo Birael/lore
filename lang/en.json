@@ -9,8 +9,8 @@
       "tags": {"label": "Tags"},
       "wounds": {"label": "Wounds"},
       "fatigue": {"label": "Fatigue"},
-      "incapacitated": {"label": "Incapacitated"},
-      "unconscious": {"label": "Unconscious"},
+      "incapacitated": {"label": "Inc"},
+      "unconscious": {"label": "Unc"},
       "stunned": {"label": "Stunned"},
       "morale": {"label": "Morale"},
       "pace": {"label": "Pace"},
@@ -20,9 +20,9 @@
         "Biography": "Biography",
         "Skills": "Skills",
         "Gear": "Gear",
-        "Spells": "Spells",
         "Effects": "Effects"
       },
+      "Attributes": {"label": "Attributes"},
       "Attribute": {
         "Ref": { "long": "Reflexes", "abbr": "ref" },
         "Int": { "long": "Intellect", "abbr": "int" },
@@ -33,7 +33,9 @@
       },
       "biography": {"label": "Biography"},
       "loreCoins": {"label": "Lore Coins"},
-      "playerName": {"label": "Player Name"}
+      "Player": {
+        "playerName": {"label": "Player Name"}
+      }
     },
     "Item": {
       "Tabs": {
@@ -50,13 +52,6 @@
           "quantity": {"label": "Quantity"},
           "weight": {"label": "Weight"}
         }
-      },
-      "Spell": {
-        "FIELDS": {
-          "level": {"label": "Spell Level"}
-        },
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
       }
     },
     "Effect": {
@@ -75,8 +70,7 @@
     },
     "Item": {
       "gear": "Gear",
-      "feature": "Feature",
-      "spell": "Spell"
+      "feature": "Feature"
     }
   }
 }

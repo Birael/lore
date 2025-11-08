@@ -5,35 +5,6 @@
   data-tab='skills'
 >
   <section class='grid grid-3col'>
-    <aside class='sidebar'>
-      
-      <div class='attributes flexcol'>
-        {{#each actor.system.attributes as |attribute key|}}
-          <div class='attribute flexrow flex-group-center'>
-            <label
-              class='resource-label rollable flexlarge align-left'
-              data-action='roll'
-              data-roll='d20+@attributes.{{key}}.mod'
-              data-label='{{localize (lookup @root.config.attributes key)}}'
-            >{{localize (lookup @root.config.attributes key)}}</label>
-            <input
-              type='text'
-              name='system.attributes.{{key}}.value'
-              value='{{attribute.value}}'
-              class="attribute-score"
-              data-dtype='Number'
-            />
-            <span
-              class='attribute-mod rollable'
-              data-action='roll'
-              data-roll='d20+@attributes.{{key}}.mod'
-              data-label='{{localize (lookup @root.config.attributes key)}}'
-            >{{numberFormat attribute.mod decimals=0 sign=true}}</span>
-          </div>
-        {{/each}}
-      </div>
-    </aside>
-
     <section class='main grid-span-2'>
       <ol class='items-list'>
         <li class='item flexrow items-header'>

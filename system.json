@@ -21,15 +21,12 @@
       }
     },
     "Item": {
-    "skill": {
-      "htmlFields": ["description"]
-    },
-        "gear": {
-            "htmlFields": ["description"]
-        },
-        "spell": {
-            "htmlFields": ["description"]
-        }
+      "skill": {
+        "htmlFields": ["description"]
+      },
+      "gear": {
+        "htmlFields": ["description"]
+      }
     }
   },
   "flags": {
