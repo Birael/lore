@@ -6,7 +6,14 @@
     </div>
     <div class='right-container grid-span-1'>
       <img class="lore-logo" src="systems/lore/assets/lore-logo.png" />
-      <label class='lore-coins-label'>Coins: 3</label>
+      {{!-- Show Lore Coins only for Player or Legend actors --}}
+      {{#if (or (eq actor.type 'Player') (eq actor.type 'Legend'))}}
+        <label class='lore-coins-label'>{{localize 'LORE.LoreCoins.Coins.label'}}: {{loreCoinValue}}</label>
+      <button type="button" class="lore-coin-clickable-space" aria-label="Lore Coin Area"
+        onclick="(function(e){e.preventDefault();e.stopPropagation();this.dispatchEvent(new CustomEvent('loreCoinAdjust',{bubbles:true,detail:{delta:-1}}));}).call(this,event);"
+        oncontextmenu="(function(e){e.preventDefault();e.stopPropagation();this.dispatchEvent(new CustomEvent('loreCoinAdjust',{bubbles:true,detail:{delta:1}}));}).call(this,event);"
+      ></button>
+      {{/if}}
     </div>
   </div>
 

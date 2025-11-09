@@ -28,6 +28,11 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    */
   #loreCoins;
   /**
+   * Promise that resolves when lore coins helper is ready
+   * @type {Promise<void>}
+   */
+  #coinsReadyPromise;
+  /**
    * Instance of LoreContextMenu for this sheet
    * @type {import('../helpers/context-menu.mjs').LoreContextMenus}
    */
@@ -72,13 +77,13 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
         this.#tabNavigation.attach(this.element[0] ?? this.element);
       }
     });
-    // Import lore coin handler and store instance
-    import('../helpers/lore-coins.mjs').then(mod => {
+    // Import lore coin handler and store instance; keep a promise to attach post-render reliably
+    this.#coinsReadyPromise = import('../helpers/lore-coins.mjs').then(mod => {
       this.#loreCoins = new mod.LoreCoins(this);
       if (this.element) {
         this.#loreCoins.attach(this.element[0] ?? this.element);
       }
-    });
+    }).catch(err => console.warn('LORE | Failed to load lore-coins helper', err));
   }
 
   /** @override */
@@ -190,9 +195,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     try {
       const isCoinActor = this.document.type === 'Player' || this.document.type === 'Legend';
       if (isCoinActor) {
-        const maxCoins = 4; // visual slots
-        const current = Math.max(0, Math.min(maxCoins, Number(this.actor.system?.loreCoin ?? 0)));
-        context.coinSlots = Array.from({ length: maxCoins }, (_, i) => i + 1);
+        const current = Math.max(0, Number(this.actor.system?.loreCoin ?? 0));
+        context.coinSlots = Array.from({ length: current }, (_, i) => i + 1);
         context.loreCoinValue = current;
       }
     } catch (e) {
@@ -323,6 +327,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    * @override
    */
   _onRender(context, options) {
+    // Dev trace to ensure _onRender runs for actor sheet
+    try { console.log('LORE | loreActorSheet _onRender', { actor: this.actor?.name, type: this.document?.type }); } catch {}
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
     let rootEl = this.element;
@@ -333,8 +339,14 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     if (this.#tabNavigation && rootEl) {
       this.#tabNavigation.attach(rootEl);
     }
-    if (this.#loreCoins && rootEl) {
-      this.#loreCoins.attach(rootEl);
+    if (rootEl) {
+      if (this.#loreCoins) {
+        this.#loreCoins.attach(rootEl);
+      } else if (this.#coinsReadyPromise) {
+        this.#coinsReadyPromise.then(() => {
+          if (this.#loreCoins) this.#loreCoins.attach(rootEl);
+        });
+      }
     }
     // Layout is handled by CSS in src/less/components/_actor-sidebar.less
 
@@ -472,10 +484,19 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[attribute] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      // Append morale modifier to formula if actor has morale (non-zero).
+      const morale = this.actor?.system?.morale ?? 0;
+      const buildMoraleFormula = (formula, moraleVal) => {
+        if (!Number.isFinite(moraleVal) || moraleVal === 0) return formula;
+        const sign = moraleVal >= 0 ? '+' : '-';
+        return `(${formula}) ${sign} ${Math.abs(moraleVal)}`;
+      };
+      const finalFormula = buildMoraleFormula(dataset.roll, morale);
+      let roll = new Roll(finalFormula, this.actor.getRollData());
+      const moraleFlavor = morale ? ` (Morale ${morale >= 0 ? '+' : ''}${morale})` : '';
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
+        flavor: `${label}${moraleFlavor}`,
         rollMode: game.settings.get('core', 'rollMode'),
       });
       return roll;

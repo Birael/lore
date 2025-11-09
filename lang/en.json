@@ -4,6 +4,9 @@
       "Actor": "lore Actor Sheet",
       "Item": "lore Item Sheet"
     },
+    "LoreCoins": {
+      "Coins": {"label": "Coins"}
+    },
     "Actor": {
       "level": {"label": "Level"},
       "tags": {"label": "Tags"},

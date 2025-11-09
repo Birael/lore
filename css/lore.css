@@ -17,6 +17,7 @@
 :root {
   --lore-c-bg1: #2e2e2e;
   --lore-c-bg2: #6e6e6e;
+  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #fdfdfd;
   --lore-c-txt2: #b9b9b9;
   --lore-c-slate: var(--color-border-light, #8a8a8a);
@@ -36,6 +37,7 @@ html[data-theme="dark"],
 body.theme-dark {
   --lore-c-bg1: #2e2e2e;
   --lore-c-bg2: #6e6e6e;
+  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #fdfdfd;
   --lore-c-txt2: #b9b9b9;
   --lore-c-slate: #7a7a7a;
@@ -53,6 +55,7 @@ html[data-theme="light"],
 body.theme-light {
   --lore-c-bg1: #d1d1d1;
   --lore-c-bg2: #b0b0b0;
+  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #2e2e2e;
   --lore-c-txt2: #4a4a4a;
   --lore-c-slate: #d0d0d0;
@@ -251,6 +254,8 @@ body.theme-light {
   /* Everything that is not the sidebar flows into the right column */
   /* A utility class if we ever wrap main content manually */
   /* Right-side vertical circles */
+  /* Remove Firefox inner focus border on buttons */
+  /* Normalize default button appearance to avoid UA borders */
   /* Intentionally removing empty rules to satisfy linter */
 }
 .lore .item-form {
@@ -1080,6 +1085,8 @@ body.theme-light {
 }
 .lore .right-container {
   padding: 0px;
+  display: flex;
+  flex-direction: column;
 }
 .lore .lore-logo {
   width: 80px;
@@ -1088,6 +1095,46 @@ body.theme-light {
 }
 .lore .lore-coins-label {
   text-align: center;
+  color: var(--lore-c-txt1);
+}
+.lore .lore-coin-clickable-space {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--lore-c-bg3);
+  height: 87px;
+  border: 0px;
+  position: relative;
+  /* allow absolutely-positioned coin sprites */
+  overflow: hidden;
+  /* keep sprites inside */
+}
+.lore .lore-coin-clickable-space,
+.lore .lore-coin-clickable-space:hover,
+.lore .lore-coin-clickable-space:focus,
+.lore .lore-coin-clickable-space:active,
+.lore .lore-coin-clickable-space:focus-visible {
+  /* Keep border/outline/box-shadow from changing on interaction */
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  outline-offset: 0 !important;
+}
+.lore .lore-coin-clickable-space::-moz-focus-inner {
+  border: 0;
+}
+.lore .lore-coin-clickable-space {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lore .lore-coin-clickable-space.has-lore-coins {
+  cursor: pointer;
+}
+.lore .lore-coin-clickable-space img.lore-coin-sprite {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  /* don't block clicks */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
 }
 .lore .derived-stat {
   align-items: center;

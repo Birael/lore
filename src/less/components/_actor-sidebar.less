@@ -66,6 +66,8 @@
 /* Right-side vertical circles */
 .right-container {
   padding: 0px;
+  display: flex;
+  flex-direction: column;
 }
 
 .lore-logo {
@@ -76,6 +78,47 @@
 
 .lore-coins-label {
   text-align: center;
+  color: var(--lore-c-txt1);
+}
+
+
+.lore-coin-clickable-space {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--lore-c-bg3);
+  height: 87px;
+  border: 0px;
+  position: relative; /* allow absolutely-positioned coin sprites */
+  overflow: hidden;   /* keep sprites inside */
+}
+.lore-coin-clickable-space,
+.lore-coin-clickable-space:hover,
+.lore-coin-clickable-space:focus,
+.lore-coin-clickable-space:active,
+.lore-coin-clickable-space:focus-visible {
+  /* Keep border/outline/box-shadow from changing on interaction */
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  outline-offset: 0 !important;
+}
+/* Remove Firefox inner focus border on buttons */
+.lore-coin-clickable-space::-moz-focus-inner {
+  border: 0;
+}
+/* Normalize default button appearance to avoid UA borders */
+.lore-coin-clickable-space {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lore-coin-clickable-space.has-lore-coins {
+  cursor: pointer;
+}
+.lore-coin-clickable-space img.lore-coin-sprite {
+  position: absolute;
+  display: block;
+  pointer-events: none; /* don't block clicks */
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.45));
 }
 
 .derived-stat {

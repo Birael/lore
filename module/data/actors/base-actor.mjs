@@ -96,6 +96,9 @@ export default class loreActorBase extends foundry.abstract
     // Level is a top-level field on the DataModel, not nested under attributes
     data.lvl = this.level?.value ?? 0;
 
+    // Morale is a direct numeric field; expose it for roll formulas and morale adjustments
+    data.morale = this.morale ?? 0;
+
     return data;
   }
 }

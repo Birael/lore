@@ -56,14 +56,24 @@ export class loreItem extends Item {
       // Retrieve roll data.
       const rollData = this.getRollData();
 
-      // Invoke the roll and submit it to chat.
-      const roll = new Roll(rollData.formula, rollData.actor);
+      // Append actor morale at end of formula if present; ensure explicit sign and parentheses.
+      const morale = this.actor?.system?.morale ?? 0;
+      const buildMoraleFormula = (formula, moraleVal) => {
+        if (!Number.isFinite(moraleVal) || moraleVal === 0) return formula; // No change
+        const sign = moraleVal >= 0 ? '+' : '-';
+        return `(${formula}) ${sign} ${Math.abs(moraleVal)}`;
+      };
+      const finalFormula = buildMoraleFormula(rollData.formula, morale);
+
+      // Invoke the roll (morale applied) and submit it to chat.
+      const roll = new Roll(finalFormula, rollData.actor);
       // If you need to store the value first, uncomment the next line.
       // const result = await roll.evaluate();
+      const moraleFlavor = morale ? ` (Morale ${morale >= 0 ? '+' : ''}${morale})` : '';
       roll.toMessage({
         speaker: speaker,
         rollMode: rollMode,
-        flavor: label,
+        flavor: `${label}${moraleFlavor}`,
       });
       return roll;
     }
