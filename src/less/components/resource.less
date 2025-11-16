@@ -1,0 +1,15 @@
+// main: "../lore.less", out: false
+
+.resource {
+	.resource-checkbox {
+		accent-color: var(--lore-c-txt1);
+	
+		--checkbox-checked-color: var(--lore-c-txt1);
+
+		--checkbox-unchecked-color: var(--lore-c-bg2);
+		&::before {
+			color: var(--checkbox-unchecked-color);
+			border-color: var(--checkbox-unchecked-color);
+		}
+	}
+}

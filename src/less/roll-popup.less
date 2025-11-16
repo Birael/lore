@@ -1,0 +1,85 @@
+// main: "lore.less", out: false
+
+// Scope popup styles to the popup content wrapper only
+.lore-roll-popup {
+  // Optional: set an inner background to visually separate from window content
+  background: var(--lore-c-charcoal);
+  padding: 0.5rem;
+  border-radius: 4px;
+
+  .roll-formula {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .target-number-input-label {
+    text-align: left;
+    margin-right: 10px;
+  }
+
+  .target-number-input {
+    width: 50px;
+    background: var(--lore-c-slate);
+    margin-bottom: 10px;
+  }
+
+  .modifier-input-label {
+    text-align: left;
+    margin-right: 10px;
+  }
+
+  .modifier-input {
+    width: 50px;
+    background: var(--lore-c-slate);
+  }
+
+  // Target header
+  .roll-target {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    background: var(--lore-c-slate);
+    border-radius: 4px;
+  }
+  .roll-target-img {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+  .roll-target-text {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .roll-target-label {
+    color: var(--color-text-light-4);
+    font-size: 0.9rem;
+  }
+  .roll-target-name {
+    font-weight: 600;
+  }
+
+  // Ensure action buttons sit side-by-side regardless of any global grid utilities
+  .roll-popup-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  // Layout for any option buttons displayed above the actions
+  .roll-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+}

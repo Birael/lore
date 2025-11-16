@@ -1,50 +1,103 @@
 {
   "LORE": {
+    "Attribute": {
+      "Ref": { "long": "Reflexes", "abbr": "ref" },
+      "Int": { "long": "Intellect", "abbr": "int" },
+      "Gri": { "long": "Grit", "abbr": "gri" },
+      "Mig": { "long": "Might", "abbr": "mig" },
+      "Phy": { "long": "Physique", "abbr": "phy" },
+      "Cha": { "long": "Charisma", "abbr": "cha" }
+    },
     "SheetLabels": {
       "Actor": "lore Actor Sheet",
-      "Item": "lore Item Sheet"
-    },
-    "LoreCoins": {
-      "Coins": {"label": "Coins"}
+      "Item": "lore Item Sheet",
+      "Attributes": "Attributes",
+      "RollMod": "Roll Mod",
+      "AdditionalMod": "Additional Mod",
+      "Name": "Name",
+      "Target": "Target",
+      "TargetNumber": "Target Number",
+      "Distance": "Distance"
     },
     "Actor": {
-      "level": {"label": "Level"},
-      "tags": {"label": "Tags"},
-      "wounds": {"label": "Wounds"},
-      "fatigue": {"label": "Fatigue"},
-      "incapacitated": {"label": "Inc"},
-      "unconscious": {"label": "Unc"},
-      "stunned": {"label": "Stunned"},
-      "morale": {"label": "Morale"},
-      "pace": {"label": "Pace"},
-      "parry": {"label": "Parry"},
-      "resist": {"label": "Resist"},
       "Tabs": {
         "Biography": "Biography",
-        "Skills": "Skills",
+        "Details": "Details",
         "Gear": "Gear",
+        "Magicks": "Magicks",
         "Effects": "Effects"
       },
-      "Attributes": {"label": "Attributes"},
-      "Attribute": {
-        "Ref": { "long": "Reflexes", "abbr": "ref" },
-        "Int": { "long": "Intellect", "abbr": "int" },
-        "Gri": { "long": "Grit", "abbr": "gri" },
-        "Mig": { "long": "Might", "abbr": "mig" },
-        "Tou": { "long": "Tough", "abbr": "tou" },
-        "Cha": { "long": "Charisma", "abbr": "cha" }
+      "Details": {
+        "SubTabs": {
+          "Skills": "Skills",
+          "BoonsBanes": "Boons/Banes"
+        }
       },
-      "biography": {"label": "Biography"},
-      "loreCoins": {"label": "Lore Coins"},
+      "base": {
+        "FIELDS": {
+          "level": {"label": "Level"},
+          "Ancestry": {"label": "Ancestry", "empty": "Drop an Ancestry item here"},
+          "Gender": {"label": "Gender"},
+          "Age": {"label": "Age"},
+          "Height": {"label": "Height"},
+          "Weight": {"label": "Weight"},
+          "biography": {"label": "Biography"},
+          "wounds": {
+            "value": {"label": "Wounds"},
+            "max": {"label": "Maximum Wounds"}
+          },
+          "incapacitated": {"label": "Inc"},
+          "fatigue": {
+            "value": {"label": "Fatigue"},
+            "max": {"label": "Maximum Fatigue"}
+          },
+          "unconscious": {"label": "Unc"},
+          "stunned": {"label": "Stn"},
+          "movement": {"label": "Movement"},
+          "toughness": {"label": "Toughness"},
+          "parry": {"label": "Parry"},
+          "morale": {"label": "Morale"}
+        }
+      },
       "Player": {
-        "playerName": {"label": "Player Name"}
+        "FIELDS": {
+          "PlayerName": {"label": "Player Name"}
+        }
+      },
+      "Lackey": {
+        "FIELDS": { }
+      },
+      "Legend": {
+        "FIELDS": { }
+      },
+      "LoreCoins": {
+        "Label": "Lore Coins",
+        "Tooltip": "Left-click: use a coin. Right-click: gain a coin."
       }
     },
     "Item": {
       "Tabs": {
-        "Attributes": "Attributes",
+        "Details": "Details",
         "Description": "Description",
         "Effects": "Effects"
+      },
+      "Skill": {
+        "Rank": "Rank",
+        "Attribute": "Attribute",
+        "Modifier": "Modifier",
+        "FIELDS": {
+          "rank": {"label": "Rank"},
+          "attribute": {"label": "Linked Attribute"}
+        }
+      },
+      "Boons": { "label": "Boons" },
+      "Banes": { "label": "Banes" },
+      "Boon": {
+        "FIELDS": {
+          "magicksBackground": {
+            "label": "Magicks Background"
+          }
+        }
       },
       "Gear": {
         "FIELDS": {
@@ -53,7 +106,42 @@
           "dieSize": {"label": "Die Size"},
           "rollMod": {"label": "Roll Modifier"},
           "quantity": {"label": "Quantity"},
-          "weight": {"label": "Weight"}
+          "cost": {"label": "Cost"},
+          "weight": {"label": "Weight"},
+          "genericDetailsHint": "No additional details for this gear."
+        }
+      },
+      "Weapon": {
+        "FIELDS": {
+          "attackFormula": {"label": "Attack Formula"},
+          "damageFormula": {"label": "Damage Formula"},
+          "damageDice": {"label": "Damage Dice"},
+          "type": {"label": "Weapon Type"},
+          "handedness": {"label": "Handedness"},
+          "range": {
+            "short": {"label": "Short Range"},
+            "medium": {"label": "Medium Range"},
+            "long": {"label": "Long Range"},
+            "units": {"label": "Units"}
+          }
+        },
+        "Types": {
+          "melee": "Melee",
+          "ranged": "Ranged"
+        }
+      },
+      "Armor": {
+        "FIELDS": {
+          "type": {"label": "Armor Type"},
+          "value": {"label": "Armor Value"}
+        },
+        "Types": {
+          "head": "Head",
+          "body": "Body",
+          "arms": "Arms",
+          "hands": "Hands",
+          "legs": "Legs",
+          "feet": "Feet"
         }
       }
     },
@@ -63,17 +151,38 @@
       "Temporary": "Temporary Effects",
       "Passive": "Passive Effects",
       "Inactive": "Inactive Effects"
+    },
+    "Common": {
+      "Clear": "Clear"
+    }
+  },
+  "LORE.Settings": {
+    "DefaultRollMode": {
+      "Name": "Default Roll Visibility",
+      "Hint": "The default roll visibility used by Lore roll messages.",
+      "choices": {
+        "publicroll": "Public Roll",
+        "gmroll": "Private GM Roll",
+        "blindroll": "Blind GM Roll",
+        "selfroll": "Self Roll"
+      }
     }
   },
   "TYPES": {
     "Actor": {
       "player": "Player",
-      "legend": "Legend",
-      "lackey": "Lackey"
+      "lackey": "Lackey",
+      "legend": "Legend"
     },
     "Item": {
       "gear": "Gear",
-      "feature": "Feature"
+      "weapon": "Weapon",
+      "skill": "Skill",
+      "magick": "Magick",
+      "armor": "Armor",
+      "boon": "Boon",
+      "bane": "Bane",
+      "ancestry": "Ancestry"
     }
   }
 }

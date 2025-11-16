@@ -1,0 +1,52 @@
+<div class="lore-roll-card">
+  
+  {{!-- Target (optional, typically for weapon attacks) --}}
+  {{#if target}}
+  <div class="lore-target">
+    <span class="lore-target-label">Target:</span>
+    {{#if target.img}}
+      <img class="lore-target-img" src="{{target.img}}" alt="{{target.name}}"/>
+    {{/if}}
+    <span class="lore-target-name">{{target.name}}</span>
+  </div>
+  {{/if}}
+  
+  <!-- Main/normal roll -->
+  <div class="lore-main-roll">
+    {{{mainRollHtml}}}
+  </div>
+
+  <!-- LORE Die (optional) -->
+  {{#if loreHtml}}
+  <div class="lore-die">
+    {{{loreHtml}}}
+  </div>
+  {{/if}}
+
+  <!-- Morale -->
+  {{#if morale}}
+  <div class="lore-morale-mod">Morale: {{moraleText}}</div>
+  {{/if}}
+
+  <!-- Critical Failure (optional) -->
+  {{#if critFailure}}
+  <div class="lore-crit lore-crit-failure"><strong>Critical Failure</strong> — Snake Eyes</div>
+  {{/if}}
+
+  <!-- Final Result -->
+  <div class="lore-final-total"><strong>Final Result:</strong> {{finalTotal}}</div>
+
+  {{#if targetNumber}}
+  <div class="lore-target-number"><strong>{{localize "LORE.SheetLabels.TargetNumber"}}:</strong> {{targetNumber}}</div>
+  <div class="lore-outcome {{#if success}}is-success{{else}}is-failure{{/if}}">
+    {{#if success}}
+      <strong>Success</strong>
+      {{#if raises}}
+        — Raises: {{raises}}
+      {{/if}}
+    {{else}}
+      <strong>Failure</strong>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

@@ -1,0 +1,204 @@
+// main: "../lore.less", out: false
+
+.paper-doll-with-summary {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--lore-c-bg2);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.paper-doll-absolute-layout {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  --paper-doll-slot-size: 50px;
+  --paper-doll-weapon-icon: 24px;
+}
+.paper-doll-absolute-layout .paper-doll-slots {
+  position: relative;
+  width: calc(var(--paper-doll-slot-size, 50px) * 3 + 20px);
+  height: calc(var(--paper-doll-slot-size, 50px) * 3 + 20px);
+  
+}
+.paper-doll-absolute-layout .slot {
+  position: absolute;
+  width: var(--paper-doll-slot-size, 50px);
+  height: var(--paper-doll-slot-size, 50px);
+  background: var(--lore-c-bg1);
+  border: 2px solid var(--lore-c-bg2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px #0001;
+  box-sizing: border-box;
+  padding: 3px;
+}
+
+.paper-doll-absolute-layout .slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.paper-doll-absolute-layout .slot-head {
+  top: 0;
+  left: 60px;
+}
+
+.paper-doll-absolute-layout .slot-body {
+  top: 60px;
+  left: 60px;
+}
+
+.paper-doll-absolute-layout .slot-arms {
+  top: 0;
+  left: 0;
+}
+
+.paper-doll-absolute-layout .slot-hands {
+  top: 60px;
+  left: 0;
+}
+
+.paper-doll-absolute-layout .slot-legs {
+  top: 0;
+  left: 120px;
+}
+
+.paper-doll-absolute-layout .slot-feet {
+  top: 60px;
+  left: 120px;
+}
+
+.paper-doll-absolute-layout .slot-mainhand {
+  top: 120px;
+  left: 0;
+}
+
+.paper-doll-absolute-layout .slot-offhand {
+  top: 120px;
+  left: 120px;
+}
+
+.paper-doll-weapons {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  margin-top: 0.25rem;
+  min-width: 120px;
+}
+.weapon-slot {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.weapon-slot.mainhand {
+  left: 0;
+}
+.weapon-slot.offhand {
+  right: 0;
+}
+.weapon-slot img {
+  width: var(--paper-doll-weapon-icon, 24px);
+  height: var(--paper-doll-weapon-icon, 24px);
+  background: var(--lore-c-ash, #e6e2dc);
+  border: 2px solid var(--lore-c-slate, #6e6e6e);
+  border-radius: 5px;
+  box-shadow: 0 1px 3px #0001;
+}
+.weapon-label {
+  margin-top: 0.05rem;
+  font-size: 0.7rem;
+  color: var(--lore-c-charcoal, #2e2e2e);
+  font-weight: 500;
+}
+
+.paper-doll-layout {
+  display: grid;
+  grid-template-areas:
+    ".    head    ."
+    "arms  body  legs"
+    "hands  .   feet";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 28px 36px 28px;
+  gap: 4px;
+  justify-items: center;
+  align-items: center;
+  max-width: 120px;
+  margin: 0.25rem auto 0.1rem auto;
+}
+.paper-doll-layout .slot {
+  --paper-doll-grid-slot-size: 28px;
+  width: var(--paper-doll-grid-slot-size, 28px);
+  height: var(--paper-doll-grid-slot-size, 28px);
+  background: var(--lore-c-ash, #e6e2dc);
+  border: 2px solid var(--lore-c-slate, #6e6e6e);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: var(--lore-c-charcoal, #2e2e2e);
+  box-shadow: 0 1px 3px #0001;
+  user-select: none;
+}
+.paper-doll-layout .slot img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  display: block;
+}
+.slot-head   { grid-area: head; }
+.slot-body   { grid-area: body; }
+.slot-arms   { grid-area: arms; }
+.slot-hands  { grid-area: hands; }
+.slot-legs   { grid-area: legs; }
+.slot-feet   { grid-area: feet; }
+
+.paper-doll-with-summary .paper-doll-absolute-layout {
+  width: auto;
+  margin: 0;
+}
+.armor-summary {
+  background: var(--lore-c-bg1);
+  border-left: 1px solid var(--lore-c-bg2);
+  padding: 8px 10px;
+  min-width: 160px;
+  box-shadow: 0 2px 6px #0001;
+}
+.armor-summary-title {
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+}
+.armor-summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  row-gap: 6px;
+  column-gap: 12px;
+}
+.armor-summary-list li {
+  display: contents;
+}
+.armor-summary-list .label {
+  color: var(--lore-c-txt1);
+}
+.armor-summary-list .item-name {
+  color: var(--lore-c-txt1);
+  opacity: 0.9;
+}
+.armor-summary-list .value {
+  font-weight: 600;
+  text-align: right;
+}

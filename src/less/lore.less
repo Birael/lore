@@ -1,27 +1,46 @@
-// out: ../../css/lore.css
+// out: "../../css/lore.css", sourceMap: false, compress: false
+/*
+  LORE LESS entry point
+  - Current Foundry stylesheet remains css/lore.css
+  - This compiles to css/lore.less.css for side-by-side comparison during migration
+  - When ready to switch, run the overwrite script to emit css/lore.css
+*/
 
-// Add custom fonts by visiting and search https://fonts.google.com
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import (css) url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
-// Import utilities.
-@import 'utils/_typography.less';
-@import 'utils/_colors.less';
-@import 'utils/_mixins.less';
-@import 'utils/_variables.less';
+// Utilities
+@import "utils/variables.less";
+@import "utils/colors.less";
+@import "utils/typography.less";
+@import "utils/mixins.less";
 
-/* Global styles */
-@import 'global/_window.less';
-@import 'global/_grid.less';
-@import 'global/_flex.less';
+// System-specific overlays that are safe globally (kept namespaced)
+@import "context-menu.less";
 
-/* Styles limited to lore sheets */
+// Keep styles for chat cards and roll popup, safely scoped to their containers
+@import "components/chat.less";
+@import "roll-card.less";
+@import "roll-popup.less";
+@import "components/hotbar-target-number.less";
+
+// Scope all sheet styling strictly to .lore (actor/item sheets)
 .lore {
-  @import 'components/_forms.less';
-  @import 'components/_resource.less';
-  @import 'components/_items.less';
-  @import 'components/_effects.less';
-  @import 'components/_actor-header.less';
-  @import 'components/_actor-sidebar.less';
-  @import 'components/tab-navigation.less';
-  @import 'context-menu.less';
+  // Previously global helpers and overrides are now scoped to our sheets only
+  @import "global/window.less";
+  @import "global/grid.less";
+  @import "global/flex.less";
+
+  // Components
+  @import "components/forms.less";
+  @import "components/resource.less";
+  @import "components/items.less";
+  @import "components/effects.less";
+  @import "components/tab-navigation.less";
+  @import "components/sidebar.less";
+  @import "components/header.less";
+  @import "components/biography.less";
+  @import "components/gear.less";
+  @import "components/paper-doll.less";
+  @import "components/skills.less";
+  @import "components/magicks.less";
 }

@@ -1,0 +1,80 @@
+{{! Magicks Tab }}
+<section
+  class='tab magicks {{tab.cssClass}}'
+  data-group='primary'
+  data-tab='magicks'
+>
+
+  <div class='magicks-resource-label align-center'>Power</div>
+  <div class='magicks-resource flexrow flex-center grid-3col'>
+    
+    
+    <div class='magicks-resource-values flexrow flex-center'>
+      <input
+        type='number'
+        name='system.magicksResource.value'
+        value='{{system.magicksResource.value}}'
+        data-dtype='Number'
+        min='0'
+        class='magicks-current'
+        aria-label='Current Power'
+      />
+      <span class='magicks-resource-separator align-center'>/</span>
+      <input
+        type='number'
+        name='system.magicksResource.max'
+        value='{{system.magicksResource.max}}'
+        data-dtype='Number'
+        min='0'
+        class='magicks-max'
+        aria-label='Max Power'
+      />
+    </div>
+
+  </div>
+
+  <ol class='items-list'>
+    <li class='item flexrow items-header'>
+          <div class='item-name'>{{localize 'TYPES.Item.magick'}}</div>
+          <div class='item-controls'>
+            {{#if @root.editable}}
+              <a
+                class='item-control item-create'
+                title='Create item'
+                data-action='createDoc'
+                data-document-class='Item'
+                data-type='magick'
+              >
+                <i class='fas fa-plus'></i>
+                {{localize 'DOCUMENT.New' type='magick'}}
+              </a>
+            {{/if}}
+          </div>
+        </li>
+        {{#each magicks as |item id|}}
+          <li
+            class='item flexrow'
+            data-item-id='{{item._id}}'
+            data-drag='true'
+            data-document-class='Item'
+          >
+            <div class='item-name'>
+              <div class='item-image'>
+                <a class='rollable' data-roll-type='item' data-action='roll'>
+                  <img
+                    src='{{item.img}}'
+                    title='{{item.name}}'
+                    width='24'
+                    height='24'
+                  />
+                </a>
+              </div>
+              <div>{{item.name}}</div>
+            </div>
+            
+            
+          </li>
+    {{/each}}
+  </ol>
+
+</section>

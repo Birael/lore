@@ -2,7 +2,31 @@
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
+import { RollPopup } from '../apps/roll-popup.mjs';
+import { RollHandler } from '../helpers/roll-handler.mjs';
+
 export class loreItem extends Item {
+  /**
+   * Return the default artwork for a new item, based on its type.
+   * @param {object} itemData - The item data object
+   * @returns {{img: string}}
+   */
+  static getDefaultArtwork(itemData = {}) {
+    const type = itemData.type || "default";
+    // You can customize these paths as needed
+    const defaultImages = {
+      gear: "icons/svg/item-bag.svg",
+      weapon: "icons/svg/sword.svg",
+      armor: "icons/svg/shield.svg",
+      magick: "icons/svg/book.svg",
+      skill: "systems/lore/assets/icons/D6Icon.svg",
+      boon: "icons/svg/upgrade.svg",
+      bane: "icons/svg/downgrade.svg",
+      ancestry: "systems/lore/assets/default-item.png",
+      default: "systems/lore/assets/default-item.png"
+    };
+    return { img: defaultImages[type] || defaultImages.default };
+  }
   /**
    * Augment the basic Item data model with additional dynamic data.
    */
@@ -10,6 +34,23 @@ export class loreItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+  }
+
+  /** @override */
+  async _preUpdate(changed, options, userId) {
+    try {
+      if (this.type === 'armor' && foundry.utils.hasProperty(changed, 'system.equipped')) {
+        const newEquipped = !!foundry.utils.getProperty(changed, 'system.equipped');
+        // Delegate to the parent actor to enforce exclusivity per slot
+        if (this.actor?.handleArmorEquipChange) {
+          await this.actor.handleArmorEquipChange(this, newEquipped);
+          // No further action needed; actor method will update mapping and any other items
+        }
+      }
+    } catch (err) {
+      console.warn('LORE | Error in armor _preUpdate equip handling', err);
+    }
+    return super._preUpdate(changed, options, userId);
   }
 
   /**
@@ -35,47 +76,6 @@ export class loreItem extends Item {
    * @private
    */
   async roll(event) {
-    const item = this;
-
-    // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-    const rollMode = game.settings.get('core', 'rollMode');
-    const label = `[${item.type}] ${item.name}`;
-
-    // If there's no roll data, send a chat message.
-    if (!this.system.formula) {
-      ChatMessage.create({
-        speaker: speaker,
-        rollMode: rollMode,
-        flavor: label,
-        content: item.system.description ?? '',
-      });
-    }
-    // Otherwise, create a roll and send a chat message from it.
-    else {
-      // Retrieve roll data.
-      const rollData = this.getRollData();
-
-      // Append actor morale at end of formula if present; ensure explicit sign and parentheses.
-      const morale = this.actor?.system?.morale ?? 0;
-      const buildMoraleFormula = (formula, moraleVal) => {
-        if (!Number.isFinite(moraleVal) || moraleVal === 0) return formula; // No change
-        const sign = moraleVal >= 0 ? '+' : '-';
-        return `(${formula}) ${sign} ${Math.abs(moraleVal)}`;
-      };
-      const finalFormula = buildMoraleFormula(rollData.formula, morale);
-
-      // Invoke the roll (morale applied) and submit it to chat.
-      const roll = new Roll(finalFormula, rollData.actor);
-      // If you need to store the value first, uncomment the next line.
-      // const result = await roll.evaluate();
-      const moraleFlavor = morale ? ` (Morale ${morale >= 0 ? '+' : ''}${morale})` : '';
-      roll.toMessage({
-        speaker: speaker,
-        rollMode: rollMode,
-        flavor: `${label}${moraleFlavor}`,
-      });
-      return roll;
-    }
+    return await RollHandler.rollItem(this);
   }
 }

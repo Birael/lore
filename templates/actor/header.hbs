@@ -23,38 +23,38 @@
         id='system-level'
         value='{{system.level.value}}'
         data-dtype='Number'
-        placeholder='0'
+        placeholder='Level'
         {{#unless editable}}disabled{{/unless}}
       />
     </div>
 
   </div>
 
-  <div class='characteristics-container' aria-label="Tags">
+  <div class='tags-container' aria-label="Tags">
 
-    {{#if system.characteristics}}
-      {{#if system.characteristics.length}}
-        <ul class="characteristics-list" role="list">
-          {{#each system.characteristics as |characteristic|}}
-            {{#if characteristic}}
-              <li class="characteristic-chip" role="listitem" data-characteristic="{{characteristic}}">{{characteristicLabel characteristic}}</li>
+    {{#if system.tags}}
+      {{#if system.tags.length}}
+        <ul class="tag-list" role="list">
+          {{#each system.tags as |tag|}}
+            {{#if tag}}
+              <li class="tag-chip {{#if (isAncestryTag tag)}}is-ancestry{{/if}} {{#if (isSizeTag tag)}}is-size{{/if}}" role="listitem" data-tag="{{tag}}">{{tagLabel tag}}</li>
             {{/if}}
           {{/each}}
         </ul>
       {{else}}
-        <div class="characteristics-empty">No characteristics</div>
+        <div class="tags-empty">No tags</div>
       {{/if}}
     {{else}}
-      <div class="characteristics-empty">No characteristics</div>
+      <div class="tags-empty">No tags</div>
     {{/if}}
 
   </div>
-
+  
   <div class='combat-stats-container grid grid-5col'>
 
     <div class='wounds-container grid-span-1'>
-      <label class='wounds-label center-text align-center'>
-	      {{localize 'LORE.Actor.wounds.label'}}
+      <label class='wounds-label center-text'>
+	      {{localize 'LORE.Actor.base.FIELDS.wounds.value.label'}}
       </label>
       <div class='wounds-content flexrow flex-center flex-between center-text'>
         {{#each woundSlots}}
@@ -67,7 +67,7 @@
     
     <div class='unconscious-container grid-span-1'>
       <label class='unconscious-label center-text'>
-        {{localize 'LORE.Actor.unconscious.label'}}
+        {{localize 'LORE.Actor.base.FIELDS.unconscious.label'}}
       </label>
       <div class='unconscious-content flexrow flex-center flex-between center-text'>
         <label style="position:relative;display:inline-block;">
@@ -76,9 +76,9 @@
       </div>
     </div>
 
-    <div class='stunned-container'>
+    <div class='stunned-container grid-span-1'>
       <label class='stunned-label center-text'>
-	     {{localize 'LORE.Actor.stunned.label'}}
+	      {{localize 'LORE.Actor.base.FIELDS.stunned.label'}}
       </label>
       <div class='stunned-content flexrow flex-center flex-between center-text'>
         <label style="position:relative;display:inline-block;">
@@ -89,7 +89,7 @@
 
     <div class='incapacitated-container grid-span-1'>
       <label class='incapacitated-label center-text'>
-	      {{localize 'LORE.Actor.incapacitated.label'}}
+	      {{localize 'LORE.Actor.base.FIELDS.incapacitated.label'}}
       </label>
       <div class='incapacitated-content flexrow flex-center flex-between center-text'>
         <label style="position:relative;display:inline-block;">
@@ -99,8 +99,8 @@
     </div>
     
     <div class='fatigue-container grid-span-1'>
-      <label class='fatigue-label center-text align-center'>
-	      {{localize 'LORE.Actor.fatigue.label'}}
+      <label class='fatigue-label center-text'>
+	      {{localize 'LORE.Actor.base.FIELDS.fatigue.value.label'}}
       </label>
       <div class='fatigue-content flexrow flex-center flex-between center-text'>
         {{#each fatigueSlots}}
@@ -110,11 +110,12 @@
         {{/each}}
       </div>
     </div>
+
   </div>
 
   <div class='morale-slider-container'>
     <label for='system.morale' class='morale-label'>
-      {{localize 'LORE.Actor.morale.label'}}: {{system.morale}}
+      {{localize 'LORE.Actor.base.FIELDS.morale.label'}}: {{system.morale}}
     </label>
     
     <div class='morale-slider flexrow flex-center' style='gap: 8px;'>

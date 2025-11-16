@@ -1,23 +1,13 @@
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-stretch: normal;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/roboto/v49/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbWmT.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  font-stretch: normal;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/roboto/v49/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjammT.ttf) format('truetype');
-}
+/*
+  LORE LESS entry point
+  - Current Foundry stylesheet remains css/lore.css
+  - This compiles to css/lore.less.css for side-by-side comparison during migration
+  - When ready to switch, run the overwrite script to emit css/lore.css
+*/
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 :root {
   --lore-c-bg1: #2e2e2e;
   --lore-c-bg2: #6e6e6e;
-  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #fdfdfd;
   --lore-c-txt2: #b9b9b9;
   --lore-c-slate: var(--color-border-light, #8a8a8a);
@@ -37,7 +27,6 @@ html[data-theme="dark"],
 body.theme-dark {
   --lore-c-bg1: #2e2e2e;
   --lore-c-bg2: #6e6e6e;
-  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #fdfdfd;
   --lore-c-txt2: #b9b9b9;
   --lore-c-slate: #7a7a7a;
@@ -55,7 +44,6 @@ html[data-theme="light"],
 body.theme-light {
   --lore-c-bg1: #d1d1d1;
   --lore-c-bg2: #b0b0b0;
-  --lore-c-bg3: #4e4e4e;
   --lore-c-txt1: #2e2e2e;
   --lore-c-txt2: #4a4a4a;
   --lore-c-slate: #d0d0d0;
@@ -67,23 +55,430 @@ body.theme-light {
   --lore-c-gold: #daa520;
   --lore-c-green: #3cb371;
 }
-/* Global styles */
-.window-app {
-  font-family: 'Roboto', sans-serif;
+.lore-context-menu {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid #888;
+  padding: 4px 0;
+  box-shadow: 0 2px 8px #0002;
+  min-width: 120px;
+  background-color: black;
 }
-.rollable:hover,
-.rollable:focus {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 10px var(--lore-c-gold);
+.lore-context-menu-item {
+  padding: 4px 16px;
   cursor: pointer;
 }
-.window-content {
-  padding: 0px;
+.chat-sidebar:not(.sidebar-popout) {
   background: var(--lore-c-bg1);
-  border: 2px solid var(--lore-c-bg2);
 }
-.grid,
-.grid-2col {
+.lore-chat {
+  padding: 0;
+  border-radius: 10px;
+  background: var(--lore-c-bg1);
+}
+.lore-chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--lore-c-bg1);
+  border: 1px solid var(--lore-c-bg2);
+  border-radius: 10px;
+  color: var(--lore-c-txt1);
+}
+.lcm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.lcm-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.lcm-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 20%;
+  object-fit: cover;
+  border: 1px solid var(--lore-c-slate);
+  box-shadow: 0 0 0 2px var(--lore-c-charcoal);
+}
+.lcm-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.lcm-author {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.lcm-rolltype {
+  font-size: 0.85em;
+  color: var(--lore-c-ash);
+}
+.lcm-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lcm-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.lcm-tag {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: var(--lore-c-blue);
+  background: color-mix(in srgb, var(--lore-c-blue) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--lore-c-blue) 25%, transparent);
+}
+.lcm-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lcm-content {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--lore-c-ivory) 3%, transparent);
+  border: 1px solid var(--lore-c-slate);
+}
+.chat-sidebar,
+#sidebar .tab[data-tab="chat"],
+.chat-popout .window-content,
+#chat-log {
+  --color-scrollbar: var(--lore-c-bg2) !important;
+  --color-scrollbar-track: var(--lore-c-bg1) !important;
+}
+.lore-roll-card .lore-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--color-text-dark-5, #555);
+}
+.lore-roll-card .lore-target .lore-target-label {
+  font-weight: 600;
+  color: var(--color-text, inherit);
+}
+.lore-roll-card .lore-target .lore-target-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--color-border-light, #999);
+}
+.lore-roll-card .lore-target .lore-target-name {
+  font-weight: 600;
+}
+.lore-roll-card .lore-main-roll {
+  margin-top: 10px;
+  text-align: left;
+}
+.lore-roll-card .lore-main-roll .lore-dice-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lore-roll-card .lore-main-roll .dice-images {
+  display: inline-flex;
+  gap: 4px;
+}
+.lore-roll-card .lore-main-roll .die-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+.lore-roll-card .lore-main-roll .die-icon.is-dropped {
+  opacity: 0.35;
+  filter: grayscale(100%);
+}
+.lore-roll-card .lore-main-roll .die-icon.is-exploded {
+  /* Make explosions unmistakable */
+  filter: hue-rotate(85deg) saturate(1.8) brightness(1.1);
+  outline: 2px solid var(--color-level-warning, #e67e22);
+  outline-offset: 1px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(230, 126, 34, 0.8);
+}
+.lore-roll-card .lore-main-roll .dice-modifier {
+  font-weight: 600;
+  color: var(--color-text, inherit);
+  margin-left: 2px;
+}
+.lore-roll-card .lore-die .lore-dice-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+.lore-roll-card .lore-die .dice-images {
+  display: inline-flex;
+  gap: 4px;
+}
+.lore-roll-card .lore-die .die-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+.lore-roll-card .lore-die .die-icon.is-dropped {
+  opacity: 0.35;
+  filter: grayscale(100%);
+}
+.lore-roll-card .lore-die .die-icon.is-exploded {
+  /* Make explosions unmistakable */
+  filter: hue-rotate(85deg) saturate(1.8) brightness(1.1);
+  outline: 2px solid var(--color-level-warning, #e67e22);
+  outline-offset: 1px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(230, 126, 34, 0.8);
+}
+.lore-roll-card .lore-die .dice-modifier {
+  font-weight: 600;
+  color: var(--color-text, inherit);
+  margin-left: 2px;
+}
+.lore-roll-card .lore-die {
+  text-align: left;
+  margin-top: 10px;
+  color: var(--color-text, inherit);
+}
+.lore-roll-card .lore-roll-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.lore-roll-card .lore-roll-header .lore-roll-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border: 1px solid var(--color-border-light, #999);
+  border-radius: 50%;
+}
+.lore-roll-card .lore-roll-header .lore-roll-actor {
+  font-weight: 600;
+}
+.lore-roll-card .lore-roll-title {
+  margin-bottom: 6px;
+}
+.lore-roll-card .lore-roll-title .lore-roll-label {
+  font-weight: 600;
+}
+.lore-roll-card .lore-roll-formula {
+  color: var(--color-text-dark-5, #555);
+  margin-bottom: 6px;
+}
+.lore-roll-card .lore-crit-failure {
+  margin-top: 6px;
+  color: var(--color-level-error, #b51e1e);
+}
+.lore-roll-card .lore-final-total {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border-light, #999);
+}
+.lore-roll-card .dice-roll {
+  color: var(--color-text, inherit);
+}
+.lore-roll-card .dice-formula {
+  color: var(--color-text-dark-5, #555);
+  border-color: var(--color-tabs-border, #c9c7b8);
+}
+.lore-roll-card .dice-result {
+  border-color: var(--color-tabs-border, #c9c7b8);
+}
+.lore-roll-card .dice-total {
+  color: var(--color-text, inherit);
+  border-color: var(--color-tabs-border, #c9c7b8);
+}
+.lore-roll-card .dice-tooltip,
+.lore-roll-card .dice-tooltip .tooltip-part {
+  border-color: var(--color-tabs-border, #c9c7b8);
+}
+.lore-roll-popup {
+  background: var(--lore-c-charcoal);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+.lore-roll-popup .roll-formula {
+  font-weight: bold;
+  text-align: left;
+}
+.lore-roll-popup .target-number-input-label {
+  text-align: left;
+  margin-right: 10px;
+}
+.lore-roll-popup .target-number-input {
+  width: 50px;
+  background: var(--lore-c-slate);
+  margin-bottom: 10px;
+}
+.lore-roll-popup .modifier-input-label {
+  text-align: left;
+  margin-right: 10px;
+}
+.lore-roll-popup .modifier-input {
+  width: 50px;
+  background: var(--lore-c-slate);
+}
+.lore-roll-popup .roll-target {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  background: var(--lore-c-slate);
+  border-radius: 4px;
+}
+.lore-roll-popup .roll-target-img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.lore-roll-popup .roll-target-text {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.lore-roll-popup .roll-target-label {
+  color: var(--color-text-light-4);
+  font-size: 0.9rem;
+}
+.lore-roll-popup .roll-target-name {
+  font-weight: 600;
+}
+.lore-roll-popup .roll-popup-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.lore-roll-popup .roll-popup-actions button {
+  width: 100%;
+}
+.lore-roll-popup .roll-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.lore-dv-widget {
+  --tn-scale: 1.5;
+  --tn-font-size: 13px;
+  --tn-gap: 6px;
+  position: fixed;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  /* Force horizontal layout even if upstream CSS sets a different flex-direction */
+  flex-direction: row;
+  gap: var(--tn-gap);
+  padding: 4px 8px;
+  border-radius: 6px;
+  /* Provide fallbacks so the widget looks correct even if CSS vars aren't available yet */
+  background: var(--lore-c-bg1, #2e2e2e);
+  color: var(--lore-c-txt1, #fdfdfd);
+  border: 1px solid var(--lore-c-bg2, #6e6e6e);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-size: var(--tn-font-size);
+  transform: scale(var(--tn-scale));
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+.lore-dv-widget .dv-label {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.lore-dv-widget .dv-value {
+  min-width: 1.5em;
+  text-align: center;
+  font-weight: 700;
+}
+.lore-dv-widget .dv-btn {
+  /* Reset native button styling across browsers */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background: var(--lore-c-bg2, #6e6e6e);
+  color: var(--lore-c-txt1);
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  padding: 0;
+  line-height: 1;
+  min-width: 18px;
+  min-height: 18px;
+  cursor: pointer;
+}
+.lore-dv-widget .dv-btn::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+.lore-dv-widget .dv-btn:hover {
+  filter: brightness(1.1);
+}
+.lore-dv-widget .dv-btn[aria-disabled="true"],
+.lore-dv-widget .dv-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lore-dv-widget .dv-btn > i,
+.lore-dv-widget .dv-btn > svg {
+  color: currentColor;
+  fill: currentColor;
+  line-height: 1;
+}
+.lore-dv-widget .dv-btn > i {
+  font-size: 11px;
+}
+.lore-dv-widget .dv-btn > svg {
+  width: 10px;
+  height: 10px;
+}
+.lore-dv-widget.is-small {
+  --tn-scale: 0.85;
+}
+.lore-dv-widget.is-large {
+  --tn-scale: 1.25;
+}
+.lore {
+  /* Tags row in header */
+  /* Combat stats (wounds, etc.) */
+  /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
+  /* Conditions (Unconscious, Stunned, Incapacitated) styling when used directly in the grid */
+  /* Checkbox visuals, mirroring wounds/fatigue styling */
+  /* Ancestry slot styling */
+}
+.lore .window-app {
+  font-family: 'Roboto', sans-serif;
+}
+.lore .rollable:hover,
+.lore .rollable:focus {
+  color: var(--lore-c-red);
+  text-shadow: 0 0 10px var(--lore-c-red);
+  cursor: pointer;
+}
+.lore .horizontal-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--lore-c-bg2);
+  margin: 8px 0;
+}
+.lore .grid,
+.lore .grid-2col {
   display: grid;
   grid-column: span 2 / span 2;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -91,453 +486,617 @@ body.theme-light {
   margin: 10px 0;
   padding: 0;
 }
-.grid-3col {
+.lore .grid-3col {
   grid-column: span 3 / span 3;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.grid-4col {
+.lore .grid-4col {
   grid-column: span 4 / span 4;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
-.grid-5col {
+.lore .grid-5col {
   grid-column: span 5 / span 5;
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
-.grid-6col {
+.lore .grid-6col {
   grid-column: span 6 / span 6;
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
-.grid-7col {
+.lore .grid-7col {
   grid-column: span 7 / span 7;
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
-.grid-8col {
+.lore .grid-8col {
   grid-column: span 8 / span 8;
   grid-template-columns: repeat(8, minmax(0, 1fr));
 }
-.grid-9col {
+.lore .grid-9col {
   grid-column: span 9 / span 9;
   grid-template-columns: repeat(9, minmax(0, 1fr));
 }
-.grid-10col {
+.lore .grid-10col {
   grid-column: span 10 / span 10;
   grid-template-columns: repeat(10, minmax(0, 1fr));
 }
-.grid-11col {
+.lore .grid-11col {
   grid-column: span 11 / span 11;
   grid-template-columns: repeat(11, minmax(0, 1fr));
 }
-.grid-12col {
+.lore .grid-12col {
   grid-column: span 12 / span 12;
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
-.grid-start-2 {
+.lore .grid-start-2 {
   grid-column-start: 2;
 }
-.grid-start-3 {
+.lore .grid-start-3 {
   grid-column-start: 3;
 }
-.grid-start-4 {
+.lore .grid-start-4 {
   grid-column-start: 4;
 }
-.grid-start-5 {
+.lore .grid-start-5 {
   grid-column-start: 5;
 }
-.grid-start-6 {
+.lore .grid-start-6 {
   grid-column-start: 6;
 }
-.grid-start-7 {
+.lore .grid-start-7 {
   grid-column-start: 7;
 }
-.grid-start-8 {
+.lore .grid-start-8 {
   grid-column-start: 8;
 }
-.grid-start-9 {
+.lore .grid-start-9 {
   grid-column-start: 9;
 }
-.grid-start-10 {
+.lore .grid-start-10 {
   grid-column-start: 10;
 }
-.grid-start-11 {
+.lore .grid-start-11 {
   grid-column-start: 11;
 }
-.grid-start-12 {
+.lore .grid-start-12 {
   grid-column-start: 12;
 }
-.grid-span-2 {
+.lore .grid-span-2 {
   grid-column-end: span 2;
 }
-.grid-span-3 {
+.lore .grid-span-3 {
   grid-column-end: span 3;
 }
-.grid-span-4 {
+.lore .grid-span-4 {
   grid-column-end: span 4;
 }
-.grid-span-5 {
+.lore .grid-span-5 {
   grid-column-end: span 5;
 }
-.grid-span-6 {
+.lore .grid-span-6 {
   grid-column-end: span 6;
 }
-.grid-span-7 {
+.lore .grid-span-7 {
   grid-column-end: span 7;
 }
-.grid-span-8 {
+.lore .grid-span-8 {
   grid-column-end: span 8;
 }
-.grid-span-9 {
+.lore .grid-span-9 {
   grid-column-end: span 9;
 }
-.grid-span-10 {
+.lore .grid-span-10 {
   grid-column-end: span 10;
 }
-.grid-span-11 {
+.lore .grid-span-11 {
   grid-column-end: span 11;
 }
-.grid-span-12 {
+.lore .grid-span-12 {
   grid-column-end: span 12;
 }
-.flex-group-center,
-.flex-group-left,
-.flex-group-right {
+.lore .flex-group-center,
+.lore .flex-group-left,
+.lore .flex-group-right {
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-.flex-group-left {
+.lore .flex-center {
+  justify-content: center;
+  align-items: center;
+}
+.lore .center-text {
+  text-align: center;
+}
+.lore .flex-group-left {
   justify-content: flex-start;
   text-align: left;
 }
-.flex-group-right {
+.lore .flex-group-right {
   justify-content: flex-end;
   text-align: right;
 }
-.flexshrink {
+.lore .flexshrink {
   flex: 0;
 }
-.flex-between {
+.lore .flex-between {
   justify-content: space-between;
 }
-.flexlarge {
+.lore .flexlarge {
   flex: 2;
 }
-.align-left {
+.lore .align-left {
   justify-content: flex-start;
   text-align: left;
 }
-.align-right {
+.lore .align-right {
   justify-content: flex-end;
   text-align: right;
 }
-.align-center {
+.lore .align-center {
   justify-content: center;
   text-align: center;
 }
-/* Styles limited to lore sheets */
-.lore {
-  /* Tags row in header */
-  /* Combat stats (wounds, etc.) */
-  /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
-  /* Conditions (Unconscious, Stunned, Incapacitated) styling when used directly in the grid */
-  /* Checkbox visuals, mirroring wounds/fatigue styling */
-  /*
-  Layout notes
-  - ActorSheetV2 renders parts sequentially inside .window-content
-    (sidebar, header, tabs, etc.). Instead of relying on a custom
-    wrapper, place the siblings into a 2-column CSS Grid where the
-    sidebar occupies column 1 (1/3) and everything else flows into
-    column 2 (2/3).
-*/
-  /* Flatten the wrapper so its children become direct grid items */
-  /* Turn the sheet body into a 2/3 grid */
-  /* Sidebar sits in the first column */
-  /* Everything that is not the sidebar flows into the right column */
-  /* A utility class if we ever wrap main content manually */
-  /* Right-side vertical circles */
-  /* Remove Firefox inner focus border on buttons */
-  /* Normalize default button appearance to avoid UA borders */
-  /* Intentionally removing empty rules to satisfy linter */
+.lore.application .window-content,
+.lore.window-app .window-content {
+  padding: 0;
 }
-.lore .item-form {
-  font-family: 'Roboto', sans-serif;
+.lore .resource .resource-checkbox {
+  accent-color: var(--lore-c-txt1);
+  --checkbox-checked-color: var(--lore-c-txt1);
+  --checkbox-unchecked-color: var(--lore-c-bg2);
 }
-.lore .sheet-header {
-  flex: 0 auto;
-  overflow: hidden;
+.lore .resource .resource-checkbox::before {
+  color: var(--checkbox-unchecked-color);
+  border-color: var(--checkbox-unchecked-color);
+}
+.lore .tab.active {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+.lore .item-sheet-header {
+  width: 100%;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-bottom: 10px;
-}
-.lore .sheet-header .profile-img {
-  flex: 0 0 100px;
-  height: 100px;
-  margin-right: 10px;
-}
-.lore .sheet-header .header-fields {
-  flex: 1;
-}
-.lore .sheet-tabs {
-  flex: 0;
-}
-.lore .sheet-body,
-.lore .sheet-body .tab,
-.lore .sheet-body .tab .editor {
-  height: 100%;
-}
-.lore .tab.biography {
-  flex: 1;
-}
-.lore .tab.biography .editor {
-  height: 100%;
-}
-.lore .tox .tox-editor-container {
+  align-items: flex-start;
+  gap: 12px;
+  padding-right: 10px;
   background: var(--lore-c-bg1);
 }
-.lore .tox .tox-edit-area {
-  padding: 0 8px;
+.lore.item.application .window-content,
+.lore.item.window-app .window-content {
+  display: block;
 }
-.lore .resource-label {
+.lore.item.application .window-content > .tab.details,
+.lore.item.window-app .window-content > .tab.details {
+  padding: 6px 10px;
+}
+.lore.item.application .window-content > .tab.details > :first-child,
+.lore.item.window-app .window-content > .tab.details > :first-child {
+  margin-top: 0;
+}
+.lore.item.application .window-content > .tab.details > :last-child,
+.lore.item.window-app .window-content > .tab.details > :last-child {
+  margin-bottom: 0;
+}
+.lore.item.application .window-content > .tab.active,
+.lore.item.window-app .window-content > .tab.active {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+.lore.item.application .window-content > nav.tabs.main-tabs,
+.lore.item.window-app .window-content > nav.tabs.main-tabs {
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  padding: 4px 6px;
+  background: var(--lore-c-bg1);
+  border-top: 1px solid var(--lore-c-bg2);
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore.item.application .window-content nav.tabs.main-tabs a.main-tab,
+.lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab {
+  padding: 4px 8px;
+  line-height: 1.6;
+  color: var(--lore-c-txt1);
+}
+.lore.item.application .window-content nav.tabs.main-tabs a.main-tab:hover,
+.lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab:hover {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.item.application .window-content nav.tabs.main-tabs a.main-tab.active,
+.lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab.active {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.item.application .window-content nav.tabs.sub-tabs,
+.lore.item.window-app .window-content nav.tabs.sub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: center;
+  padding: 2px 4px;
+  background: var(--lore-c-bg1);
+  border-bottom: 1px solid var(--lore-c-bg2);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.lore.item.application .window-content nav.tabs.sub-tabs a.item,
+.lore.item.window-app .window-content nav.tabs.sub-tabs a.item {
+  padding: 2px 6px;
+  line-height: 1.3;
+}
+.lore.item.application .window-content nav.tabs.sub-tabs a.item:hover,
+.lore.item.window-app .window-content nav.tabs.sub-tabs a.item:hover {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.item.application .window-content nav.tabs.sub-tabs a.item.active,
+.lore.item.window-app .window-content nav.tabs.sub-tabs a.item.active {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore .item-sheet-header .profile-img {
+  flex: 0 0 auto;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid var(--lore-c-bg2);
+}
+.lore .item-sheet-header .header-fields {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.lore .item-sheet-header .document-name {
+  margin-bottom: 8px;
+}
+.lore .item-sheet-header .item-name-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent !important;
+}
+.lore .item-sheet-header .resource .resource-label {
+  color: var(--lore-c-txt1);
+}
+.lore .cost-input {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .weight-input {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .quantity-input {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .item-options .resource-label {
+  color: var(--lore-c-txt1);
+}
+.lore .item-options .resource-select {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .item-options .resource-input {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .weapon-damage-label {
+  color: var(--lore-c-txt1);
   font-weight: bold;
-}
-.lore .attribute {
+  display: block;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 2px;
 }
-.lore .attribute-score,
-.lore .attribute-mod {
-  flex: 0 0 44px;
+.lore .weapon-damage-formula {
+  color: var(--lore-c-txt2);
+  display: block;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
 }
-.lore .items-header {
-  height: 28px;
-  margin: 2px 0;
-  padding: 0;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #8a8a8a;
-  font-weight: bold;
-}
-.lore .items-header > * {
-  font-size: 14px;
-  text-align: center;
-}
-.lore .items-header .item-name {
-  font-weight: bold;
-  padding-left: 5px;
-  text-align: left;
-  display: flex;
-}
-.lore .items-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
+.lore .lore.item .tab[data-group="primary"] {
+  background: var(--lore-c-bg1);
   color: var(--lore-c-txt1);
 }
-.lore .items-list .item-list {
-  list-style: none;
+.lore .lore.item prose-mirror,
+.lore .lore.item .editor,
+.lore .lore.item .editor-content {
+  color: var(--lore-c-txt1);
+}
+.lore.item.application .window-content > .tab.gear,
+.lore.actor.application .window-content > .tab.gear,
+.lore.item.window-app .window-content > .tab.gear,
+.lore.actor.window-app .window-content > .tab.gear {
+  min-height: 0;
+  overflow: hidden;
+}
+.lore.item.application .window-content > .tab.gear.active,
+.lore.actor.application .window-content > .tab.gear.active,
+.lore.item.window-app .window-content > .tab.gear.active,
+.lore.actor.window-app .window-content > .tab.gear.active {
+  display: flex;
+  flex-direction: column;
+}
+.lore.item .tab.gear .tabs.sub-tabs,
+.lore.actor .tab.gear .tabs.sub-tabs {
+  flex: 0 0 auto;
+}
+.lore.item .tab.gear .tab.active,
+.lore.actor .tab.gear .tab.active {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.lore .tab {
+  background: var(--lore-c-bg1);
+}
+.lore .item .resource-label {
+  color: var(--lore-c-txt1);
+  background: var(--lore-c-bg2);
+}
+.lore .resource .resource-checkbox {
+  accent-color: var(--lore-c-bg2);
+}
+.lore .effects {
+  background: var(--lore-c-bg1);
+  padding: 1px;
+}
+.lore .effects .effects-list,
+.lore .effects .effect-list {
   margin: 0;
   padding: 0;
+  padding-inline-start: 0;
+  list-style: none;
 }
-.lore .items-list .item-name {
-  flex: 2;
-  margin: 0;
-  overflow: hidden;
-  font-size: 13px;
-  text-align: left;
+.lore .effects .effects-list .effects-header {
+  background: var(--lore-c-bg2);
+  padding: 1px;
+}
+.lore .effects .effects-list .effects-header > div {
+  display: flex;
   align-items: center;
-  display: flex;
-}
-.lore .items-list .item-name h3,
-.lore .items-list .item-name h4 {
-  margin: 0;
-  white-space: nowrap;
-  overflow-x: hidden;
-}
-.lore .items-list .item-controls {
-  display: flex;
-  flex: 0 0 100px;
-  justify-content: flex-end;
-}
-.lore .items-list .item-controls a {
-  font-size: 12px;
+  justify-content: center;
   text-align: center;
-  margin: 0 6px;
 }
-.lore .items-list .item {
+.lore .effects .effects-list .effects-header .effect-name {
+  font-weight: bold;
+  color: var(--lore-c-txt1);
+}
+.lore .effects .effects-list .effects-header .effect-source {
+  font-weight: bold;
+  color: var(--lore-c-txt1);
+}
+.lore .effects .effects-list .effects-header .effect-controls {
+  font-weight: bold;
+  color: var(--lore-c-txt1);
+}
+.lore.actor.application .window-content,
+.lore.actor.window-app .window-content {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lore.actor.application .window-content > .tab.gear,
+.lore.actor.window-app .window-content > .tab.gear {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.lore.actor.application .window-content > .tab.gear.active,
+.lore.actor.window-app .window-content > .tab.gear.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.lore.actor.application .window-content > nav.tabs.main-tabs,
+.lore.actor.window-app .window-content > nav.tabs.main-tabs {
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
   align-items: center;
-  padding: 0 2px;
+  padding: 4px 6px;
+  background: var(--lore-c-bg1);
   border-bottom: 1px solid var(--lore-c-bg2);
 }
-.lore .items-list .item:last-child {
-  border-bottom: none;
-}
-.lore .items-list .item .item-name {
+.lore.actor.application .window-content nav.tabs.main-tabs a.main-tab,
+.lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab {
+  padding: 4px 8px;
+  line-height: 1.6;
   color: var(--lore-c-txt1);
 }
-.lore .items-list .item .item-name .item-image {
-  flex: 0 0 30px;
-  height: 30px;
-  background-size: 30px;
-  border: none;
-  margin-right: 5px;
-}
-.lore .items-list .item-prop {
-  text-align: center;
-  border-left: 1px solid #c9c7b8;
-  border-right: 1px solid #c9c7b8;
-  font-size: 12px;
-}
-.lore .items-list .items-header {
-  height: 28px;
-  margin: 2px 0;
-  padding: 0;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #8a8a8a;
-  font-weight: bold;
-}
-.lore .items-list .items-header > * {
-  font-size: 12px;
-  text-align: center;
-}
-.lore .items-list .items-header .item-name {
-  padding-left: 5px;
-  text-align: left;
-}
-.lore .item-formula {
-  flex: 0 0 200px;
-  padding: 0 8px;
-}
-.lore .effects-header {
-  height: 28px;
-  margin: 2px 0;
-  padding: 0;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #8a8a8a;
-  font-weight: bold;
-}
-.lore .effects-header > * {
-  font-size: 14px;
-  text-align: center;
-}
-.lore .effects-header .effect-name {
-  font-weight: bold;
-  padding-left: 5px;
-  text-align: left;
-  display: flex;
-}
-.lore .effects-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
+.lore.actor.application .window-content nav.tabs.main-tabs a.main-tab:hover,
+.lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab:hover {
   color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
 }
-.lore .effects-list .effect-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.lore.actor.application .window-content nav.tabs.main-tabs a.main-tab.active,
+.lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab.active {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
 }
-.lore .effects-list .effect-name {
-  flex: 2;
-  margin: 0;
-  overflow: hidden;
-  font-size: 13px;
-  text-align: left;
-  align-items: center;
+.lore.actor.application .window-content nav.tabs.main-tabs,
+.lore.actor.window-app .window-content nav.tabs.main-tabs {
+  grid-row: 2;
+  grid-column: 2;
   display: flex;
-}
-.lore .effects-list .effect-name h3,
-.lore .effects-list .effect-name h4 {
-  margin: 0;
-  white-space: nowrap;
-  overflow-x: hidden;
-}
-.lore .effects-list .effect-controls {
-  display: flex;
-  flex: 0 0 100px;
-  justify-content: flex-end;
-}
-.lore .effects-list .effect-controls a {
-  font-size: 12px;
-  text-align: center;
-  margin: 0 6px;
-}
-.lore .effects-list .effect {
+  flex-wrap: wrap;
+  gap: 6px 10px;
   align-items: center;
-  padding: 0 2px;
+  padding: 4px 6px;
+  background: var(--lore-c-bg1);
+  border-top: 1px solid var(--lore-c-bg2);
   border-bottom: 1px solid var(--lore-c-bg2);
 }
-.lore .effects-list .effect:last-child {
-  border-bottom: none;
+.lore.actor.application .window-content nav.tabs.sub-tabs,
+.lore.actor.window-app .window-content nav.tabs.sub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: center;
+  padding: 2px 4px;
+  border-top: none;
+  background: var(--lore-c-bg1);
+  border-bottom: 1px solid var(--lore-c-bg2);
+  font-size: 12px;
+  line-height: 1.4;
 }
-.lore .effects-list .effect .effect-name {
+.lore.actor.application .window-content nav.tabs.sub-tabs a.item,
+.lore.actor.window-app .window-content nav.tabs.sub-tabs a.item {
+  padding: 2px 6px;
+  line-height: 1.3;
+}
+.lore.actor.application .window-content nav.tabs.sub-tabs a.item:hover,
+.lore.actor.window-app .window-content nav.tabs.sub-tabs a.item:hover {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.actor.application .window-content nav.tabs.sub-tabs a.item.active,
+.lore.actor.window-app .window-content nav.tabs.sub-tabs a.item.active {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.actor.application .window-content > .tab,
+.lore.actor.window-app .window-content > .tab {
+  grid-row: 3;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: var(--lore-c-txt2);
+}
+.lore.actor.application .window-content > .tab[data-group='primary'],
+.lore.actor.window-app .window-content > .tab[data-group='primary'] {
+  display: none;
+}
+.lore.actor.application .window-content > .tab[data-group='primary'].active,
+.lore.actor.window-app .window-content > .tab[data-group='primary'].active {
+  display: block;
+}
+.lore.actor.application .window-content > .tab[data-group]:not([data-group='primary']),
+.lore.actor.window-app .window-content > .tab[data-group]:not([data-group='primary']) {
+  display: none;
+}
+.lore.actor.application .window-content > .tab[data-group]:not([data-group='primary']).active,
+.lore.actor.window-app .window-content > .tab[data-group]:not([data-group='primary']).active {
+  display: block;
+}
+.lore.actor.application .window-content .tab,
+.lore.actor.window-app .window-content .tab {
+  grid-row: 3;
+  grid-column: 2;
+  min-height: 0;
+  overflow: auto;
+}
+.lore .lore-sidebar {
+  width: 160px;
+  border-right: 1px solid var(--lore-c-bg2);
+  height: 100%;
+  overflow: visible;
+  background: var(--lore-c-bg1);
+}
+.lore.actor.application .window-content,
+.lore.actor.window-app .window-content {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  align-items: start;
+  height: 100%;
+}
+.lore.actor.application .window-content > .lore-sidebar,
+.lore.actor.window-app .window-content > .lore-sidebar {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+.lore.actor.application .window-content > form > .lore-sidebar,
+.lore.actor.window-app .window-content > form > .lore-sidebar {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+.lore.actor.application .window-content > :not(.lore-sidebar),
+.lore.actor.window-app .window-content > :not(.lore-sidebar) {
+  grid-column: 2;
+}
+.lore.actor.application .window-content > form > :not(.lore-sidebar),
+.lore.actor.window-app .window-content > form > :not(.lore-sidebar) {
+  grid-column: 2;
+}
+.lore.actor.application .window-content > form,
+.lore.actor.window-app .window-content > form {
+  display: contents;
+  height: 100%;
+}
+.lore .profile-img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore .attributes {
+  padding: 10px;
+}
+.lore .attribute {
+  margin: 0px;
+  height: 30px;
+  color: var(--lore-c-txt2);
+}
+.lore .attribute-label {
+  font-weight: bold;
+  text-align: center;
+  display: block;
   color: var(--lore-c-txt1);
 }
-.lore .effects-list .effect .effect-name .effect-image {
-  flex: 0 0 30px;
-  height: 30px;
-  background-size: 30px;
-  border: none;
-  margin-right: 5px;
+.lore .attribute-roll-label {
+  color: var(--lore-c-txt1);
 }
-.lore .effects-list .effect-prop {
-  text-align: center;
-  border-left: 1px solid #c9c7b8;
-  border-right: 1px solid #c9c7b8;
-  font-size: 12px;
+.lore .attribute-formula-label {
+  color: var(--lore-c-txt2);
 }
-.lore .effects-list .effects-header {
-  height: 28px;
-  margin: 2px 0;
-  padding: 0;
+.lore .stats-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #8a8a8a;
-  font-weight: bold;
+  justify-content: center;
 }
-.lore .effects-list .effects-header > * {
-  font-size: 12px;
+.lore .stat-container {
+  padding: 0px;
+}
+.lore .stat-label {
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  color: var(--lore-c-txt1);
+}
+.lore .stat-label .stat-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+.lore .stat-input {
+  width: 50px;
   text-align: center;
-}
-.lore .effects-list .effects-header .effect-name {
-  padding-left: 5px;
-  text-align: left;
-}
-.lore .effect-formula {
-  flex: 0 0 200px;
-  padding: 0 8px;
-}
-.lore .effects .item .effect-source,
-.lore .effects .item .effect-duration,
-.lore .effects .item .effect-controls {
-  text-align: center;
-  border-left: 1px solid #c9c7b8;
-  border-right: 1px solid #c9c7b8;
-  font-size: 12px;
-}
-.lore .effects .item .effect-controls {
-  border: none;
+  color: var(--lore-c-txt2);
+  background: var(--lore-c-bg2);
 }
 .lore .sheet-header {
   background: var(--lore-c-bg1);
-  margin-bottom: 0px;
 }
 .lore .actor-header-first {
   margin: 0 0 0 0;
   border-top: 1px solid var(--lore-c-bg2);
   border-bottom: 1px solid var(--lore-c-bg2);
   border-right: 1px solid var(--lore-c-bg2);
-  /* Ensure the header row spans the full width inside the flex-based .sheet-header */
-  width: 100%;
-  /* In case flex sizing applies, allow it to grow to full width */
-  flex: 1 1 100%;
-  /* Match left border for visual consistency */
-  border-left: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-name-input {
   border-radius: 0px;
@@ -547,8 +1106,6 @@ body.theme-light {
   box-shadow: none;
   margin: 0;
   color: var(--lore-c-txt1);
-  /* Let the name input fill its grid cell */
-  width: 100%;
 }
 .lore .actor-level {
   display: flex;
@@ -570,9 +1127,6 @@ body.theme-light {
 }
 .lore .tags-container {
   border-right: 1px solid var(--lore-c-bg2);
-  /* Force tags row to occupy full width so following sections wrap below */
-  width: 100%;
-  flex: 1 1 100%;
 }
 .lore .tags-empty {
   opacity: 0.7;
@@ -618,9 +1172,6 @@ body.theme-light {
   margin: 0;
   border-right: 1px solid var(--lore-c-bg2);
   border-top: 1px solid var(--lore-c-bg2);
-  /* Ensure combat stats also span full width beneath tags */
-  width: 100%;
-  flex: 1 1 100%;
 }
 .lore .combat-stats-container.grid-5col {
   /* Make Wounds and Fatigue narrow; let center conditions flex */
@@ -878,19 +1429,14 @@ body.theme-light {
   color: var(--lore-c-bg2);
 }
 .lore .morale-input {
-  position: relative;
-  z-index: 2;
   width: 100%;
   color: var(--lore-c-bg2);
-  background: transparent;
   height: 30px;
 }
 .lore .morale-input::-webkit-slider-runnable-track {
   background: var(--lore-c-bg2);
   height: 6px;
   border-radius: 3px;
-  position: relative;
-  z-index: 1;
 }
 .lore .morale-input::-webkit-slider-thumb {
   background: var(--lore-c-txt1);
@@ -903,8 +1449,6 @@ body.theme-light {
   -webkit-appearance: none;
   appearance: none;
   transition: background 0.2s, border 0.2s;
-  position: relative;
-  z-index: 3;
 }
 .lore .morale-input::-ms-fill-lower {
   background: var(--lore-c-bg2);
@@ -916,8 +1460,6 @@ body.theme-light {
   background: var(--lore-c-bg2);
   height: 6px;
   border-radius: 3px;
-  position: relative;
-  z-index: 1;
 }
 .lore .morale-input::-moz-range-thumb {
   background: var(--lore-c-txt1);
@@ -927,8 +1469,6 @@ body.theme-light {
   height: 18px;
   cursor: pointer;
   transition: background 0.2s, border 0.2s;
-  position: relative;
-  z-index: 3;
 }
 .lore .morale-input::-ms-thumb {
   background: var(--lore-c-txt1);
@@ -938,8 +1478,6 @@ body.theme-light {
   height: 18px;
   cursor: pointer;
   transition: background 0.2s, border 0.2s;
-  position: relative;
-  z-index: 3;
 }
 .lore .morale-input::-ms-tooltip {
   display: none;
@@ -957,28 +1495,22 @@ body.theme-light {
   position: absolute;
   left: 9px;
   right: 9px;
-  top: 50%;
-  height: 12px;
-  transform: translateY(-50%);
+  height: 8px;
+  bottom: -6px;
   box-sizing: border-box;
   pointer-events: none;
-  z-index: 1;
 }
 .lore .morale-tick {
   position: absolute;
   top: 0;
   width: 2px;
   height: 100%;
+  background: var(--lore-c-txt2);
   transform: translateX(-1px);
 }
 .lore .morale-ticks .morale-tick:nth-child(1) {
   left: 0%;
   background-color: var(--lore-c-red);
-}
-.lore .morale-tick:first-child,
-.lore .morale-tick:first-of-type {
-  left: 0% !important;
-  background-color: var(--lore-c-red) !important;
 }
 .lore .morale-ticks .morale-tick:nth-child(2) {
   left: 8.333%;
@@ -1036,180 +1568,652 @@ body.theme-light {
   width: 1px;
   background-color: var(--lore-c-bg2);
 }
-.lore .lore-sheet-flex {
-  display: contents;
-  /* allows .lore-sidebar and main parts to be grid children */
-}
-.lore .window-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  /* left 1/3, right 2/3 */
-  /* Explicit rows: header (auto), tabs (auto), body (fills remaining) */
-  grid-template-rows: auto auto 1fr;
-  /* Make the grid consume the available height inside the window */
-  height: 100%;
-  /* Ensure children that need to scroll can do so */
-  min-height: 0;
-  gap: 0;
-}
-.lore .window-content > .lore-sidebar {
-  grid-column: 1;
-  grid-row: 1 / -1;
-  /* span all rows */
-  /* Let the grid control width; keep a comfortable min */
-  min-width: 200px;
-  box-sizing: border-box;
-  /* Guarantee the sidebar stretches the full grid height */
-  align-self: stretch;
-  border-right: 2px solid var(--lore-c-bg2);
-}
-.lore .window-content > :not(.lore-sidebar) {
-  grid-column: 2;
-}
-.lore .lore-main {
-  padding: 1em;
-}
-.lore .lore-sidebar-top {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  /* align to top */
-  padding: 0px;
-  border-bottom: 1px solid var(--lore-c-bg2);
-}
-.lore .profile-img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-right: 1px solid var(--lore-c-bg2);
-}
-.lore .right-container {
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-}
-.lore .lore-logo {
-  width: 80px;
-  height: auto;
-  border-bottom: 1px solid var(--lore-c-bg2);
-}
-.lore .lore-coins-label {
-  text-align: center;
-  color: var(--lore-c-txt1);
-}
-.lore .lore-coin-clickable-space {
-  flex: 1 1 auto;
-  min-height: 0;
-  background: var(--lore-c-bg3);
-  height: 87px;
-  border: 0px;
-  position: relative;
-  /* allow absolutely-positioned coin sprites */
-  overflow: hidden;
-  /* keep sprites inside */
-}
-.lore .lore-coin-clickable-space,
-.lore .lore-coin-clickable-space:hover,
-.lore .lore-coin-clickable-space:focus,
-.lore .lore-coin-clickable-space:active,
-.lore .lore-coin-clickable-space:focus-visible {
-  /* Keep border/outline/box-shadow from changing on interaction */
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-  outline-offset: 0 !important;
-}
-.lore .lore-coin-clickable-space::-moz-focus-inner {
-  border: 0;
-}
-.lore .lore-coin-clickable-space {
-  -webkit-appearance: none;
-  appearance: none;
-}
-.lore .lore-coin-clickable-space.has-lore-coins {
-  cursor: pointer;
-}
-.lore .lore-coin-clickable-space img.lore-coin-sprite {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-  /* don't block clicks */
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
-}
-.lore .derived-stat {
-  align-items: center;
-  gap: 5px;
-  padding: 2px;
-  border-bottom: 1px solid var(--lore-c-bg2);
-}
-.lore .derived-stat-icon {
-  height: 28px;
-  width: 28px;
-}
-.lore .derived-stat-input {
-  background: transparent;
-  text-align: center;
-  color: var(--lore-c-txt2);
-}
-.lore .attributes {
-  padding: 0px;
-}
-.lore .attribute {
-  margin: 0px;
-  height: 30px;
-  color: var(--lore-c-txt2);
+.lore .biography {
   padding: 10px;
+  height: 100%;
+  overflow: hidden;
+  background: var(--lore-c-bg1);
+  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
 }
-.lore .attribute-label {
-  font-weight: bold;
-  text-align: center;
-  display: block;
+.lore .biography-label {
   color: var(--lore-c-txt1);
 }
-.lore.actor {
-  /* Inactive tab text color */
-  /* Active tab text color */
-}
-.lore.actor.application .window-content > nav.tabs.main-tabs,
-.lore.actor.window-app .window-content > nav.tabs.main-tabs {
-  grid-row: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-  align-items: center;
-  padding: 4px 6px;
-  border-bottom: 1px solid var(--lore-c-bg2) !important;
-  border-top: 1px solid var(--lore-c-bg2) !important;
-  /* Container no longer forces active color; anchors manage active/inactive state */
-  /* (Optional) could set a default here if needed, but we let anchors define it */
-}
-.lore.actor.application .window-content > nav.tabs.main-tabs a.main-tab,
-.lore.actor.window-app .window-content > nav.tabs.main-tabs a.main-tab {
+.lore .biography-input {
   color: var(--lore-c-txt2);
+  background: var(--lore-c-bg2);
 }
-.lore.actor.application .window-content > nav.tabs.main-tabs a.main-tab.active,
-.lore.actor.window-app .window-content > nav.tabs.main-tabs a.main-tab.active {
-  color: var(--lore-c-txt1);
-}
-.lore.actor.application .window-content > .tab,
-.lore.actor.window-app .window-content > .tab {
-  grid-row: 3;
-  min-height: 0;
+.lore .biography-content {
+  background: none;
+  border: none;
   height: 100%;
   overflow-y: auto;
-  overflow-x: hidden;
+}
+.lore .ancestry-slot {
+  /* Match other input blocks in feel and width */
+  display: block;
+  border-radius: 3px;
+  padding: 4px 6px;
+}
+.lore .ancestry-list {
+  list-style: none;
+  /* remove bullet dot */
+  margin: 0;
+  padding: 0;
+}
+.lore .ancestry-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* push trash to right */
+  gap: 8px;
+}
+.lore .ancestry-name a {
+  color: var(--lore-c-gold);
+  text-decoration: underline;
+}
+.lore .ancestry-clear {
+  /* Small, unobtrusive icon button */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--lore-c-txt1);
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+.lore .ancestry-clear i {
+  font-size: 12px;
+}
+.lore .ancestry-clear:hover {
+  filter: brightness(1.1);
+}
+.lore .ancestry-empty {
+  opacity: 0.75;
+  font-style: italic;
+}
+.lore .gear {
+  height: 100%;
+  overflow: hidden;
+  background: var(--lore-c-bg1);
+}
+.lore .gear-content {
+  background: none;
+  border: none;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
+}
+.lore .gear-content .item {
   color: var(--lore-c-txt2);
 }
-.lore .lore-context-menu {
-  position: absolute;
-  z-index: 1000;
-  border: 1px solid #888;
-  padding: 4px 0;
-  box-shadow: 0 2px 8px #0002;
-  min-width: 120px;
-  background-color: black;
+.lore.actor.application .window-content > .tab.gear,
+.lore.actor.window-app .window-content > .tab.gear {
+  overflow: hidden;
 }
-.lore .lore-context-menu-item {
-  padding: 4px 16px;
+.lore.actor .tab.gear .sub-tab.active {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.lore.actor .tab.gear .sub-tab[data-group='gear-sub'] {
+  display: none;
+}
+.lore.actor .tab.gear .sub-tab[data-group='gear-sub'].active {
+  display: block;
+}
+.lore.actor.application .window-content > .tab.gear.active .sub-tab.active,
+.lore.actor.window-app .window-content > .tab.gear.active .sub-tab.active {
+  flex: 1 1 auto;
+  min-height: 0;
+  color: var(--lore-c-txt2);
+  padding: 5px;
+}
+.lore .weapon-skill-roll:hover,
+.lore .weapon-skill-roll.active {
+  color: var(--lore-c-red);
+  text-shadow: 0 0 8px var(--lore-c-red);
+}
+.lore .items-list.items-weapons .rollable.item-formula:hover,
+.lore .items-list.items-weapons .rollable.item-formula.active {
+  color: var(--lore-c-red) !important;
+  text-shadow: 0 0 8px var(--lore-c-red);
+}
+.lore .item-armor {
+  padding-right: 10px;
+}
+.lore .items-sub-header {
+  background-color: var(--lore-c-bg1);
+  height: 30px;
+  margin-left: 5px;
+  border: 1px solid var(--lore-c-bg2);
+}
+.lore .items-sublist {
+  margin-left: 5px;
+  list-style: none;
+}
+.lore .items-sublist ul,
+.lore .items-sublist ol {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+.lore .items-list,
+.lore .items-list .item {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.lore .items-list .item .item-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: var(--lore-c-txt1);
+}
+.lore .items-list .item .item-image {
+  flex: 0 0 auto;
+}
+.lore .items-list .item .item-image .items-list .item .item-armor {
+  margin-left: auto;
+  justify-content: flex-end;
+  text-align: right;
+  display: flex;
+  align-items: center;
+}
+.lore .items-list .item .item-image img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border: none;
+}
+.lore .items-list .items-header {
+  background-color: var(--lore-c-bg2);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.lore .items-list,
+.lore .items-header .item-formula {
+  color: var(--lore-c-txt1);
+}
+.lore .items-list > .items-header.is-collapsible {
   cursor: pointer;
+  position: relative;
+}
+.lore .items-list > .items-header.is-collapsible::before {
+  font-size: 10px;
+  opacity: 0.7;
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lore .items-list.collapsed > li:not(.items-header) {
+  display: none;
+}
+.lore .items-list .items-header .item-name {
+  flex: 1 1 auto;
+}
+.lore .item-equip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding-left: 10px;
+}
+.lore .item-equip label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.lore .item-equip input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.lore .item-equip .custom-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 2px solid var(--lore-c-bg2);
+  background-color: transparent;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 60ms ease;
+  pointer-events: none;
+  position: relative;
+}
+.lore .item-equip .custom-circle.checked {
+  background-color: var(--lore-c-blue);
+  border-color: var(--lore-c-blue);
+}
+.lore .item-equip .custom-circle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  pointer-events: none;
+}
+.lore .item-equip .custom-circle.mainhand::after {
+  content: "M";
+}
+.lore .item-equip .custom-circle.offhand::after {
+  content: "O";
+}
+.lore .item-equip input[type="checkbox"]:checked + .custom-circle {
+  background-color: var(--lore-c-blue);
+  border-color: var(--lore-c-blue);
+}
+.lore .item-equip label:hover .custom-circle {
+  border-color: var(--lore-c-bg2);
+}
+.lore .item-equip input[type="checkbox"]:active + .custom-circle {
+  transform: scale(0.95);
+}
+.lore .item-equip input[type="checkbox"]:focus-visible + .custom-circle {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), 0 0 0 4px var(--lore-c-bg2);
+}
+.lore .weapon-roll-formula {
+  color: var(--lore-c-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.lore .item-controls {
+  gap: 4px;
+  flex: 0 0 auto;
+  padding-right: 1.25em;
+}
+.lore .items-list .item-formula {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-right: 1.25em;
+  white-space: nowrap;
+  color: var(--lore-c-txt2);
+}
+.lore .items-list .items-header .item-formula {
+  font-weight: 600;
+  opacity: 0.9;
+}
+.lore .items-list.items-weapons .items-header,
+.lore .items-list.items-weapons .item {
+  display: grid;
+  grid-template-columns: auto 2fr 1fr 1fr 1fr;
+  align-items: center;
+  column-gap: 8px;
+}
+.lore .items-list.items-weapons .item .item-name,
+.lore .items-list.items-weapons .items-header .item-name {
+  min-width: 0;
+}
+.lore .items-list.items-weapons .item .item-formula,
+.lore .items-list.items-weapons .items-header .item-formula,
+.lore .items-list.items-weapons .item .item-mod,
+.lore .items-list.items-weapons .item .item-range {
+  padding-right: 0.5em;
+  white-space: nowrap;
+}
+.lore .items-list.items-weapons .item .item-formula,
+.lore .items-list.items-weapons .items-header .item-formula {
+  color: var(--lore-c-txt1);
+}
+.lore .items-list.items-weapons .item .item-controls,
+.lore .items-list.items-weapons .items-header .item-controls {
+  justify-self: end;
+  padding-right: 1.25em;
+}
+.lore .items-list .item.empty .item-name {
+  opacity: 0.7;
+  font-style: italic;
+}
+.lore .items-list .item .item-armor {
+  margin-left: auto;
+  justify-content: flex-end;
+  text-align: right;
+  display: flex;
+  align-items: center;
+}
+.lore .paper-doll-with-summary {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--lore-c-bg2);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.lore .paper-doll-absolute-layout {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  --paper-doll-slot-size: 50px;
+  --paper-doll-weapon-icon: 24px;
+}
+.lore .paper-doll-absolute-layout .paper-doll-slots {
+  position: relative;
+  width: calc(var(--paper-doll-slot-size, 50px) * 3 + 20px);
+  height: calc(var(--paper-doll-slot-size, 50px) * 3 + 20px);
+}
+.lore .paper-doll-absolute-layout .slot {
+  position: absolute;
+  width: var(--paper-doll-slot-size, 50px);
+  height: var(--paper-doll-slot-size, 50px);
+  background: var(--lore-c-bg1);
+  border: 2px solid var(--lore-c-bg2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px #0001;
+  box-sizing: border-box;
+  padding: 3px;
+}
+.lore .paper-doll-absolute-layout .slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.lore .paper-doll-absolute-layout .slot-head {
+  top: 0;
+  left: 60px;
+}
+.lore .paper-doll-absolute-layout .slot-body {
+  top: 60px;
+  left: 60px;
+}
+.lore .paper-doll-absolute-layout .slot-arms {
+  top: 0;
+  left: 0;
+}
+.lore .paper-doll-absolute-layout .slot-hands {
+  top: 60px;
+  left: 0;
+}
+.lore .paper-doll-absolute-layout .slot-legs {
+  top: 0;
+  left: 120px;
+}
+.lore .paper-doll-absolute-layout .slot-feet {
+  top: 60px;
+  left: 120px;
+}
+.lore .paper-doll-absolute-layout .slot-mainhand {
+  top: 120px;
+  left: 0;
+}
+.lore .paper-doll-absolute-layout .slot-offhand {
+  top: 120px;
+  left: 120px;
+}
+.lore .paper-doll-weapons {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  margin-top: 0.25rem;
+  min-width: 120px;
+}
+.lore .weapon-slot {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.lore .weapon-slot.mainhand {
+  left: 0;
+}
+.lore .weapon-slot.offhand {
+  right: 0;
+}
+.lore .weapon-slot img {
+  width: var(--paper-doll-weapon-icon, 24px);
+  height: var(--paper-doll-weapon-icon, 24px);
+  background: var(--lore-c-ash, #e6e2dc);
+  border: 2px solid var(--lore-c-slate, #6e6e6e);
+  border-radius: 5px;
+  box-shadow: 0 1px 3px #0001;
+}
+.lore .weapon-label {
+  margin-top: 0.05rem;
+  font-size: 0.7rem;
+  color: var(--lore-c-charcoal, #2e2e2e);
+  font-weight: 500;
+}
+.lore .paper-doll-layout {
+  display: grid;
+  grid-template-areas: ".    head    ." "arms  body  legs" "hands  .   feet";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 28px 36px 28px;
+  gap: 4px;
+  justify-items: center;
+  align-items: center;
+  max-width: 120px;
+  margin: 0.25rem auto 0.1rem auto;
+}
+.lore .paper-doll-layout .slot {
+  --paper-doll-grid-slot-size: 28px;
+  width: var(--paper-doll-grid-slot-size, 28px);
+  height: var(--paper-doll-grid-slot-size, 28px);
+  background: var(--lore-c-ash, #e6e2dc);
+  border: 2px solid var(--lore-c-slate, #6e6e6e);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: var(--lore-c-charcoal, #2e2e2e);
+  box-shadow: 0 1px 3px #0001;
+  user-select: none;
+}
+.lore .paper-doll-layout .slot img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  display: block;
+}
+.lore .slot-head {
+  grid-area: head;
+}
+.lore .slot-body {
+  grid-area: body;
+}
+.lore .slot-arms {
+  grid-area: arms;
+}
+.lore .slot-hands {
+  grid-area: hands;
+}
+.lore .slot-legs {
+  grid-area: legs;
+}
+.lore .slot-feet {
+  grid-area: feet;
+}
+.lore .paper-doll-with-summary .paper-doll-absolute-layout {
+  width: auto;
+  margin: 0;
+}
+.lore .armor-summary {
+  background: var(--lore-c-bg1);
+  border-left: 1px solid var(--lore-c-bg2);
+  padding: 8px 10px;
+  min-width: 160px;
+  box-shadow: 0 2px 6px #0001;
+}
+.lore .armor-summary-title {
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+}
+.lore .armor-summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  row-gap: 6px;
+  column-gap: 12px;
+}
+.lore .armor-summary-list li {
+  display: contents;
+}
+.lore .armor-summary-list .label {
+  color: var(--lore-c-txt1);
+}
+.lore .armor-summary-list .item-name {
+  color: var(--lore-c-txt1);
+  opacity: 0.9;
+}
+.lore .armor-summary-list .value {
+  font-weight: 600;
+  text-align: right;
+}
+.lore .skills {
+  background: var(--lore-c-bg1);
+  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
+}
+.lore .skills-list,
+.lore .skills-list .skill {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.lore .skill {
+  border-bottom: 1px solid var(--lore-c-bg2);
+}
+.lore .skills-list .skills-header {
+  border-bottom: 1px solid var(--lore-c-bg2);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+  width: 100%;
+  background: var(--lore-c-bg2);
+}
+.lore .skills-list .skill {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.lore .skills-list .skills-header .skill-name {
+  padding-left: 10px;
+  font-weight: bold;
+}
+.lore .skills-list .skills-header .skill-formula {
+  margin-right: 15px;
+  font-weight: bold;
+}
+.lore .skills-list .skill .skill-image {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border: none;
+  flex: 0 0 auto;
+}
+.lore .skills-list .skill .skill-image img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border: none;
+  flex: 0 0 auto;
+}
+.lore .skills-list .skill .skill-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 10px;
+  color: var(--lore-c-txt2);
+}
+.lore .skills-list .skill .skill-formula {
+  padding-right: 10px;
+  color: var(--lore-c-txt2);
+}
+.lore.actor .tab.skills nav.tabs.sub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: center;
+  padding: 2px 4px;
+  background: var(--lore-c-bg1);
+  border-bottom: 1px solid var(--lore-c-bg2);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.lore.actor .tab.skills nav.tabs.sub-tabs a.item {
+  padding: 2px 6px;
+  line-height: 1.3;
+  color: var(--lore-c-txt1);
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 3px;
+  transition: color 0.15s, text-shadow 0.15s;
+}
+.lore.actor .tab.skills nav.tabs.sub-tabs a.item:hover {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.actor .tab.skills nav.tabs.sub-tabs a.item.active {
+  color: var(--lore-c-txt1);
+  text-shadow: 0 0 8px var(--lore-c-txt1);
+}
+.lore.actor .tab.skills .sub-tab[data-group='details-sub'] {
+  display: none;
+}
+.lore.actor .tab.skills .sub-tab[data-group='details-sub'].active {
+  display: block;
+}
+.lore .skill-form-group .skill-rank-label,
+.lore .skill-form-group .skill-attribute-label {
+  color: var(--lore-c-txt2);
+  font-weight: bold;
+}
+.lore .skill-form-group .skill-rank-input,
+.lore .skill-form-group .skill-attribute-select {
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .magicks {
+  padding-top: 10px;
+  height: 100%;
+  overflow: hidden;
+  background: var(--lore-c-bg1);
+  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
+}
+.lore .magicks-resource {
+  gap: 8px;
+  padding: 10px;
+}
+.lore .magicks-resource-values {
+  gap: 6px;
+}
+.lore .magicks-resource-values input[type='number'] {
+  width: 3.5ch;
+  text-align: center;
+  background: var(--lore-c-bg2);
+  color: var(--lore-c-txt1);
+}
+.lore .magicks-resource-label {
+  font-weight: 700;
 }

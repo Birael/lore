@@ -1,0 +1,81 @@
+// main: "../lore.less", out: false
+
+.lore-dv-widget {
+  --tn-scale: 1.5;
+  --tn-font-size: 13px;
+  --tn-gap: 6px;
+
+  position: fixed;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  /* Force horizontal layout even if upstream CSS sets a different flex-direction */
+  flex-direction: row;
+  gap: var(--tn-gap);
+  padding: 4px 8px;
+  border-radius: 6px;
+  /* Provide fallbacks so the widget looks correct even if CSS vars aren't available yet */
+  background: var(--lore-c-bg1, #2e2e2e);
+  color: var(--lore-c-txt1, #fdfdfd);
+  border: 1px solid var(--lore-c-bg2, #6e6e6e);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  font-size: var(--tn-font-size);
+  transform: scale(var(--tn-scale));
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+
+.lore-dv-widget .dv-label {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lore-dv-widget .dv-value {
+  min-width: 1.5em;
+  text-align: center;
+  font-weight: 700;
+}
+
+.lore-dv-widget .dv-btn {
+  /* Reset native button styling across browsers */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background: var(--lore-c-bg2, #6e6e6e);
+  color: var(--lore-c-txt1);
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  padding: 0;
+  line-height: 1;
+  min-width: 18px;
+  min-height: 18px;
+  cursor: pointer;
+}
+.lore-dv-widget .dv-btn::-moz-focus-inner { border: 0; padding: 0; }
+.lore-dv-widget .dv-btn:hover {
+  filter: brightness(1.1);
+}
+.lore-dv-widget .dv-btn[aria-disabled="true"],
+.lore-dv-widget .dv-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lore-dv-widget .dv-btn > i,
+.lore-dv-widget .dv-btn > svg {
+  color: currentColor;
+  fill: currentColor;
+  line-height: 1;
+}
+
+.lore-dv-widget .dv-btn > i { font-size: 11px; }
+.lore-dv-widget .dv-btn > svg { width: 10px; height: 10px; }
+
+.lore-dv-widget.is-small { --tn-scale: 0.85; }
+.lore-dv-widget.is-large { --tn-scale: 1.25; }

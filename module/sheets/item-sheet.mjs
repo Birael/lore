@@ -39,18 +39,36 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
       template: 'systems/lore/templates/item/header.hbs',
     },
     tabs: {
-      // Foundry-provided generic template
-      template: 'templates/generic/tab-navigation.hbs',
+      // Use local template to ensure availability
+      template: 'systems/lore/templates/tab-navigation.hbs',
     },
     description: {
       template: 'systems/lore/templates/item/description.hbs',
     },
-    attributesSkill: {
+    detailsSkill: {
       template:
-        'systems/lore/templates/item/attribute-parts/skill.hbs',
+        'systems/lore/templates/item/detail-parts/skill.hbs',
     },
-    attributesGear: {
-      template: 'systems/lore/templates/item/attribute-parts/gear.hbs',
+    detailsGear: {
+      template: 'systems/lore/templates/item/detail-parts/gear.hbs',
+    },
+    detailsWeapon: {
+      template: 'systems/lore/templates/item/detail-parts/weapon.hbs',
+    },
+    detailsArmor: {
+      template: 'systems/lore/templates/item/detail-parts/armor.hbs',
+    },
+    detailsMagick: {
+      template: 'systems/lore/templates/item/detail-parts/magick.hbs',
+    },
+    detailsBoon: {
+      template: 'systems/lore/templates/item/detail-parts/boon.hbs',
+    },
+    detailsBane: {
+      template: 'systems/lore/templates/item/detail-parts/bane.hbs',
+    },
+    detailsAncestry: {
+      template: 'systems/lore/templates/item/detail-parts/ancestry.hbs',
     },
     effects: {
       template: 'systems/lore/templates/item/effects.hbs',
@@ -67,10 +85,32 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'skill':
-        options.parts.push('attributesSkill', 'effects');
+        options.parts.push('detailsSkill');
         break;
       case 'gear':
-        options.parts.push('attributesGear');
+        options.parts.push('detailsGear');
+        break;
+      case 'weapon':
+        options.parts.push('detailsWeapon');
+        break;
+      case 'armor':
+        options.parts.push('detailsArmor');
+        break;
+      case 'magick':
+        options.parts.push('detailsMagick');
+        break;
+      case 'boon':
+        options.parts.push('detailsBoon');
+        // Re-enable effects tab for Boons
+        options.parts.push('effects');
+        break;
+      case 'bane':
+        options.parts.push('detailsBane');
+        // Re-enable effects tab for Banes only
+        options.parts.push('effects');
+        break;
+      case 'ancestry':
+        options.parts.push('detailsAncestry');
         break;
     }
   }
@@ -104,8 +144,14 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'attributesSkill':
-      case 'attributesGear':
+      case 'detailsSkill':
+      case 'detailsGear':
+      case 'detailsWeapon':
+      case 'detailsArmor':
+      case 'detailsMagick':
+      case 'detailsBoon':
+      case 'detailsBane':
+      case 'detailsAncestry':
         // Necessary for preserving active tab on re-render
         context.tab = context.tabs[partId];
         break;
@@ -164,10 +210,16 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
           tab.id = 'description';
           tab.label += 'Description';
           break;
-        case 'attributesSkill':
-        case 'attributesGear':
-          tab.id = 'attributes';
-          tab.label += 'Attributes';
+        case 'detailsSkill':
+        case 'detailsGear':
+        case 'detailsWeapon':
+        case 'detailsArmor':
+        case 'detailsMagick':
+        case 'detailsBoon':
+        case 'detailsBane':
+        case 'detailsAncestry':
+          tab.id = 'details';
+          tab.label += 'Details';
           break;
         case 'effects':
           tab.id = 'effects';
@@ -189,9 +241,44 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
    */
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
-    // You may want to add other special handling here
-    // Foundry comes with a large number of utility classes, e.g. SearchFilter
-    // That you may want to implement yourself.
+    // Initialize PRIMARY tabs (description, details, effects)
+    try {
+      const primaryGroup = 'primary';
+      const nav = this.element.querySelector(`nav.tabs[data-group="${primaryGroup}"]`);
+      if (nav) {
+        const sections = Array.from(this.element.querySelectorAll(`.tab[data-group="${primaryGroup}"]`));
+        const links = Array.from(nav.querySelectorAll('a[data-tab]'));
+        const activate = (tabId) => {
+          if (this.tabGroups) this.tabGroups[primaryGroup] = tabId;
+          for (const a of links) a.classList.toggle('active', a.dataset.tab === tabId);
+          for (const s of sections) s.classList.toggle('active', s.dataset.tab === tabId);
+        };
+        const handler = (e) => {
+          const a = e.target.closest('a[data-tab]');
+          if (!a) return;
+          e.preventDefault();
+          activate(a.dataset.tab);
+        };
+        if (nav._lorePrimaryHandler) nav.removeEventListener('click', nav._lorePrimaryHandler);
+        nav.addEventListener('click', handler);
+        nav._lorePrimaryHandler = handler;
+
+        const current = this.tabGroups?.[primaryGroup] ?? sections[0]?.dataset?.tab ?? 'description';
+        activate(current);
+      }
+
+      // Add click handler for weapon roll formula
+      const formula = this.element.querySelector('.weapon-roll-formula');
+      if (formula && this.item.type === 'weapon') {
+        formula.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          // Call the item roll method
+          this.item.roll();
+        });
+      }
+    } catch (e) {
+      console.warn('LORE | Failed to initialize primary tabs (item):', e);
+    }
   }
 
   /**************
@@ -237,8 +324,14 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   static async _viewEffect(event, target) {
+    // Prevent anchor default navigation (which could open a new tab/window in some contexts)
+    try { event?.preventDefault?.(); } catch (e) {}
+    try {
+      event?.stopPropagation?.();
+      if (event?.stopImmediatePropagation) event.stopImmediatePropagation();
+    } catch (e) {}
     const effect = this._getEffect(target);
-    effect.sheet.render(true);
+    effect?.sheet?.render?.(true);
   }
 
   /**
@@ -279,8 +372,8 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
       // These data attributes are reserved for the action handling
       if (['action', 'documentClass'].includes(dataKey)) continue;
       // Nested properties require dot notation in the HTML, e.g. anything with `system`
-      // An example exists in spells.hbs, with `data-system.spell-level`
-      // which turns into the dataKey 'system.spellLevel'
+  // An example exists in magick.hbs, with `data-system.magick-level`
+      // which turns into the dataKey 'system.magickLevel'
       foundry.utils.setProperty(effectData, dataKey, value);
     }
 
@@ -300,6 +393,8 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     const effect = this._getEffect(target);
     await effect.update({ disabled: !effect.disabled });
   }
+
+  
 
   /** Helper Functions */
 
@@ -378,7 +473,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   async _onDrop(event) {
-  const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     const item = this.item;
     const allowed = Hooks.call('dropItemSheetData', item, this, data);
     if (allowed === false) return;
@@ -439,7 +534,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
     }
 
     // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(effect, {
+  const sortUpdates = foundry.utils.performIntegerSort(effect, {
       target,
       siblings,
     });
@@ -497,8 +592,8 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
   /** The following pieces set up drag handling and are unlikely to need modification  */
 
   /**
-   * Returns an array of DragDrop instances
-   * @type {DragDrop[]}
+  * Returns an array of foundry.applications.ux.DragDrop instances
+  * @type {foundry.applications.ux.DragDrop[]}
    */
   get dragDrop() {
     return this.#dragDrop;
@@ -510,7 +605,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
 
   /**
    * Create drag-and-drop workflow handlers for this Application
-   * @returns {DragDrop[]}     An array of DragDrop handlers
+  * @returns {foundry.applications.ux.DragDrop[]}     An array of DragDrop handlers
    * @private
    */
   #createDragDropHandlers() {
@@ -524,7 +619,7 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
         dragover: this._onDragOver.bind(this),
         drop: this._onDrop.bind(this),
       };
-  return new foundry.applications.ux.DragDrop.implementation(d);
+      return new foundry.applications.ux.DragDrop(d);
     });
   }
 }

@@ -3,17 +3,18 @@
   "version": "3.0.0",
   "description": "CSS compiler for the lore system",
   "scripts": {
-  "build": "lessc src/less/lore.less css/lore.css",
-  "watch": "less-watch-compiler src/less css lore.less"
+    "build": "lessc src/less/lore.less css/lore.css",
+    "build:min": "lessc src/less/lore.less css/lore.css --clean-css",
+    "watch": "lessc --watch src/less/lore.less css/lore.css"
   },
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "Asacolips",
+  "author": "Birael",
   "license": "MIT",
   "private": true,
   "devDependencies": {
     "less": "^4.2.0",
-  "less-watch-compiler": "^1.14.6"
+    "less-plugin-clean-css": "^1.6.0"
   }
 }

@@ -1,56 +1,74 @@
+{{! Left Sidebar }}
 <aside class="lore-sidebar">
-
-  <div class='lore-sidebar-top'>
-    <div class="portrait">
-      <img class="profile-img" src="{{actor.img}}" data-edit="img" data-action="onEditImage" title="{{actor.name}}" />
-    </div>
-    <div class='right-container grid-span-1'>
-      <img class="lore-logo" src="systems/lore/assets/lore-logo.png" />
-      {{!-- Show Lore Coins only for Player or Legend actors --}}
-      {{#if (or (eq actor.type 'Player') (eq actor.type 'Legend'))}}
-        <label class='lore-coins-label'>{{localize 'LORE.LoreCoins.Coins.label'}}: {{loreCoinValue}}</label>
-      <button type="button" class="lore-coin-clickable-space" aria-label="Lore Coin Area"
-        onclick="(function(e){e.preventDefault();e.stopPropagation();this.dispatchEvent(new CustomEvent('loreCoinAdjust',{bubbles:true,detail:{delta:-1}}));}).call(this,event);"
-        oncontextmenu="(function(e){e.preventDefault();e.stopPropagation();this.dispatchEvent(new CustomEvent('loreCoinAdjust',{bubbles:true,detail:{delta:1}}));}).call(this,event);"
-      ></button>
-      {{/if}}
-    </div>
-  </div>
-
-<div class='derived-stats-container flexrow'>
-    {{#each system.derivedStatistics as |stat key|}}
-      <div class="derived-stat flexrow flex-group-center">
-        <img class="derived-stat-icon" src="icons/svg/{{#if (eq key 'pace')}}wingfoot.svg{{else if (eq key 'parry')}}combat.svg{{else if (eq key 'resist')}}shield.svg{{/if}}" alt="{{key}} icon" />
-        <input class="derived-stat-input" type="text" name="system.derivedStatistics.{{key}}.value" value="{{stat.value}}" data-dtype="Number"/>
-      </div>
-    {{/each}}
-  </div>
-
-  <div class='attributes flexcol'>
-    <label class='attribute-label'>{{localize 'LORE.Actor.Attributes.label'}}</label>
-      {{#each system.attributes as |attribute key|}}
-        <div class='attribute flexrow flex-between' data-attribute='{{key}}'>
-          <label
-            class='attribute-roll-label rollable align-left'
-            data-action='roll'
-            data-roll='{{attribute.value}}d6khx+@{{key}}.mod'
-            data-label='{{localize (lookup @root.config.attributes key)}}'
-          >
-            {{localize (lookup @root.config.attributes key)}}
-          </label>
-          {{#if (eq ../editingAttribute key)}}
-              <input type='number' class='attribute-rank-input' value='{{attribute.value}}' min='0' style='width:3em;text-align:right;' data-key='{{key}}'>
-          {{else}}
-            <label
-              class='attribute-formula-label roll-summary align-right'
-              data-label='{{localize (lookup @root.config.attributes key)}}'
-            >
-              {{attribute.value}}d6{{#if attribute.mod}}{{numberFormat attribute.mod decimals=0 sign=true}}{{else}}{{numberFormat 0 decimals=0 sign=true}}{{/if}}
-            </label>
-          {{/if}}
+    <div class="sidebar-inner">
+        <div class="portrait">
+            <img class="profile-img" src="{{actor.img}}" data-edit="img" data-action="onEditImage" title="{{actor.name}}" />
         </div>
-      {{/each}}
-  </div>
 
+        <div class='attributes flexcol'>
+            <label class='attribute-label'>{{localize 'LORE.SheetLabels.Attributes'}}</label>
+            {{#each system.attributes as |attribute key|}}
+                <div class='attribute flexrow flex-between' data-attribute='{{key}}'>
+                    <label
+                        class='attribute-roll-label rollable align-left'
+                        data-action='roll'
+                        data-roll='{{attribute.value}}d6khx+@attributes.{{key}}.mod'
+                        data-label='{{localize (lookup @root.config.attributes key)}}'
+                    >
+                        {{localize (lookup @root.config.attributes key)}}
+                    </label>
+                    {{#if (eq ../editingAttribute key)}}
+                        <input type='number' class='attribute-rank-input' value='{{attribute.value}}' min='0' style='width:3em;text-align:right;' data-key='{{key}}'>
+                    {{else}}
+                        <label
+                            class='attribute-formula-label roll-summary align-right'
+                            data-label='{{localize (lookup @root.config.attributes key)}}'
+                        >
+                            {{attribute.value}}d6{{numberFormat attribute.mod decimals=0 sign=true}}
+                        </label>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
+        <div class="horizontal-line"></div>
 
+        <div class='stats-container'>
+            <div class='stat-container grid grid-2col'>
+                <label for='system.movement' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.movement.label"}}'>
+                    <img src="icons/svg/wingfoot.svg" alt='{{localize "LORE.Actor.base.FIELDS.movement.label"}}' class="stat-icon"/>
+                </label>
+                <input
+                    class='stat-input text-center'
+		            type='text'
+		            name='system.movement'
+		            value='{{system.movement}}'
+		            data-dtype='Number'
+	            />
+            </div>
+            <div class='stat-container grid grid-2col'>
+                <label for='system.parry' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.parry.label"}}'>
+	                <img src="icons/svg/combat.svg" alt='{{localize "LORE.Actor.base.FIELDS.parry.label"}}' class="stat-icon"/>
+                </label>
+                <input
+                    class='stat-input text-center'
+		            type='text'
+		            name='system.parry'
+		            value='{{system.parry}}'
+		            data-dtype='Number'
+	            />
+            </div>
+            <div class='stat-container grid grid-2col'>
+                <label for='system.toughness' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.toughness.label"}}'>
+	                <img src="icons/svg/tower.svg" alt='{{localize "LORE.Actor.base.FIELDS.toughness.label"}}' class="stat-icon"/>
+                </label>
+                <input
+                    class='stat-input text-center'
+		            type='text'
+		            name='system.toughness'
+		            value='{{system.toughness}}'
+		            data-dtype='Number'
+	            />
+            </div>
+        </div>
+    </div>
 </aside>

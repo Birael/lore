@@ -1,89 +1,32 @@
-import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
-import { LoreContextMenus } from '../helpers/context-menu.mjs';
 
-
-// Do not use static import for LoreWoundsFatigue; use dynamic import in constructor
 const { api, sheets } = foundry.applications;
+import { RollPopup } from "../apps/roll-popup.mjs";
+import { RollHandler } from "../helpers/roll-handler.mjs";
+import { LoreContextMenus } from "../helpers/context-menu.mjs";
+import { LoreTabNavigation } from "../helpers/tab-navigation.mjs";
+import { LoreWoundsFatigue } from "../helpers/wounds-fatigue.mjs";
+import { LoreMorale } from "../helpers/morale.mjs";
+import { prepareActiveEffectCategories } from "../helpers/effects.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheetV2}
  */
-export class loreActorSheet extends api.HandlebarsApplicationMixin(
-  sheets.ActorSheetV2
-) {
-  /**
-   * Instance of LoreWoundsFatigue for this sheet
-   * @type {import('../helpers/wounds-fatigue.mjs').LoreWoundsFatigue}
-   */
-  #woundsFatigue;
-  /**
-   * Instance of LoreTabNavigation for this sheet
-   * @type {import('../helpers/tab-navigation.mjs').LoreTabNavigation}
-   */
-  #tabNavigation;
-  /**
-   * Instance of LoreWoundsFatigue for this sheet
-   * @type {import('../helpers/lore-coins.mjs').LoreCoins}
-   */
-  #loreCoins;
-  /**
-   * Promise that resolves when lore coins helper is ready
-   * @type {Promise<void>}
-   */
-  #coinsReadyPromise;
-  /**
-   * Instance of LoreContextMenu for this sheet
-   * @type {import('../helpers/context-menu.mjs').LoreContextMenus}
-   */
-  #contextMenu;
-  /** @override */
-  async _renderInner(...args) {
-    // Prepare context
-    const context = await this._prepareContext(this.options);
-    // Render sidebar
-    const sidebarHtml = await renderTemplate('systems/lore/templates/actor/sidebar.hbs', context);
-    // Render main content (all other parts except sidebar)
-    let mainHtml = '';
-    for (const part of Object.keys(this.constructor.PARTS)) {
-      if (part === 'sidebar') continue;
-      const partDef = this.constructor.PARTS[part];
-      const partContext = await this._preparePartContext?.(part, {...context});
-      mainHtml += await renderTemplate(partDef.template, partContext ?? context);
-    }
-    // Wrap in a flattening container so parts become grid children directly
-    // sidebar.hbs already includes the <aside class="lore-sidebar"> wrapper
-    return `<div class='lore-sheet-flex'>${sidebarHtml}${mainHtml}</div>`;
-  }
+export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
+  
   constructor(options = {}) {
     super(options);
-    this.#dragDrop = this.#createDragDropHandlers();
-    this.#woundsFatigue = null;
-    this.#tabNavigation = null;
-    this.#loreCoins = null;
-    this.#contextMenu = new LoreContextMenus(this);
+    this._dragDrop = this.#createDragDropHandlers();
+    // Context menu controller
+    this._contextMenus = new LoreContextMenus(this);
+    // Wounds & Fatigue controller
+    this._woundsFatigue = new LoreWoundsFatigue(this);
+    // Tab navigation controller
+    this._tabNavigation = new LoreTabNavigation(this);
+    // Morale slider controller
+    this._morale = new LoreMorale(this);
 
-    // Dynamically import wounds/fatigue handler and store instance
-    import('../helpers/wounds-fatigue.mjs').then(mod => {
-      this.#woundsFatigue = new mod.LoreWoundsFatigue(this);
-      if (this.element) {
-        this.#woundsFatigue.attach(this.element[0] ?? this.element);
-      }
-    });
-    // Import tab navigation and store instance
-    import('../helpers/tab-navigation.mjs').then(mod => {
-      this.#tabNavigation = new mod.LoreTabNavigation(this);
-      if (this.element) {
-        this.#tabNavigation.attach(this.element[0] ?? this.element);
-      }
-    });
-    // Import lore coin handler and store instance; keep a promise to attach post-render reliably
-    this.#coinsReadyPromise = import('../helpers/lore-coins.mjs').then(mod => {
-      this.#loreCoins = new mod.LoreCoins(this);
-      if (this.element) {
-        this.#loreCoins.attach(this.element[0] ?? this.element);
-      }
-    }).catch(err => console.warn('LORE | Failed to load lore-coins helper', err));
+    // No-op: actions are wired via DEFAULT_OPTIONS.actions
   }
 
   /** @override */
@@ -100,6 +43,10 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       deleteDoc: this._deleteDoc,
       toggleEffect: this._toggleEffect,
       roll: this._onRoll,
+      // Handle left-click on one-handed weapon equip control
+      'weapon-equip-context': this._onWeaponEquipContext,
+      // Clear ancestry slot
+      'clear-ancestry': this._onClearAncestry,
     },
     // Custom property that's merged into `this.options`
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
@@ -128,6 +75,9 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     gear: {
       template: 'systems/lore/templates/actor/gear.hbs',
     },
+    magicks: {
+      template: 'systems/lore/templates/actor/magicks.hbs',
+    },
     effects: {
       template: 'systems/lore/templates/actor/effects.hbs',
     },
@@ -136,18 +86,27 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    // Always render sidebar first
+    // Not all parts always render
     options.parts = ['sidebar', 'header', 'tabs', 'biography'];
+    // Don't show the other tabs if only limited view
     if (this.document.limited) return;
+    // Control which parts show based on document subtype
     switch (this.document.type) {
-      case 'Player':
-        options.parts.push('skills', 'gear', 'effects');
+      case 'player':
+        options.parts.push('skills', 'gear');
+        if (this.#hasMagicksBackgroundBoon()) options.parts.push('magicks');
         break;
-      case 'Legend':
-        options.parts.push('skills', 'gear', 'effects');
+      case 'lackey':
+        options.parts.push('skills', 'gear');
+        if (this.#hasMagicksBackgroundBoon()) options.parts.push('magicks');
         break;
-      case 'Lackey':
-        options.parts.push('gear', 'effects');
+      case 'pawn':
+        options.parts.push('skills', 'gear');
+        if (this.#hasMagicksBackgroundBoon()) options.parts.push('magicks');
+        break;
+      case 'legend':
+        options.parts.push('skills', 'gear');
+        if (this.#hasMagicksBackgroundBoon()) options.parts.push('magicks');
         break;
     }
   }
@@ -171,9 +130,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       config: CONFIG.LORE,
       tabs: this._getTabs(options.parts),
       // Necessary for formInput and formFields helpers
-      fields: this.document.schema?.fields,
-      systemFields: this.document.system?.schema?.fields,
-      editingAttribute: undefined
+      fields: this.document.schema.fields,
+      systemFields: this.document.system.schema.fields,
     };
 
     // Offloading context prep to a helper function
@@ -191,25 +149,73 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
       context.fatigueSlots = [1, 2, 3];
     }
 
-    // Prepare Lore Coin slots for Player and Legend actors
-    try {
-      const isCoinActor = this.document.type === 'Player' || this.document.type === 'Legend';
-      if (isCoinActor) {
-        const current = Math.max(0, Number(this.actor.system?.loreCoin ?? 0));
-        context.coinSlots = Array.from({ length: current }, (_, i) => i + 1);
-        context.loreCoinValue = current;
-      }
-    } catch (e) {
-      console.warn('LORE | Failed preparing lore coin slots', e);
+  // Prepare equipped items for paper doll and armor summary
+    const equipped = {};
+    const eqArmor = this.actor.system?.equippedArmor || {};
+    const eqWeapons = this.actor.system?.equippedWeapons || {};
+  const eqAncestryId = this.actor.system?.equippedAncestry || '';
+
+    // Start with any explicit equipped IDs stored on the actor (if used)
+    for (const slot of ["head","body","arms","hands","legs","feet"]) {
+      const id = eqArmor[slot];
+      equipped[slot] = id ? this.actor.items.get(id) : null;
     }
 
+    // Override with items that have the equipped flag set for their armorType
+    // If multiple are equipped for the same slot, prefer highest armorValue
+    const armorItems = this.actor.items.filter(i => i.type === 'armor' && i.system?.equipped);
+    for (const slot of ["head","body","arms","hands","legs","feet"]) {
+      const choices = armorItems.filter(i => i.system?.armorType === slot);
+      if (choices.length > 0) {
+        choices.sort((a,b) => (b.system?.armorValue ?? 0) - (a.system?.armorValue ?? 0));
+        equipped[slot] = choices[0];
+      }
+    }
+
+    // Weapons: keep existing mapping
+    for (const slot of ["mainhand","offhand"]) {
+      const id = eqWeapons[slot];
+      equipped[slot] = id ? this.actor.items.get(id) : null;
+    }
+  // Ancestry: show only the explicitly mapped ancestry item
+  equipped.ancestry = eqAncestryId ? this.actor.items.get(eqAncestryId) : null;
+    context.equipped = equipped;
+
+    // Compute armor summary values per slot (fallback to 0 if empty)
+    context.armorSummary = {
+      head: equipped.head?.system?.armorValue ?? 0,
+      body: equipped.body?.system?.armorValue ?? 0,
+      arms: equipped.arms?.system?.armorValue ?? 0,
+      hands: equipped.hands?.system?.armorValue ?? 0,
+      legs: equipped.legs?.system?.armorValue ?? 0,
+      feet: equipped.feet?.system?.armorValue ?? 0,
+    };
+
     return context;
+  }
+
+  /**
+   * Determine whether the actor should display the Magicks tab.
+   * The tab is shown only if the actor has at least one Boon item
+   * with the "magicks background" checkbox enabled.
+   * @returns {boolean}
+   */
+  #hasMagicksBackgroundBoon() {
+    try {
+      return this.document.items.some(
+        (i) => i.type === 'boon' && i.system?.magicksBackground === true
+      );
+    } catch (e) {
+      console.warn('LORE | Failed checking magicks background boon', e);
+      return false;
+    }
   }
 
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
       case 'skills':
+      case 'magicks':
       case 'gear':
         context.tab = context.tabs[partId];
         break;
@@ -228,6 +234,20 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
             relativeTo: this.actor,
           }
         );
+        // Compute which biography fields should be visible based on equipped ancestry
+        try {
+          const ancestry = context?.equipped?.ancestry ?? null;
+          const bf = ancestry?.system?.bioFields ?? {};
+          context.bioVisibility = {
+            gender: ancestry ? (bf.gender ?? true) : true,
+            age: ancestry ? (bf.age ?? true) : true,
+            height: ancestry ? (bf.height ?? true) : true,
+            weight: ancestry ? (bf.weight ?? true) : true,
+          };
+        } catch (e) {
+          console.warn('LORE | Failed computing biography field visibility', e);
+          context.bioVisibility = { gender: true, age: true, height: true, weight: true };
+        }
         break;
       case 'effects':
         context.tab = context.tabs[partId];
@@ -251,38 +271,47 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   _getTabs(parts) {
     // If you have sub-tabs this is necessary to change
     const tabGroup = 'primary';
-    // Default tab for first time it's rendered this session
-    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'biography';
+    // Determine a sensible default tab based on available parts
+  const candidateOrder = ['skills', 'gear', 'magicks', 'effects', 'biography'];
+    
+    const firstAvailable = candidateOrder.find((p) => parts.includes(p));
+    const current = this.tabGroups[tabGroup];
+    // Initialize or correct the current tab if it's missing from available parts
+    if (!current || !parts.includes(current)) {
+      this.tabGroups[tabGroup] = firstAvailable ?? 'biography';
+    }
     return parts.reduce((tabs, partId) => {
       const tab = {
         cssClass: '',
         group: tabGroup,
-        // Matches tab property to
         id: '',
-        // FontAwesome Icon, if you so choose
         icon: '',
-        // Run through localization
         label: 'LORE.Actor.Tabs.',
       };
       switch (partId) {
         case 'header':
         case 'tabs':
+        case 'sidebar':
           return tabs;
-        case 'biography':
-          tab.id = 'biography';
-          tab.label += 'Biography';
-          break;
         case 'skills':
           tab.id = 'skills';
-          tab.label += 'Skills';
+          tab.label += 'Details';
           break;
         case 'gear':
           tab.id = 'gear';
           tab.label += 'Gear';
           break;
+        case 'magicks':
+          tab.id = 'magicks';
+          tab.label += 'Magicks';
+          break;
         case 'effects':
           tab.id = 'effects';
           tab.label += 'Effects';
+          break;
+        case 'biography':
+          tab.id = 'biography';
+          tab.label += 'Biography';
           break;
       }
       if (this.tabGroups[tabGroup] === tab.id) tab.cssClass = 'active';
@@ -298,24 +327,92 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    */
   _prepareItems(context) {
     // Initialize containers.
+    // You can just use `this.document.itemTypes` instead
+    // if you don't need to subdivide a given type like
+    // this sheet does with magicks
     const gear = [];
+    const weapons = [];
+    const armor = [];
     const skills = [];
+    const magicks = [];
+    const boons = [];
+    const banes = [];
 
     // Iterate through items, allocating to containers
     for (let i of this.document.items) {
-      // Append to gear.
+      // Gear is now flat; weapons are their own item type
       if (i.type === 'gear') {
         gear.push(i);
+      }
+      else if (i.type === 'weapon') {
+        weapons.push(i);
+      }
+      else if (i.type === 'armor') {
+        armor.push(i);
       }
       // Append to skills.
       else if (i.type === 'skill') {
         skills.push(i);
       }
+      // Append to magicks.
+      else if (i.type === 'magick') {
+        magicks.push(i);
+      }
+      else if (i.type === 'boon') {
+        boons.push(i);
+      }
+      else if (i.type === 'bane') {
+        banes.push(i);
+      }
     }
 
     // Sort then assign
     context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.weapons = weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    // Compute display attack modifier for each weapon row
+    try {
+      const migMod = Number(this.actor.system?.attributes?.mig?.mod ?? 0) || 0;
+      for (const w of context.weapons) {
+        const isRanged = (w.system?.weaponType === 'ranged');
+        // Show only Might modifier for melee; ranged shows nothing in the template
+        const total = isRanged ? 0 : migMod;
+        w.displayAttackMod = total;
+        w.displayAttackModSigned = `${total >= 0 ? '+' : ''}${total}`;
+      }
+    } catch (e) {
+      console.warn('LORE | Failed computing weapon display modifiers', e);
+    }
+  context.armor = armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    
+    // Group armor by armorType for the gear tab
+    const armorByType = { head: [], body: [], arms: [], hands: [], legs: [], feet: [] };
+    for (const it of context.armor) {
+      const t = it?.system?.armorType;
+      if (t && armorByType[t]) armorByType[t].push(it);
+    }
+    for (const k of Object.keys(armorByType)) {
+      armorByType[k] = armorByType[k].sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    }
+    context.armorByType = armorByType;
     context.skills = skills.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.magicks = magicks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.boons = boons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.banes = banes.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+    // Lore Coins UI context (players and legends only) - fixed 5-slot display
+    try {
+      context.showLoreCoins = ['player', 'legend'].includes(this.document.type);
+      const lc = Number(this.actor.system?.loreCoin ?? 0);
+      const loreCoinCount = isNaN(lc) ? 0 : Math.max(0, lc);
+      const maxSlots = 5;
+      context.loreCoinSlots = Array.from({ length: maxSlots }, (_, i) => ({
+        idx: i + 1,
+        filled: i < loreCoinCount,
+      }));
+    } catch (e) {
+      context.showLoreCoins = false;
+      context.loreCoinSlots = [];
+    }
   }
 
   /**
@@ -327,32 +424,142 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    * @override
    */
   _onRender(context, options) {
-    // Dev trace to ensure _onRender runs for actor sheet
-    try { console.log('LORE | loreActorSheet _onRender', { actor: this.actor?.name, type: this.document?.type }); } catch {}
-    this.#dragDrop.forEach((d) => d.bind(this.element));
-    this.#disableOverrides();
-    let rootEl = this.element;
-    if (rootEl && rootEl.jquery) rootEl = rootEl[0];
-    if (this.#woundsFatigue && rootEl) {
-      this.#woundsFatigue.attach(rootEl);
-    }
-    if (this.#tabNavigation && rootEl) {
-      this.#tabNavigation.attach(rootEl);
-    }
-    if (rootEl) {
-      if (this.#loreCoins) {
-        this.#loreCoins.attach(rootEl);
-      } else if (this.#coinsReadyPromise) {
-        this.#coinsReadyPromise.then(() => {
-          if (this.#loreCoins) this.#loreCoins.attach(rootEl);
-        });
+    // Ensure drag/drop is active so dropping Items/Effects onto the sheet works
+    if (Array.isArray(this._dragDrop)) {
+      try {
+        this._dragDrop.forEach((d) => d.bind?.(this.element));
+      } catch (e) {
+        console.warn('LORE | Failed to bind drag/drop handlers on actor sheet:', e);
       }
     }
-    // Layout is handled by CSS in src/less/components/_actor-sidebar.less
 
-    // Activate context menu for attributes
-    if (this.#contextMenu && rootEl) {
-      this.#contextMenu.attach(rootEl);
+    // Close any existing context menu on re-render and re-bind
+    this._contextMenus.close();
+
+    // Initialize and wire morale slider/value
+    this._morale.attach(this.element);
+
+    // Delegate all context menu bindings to the controller
+    this._contextMenus.attach(this.element);
+    // Initialize and wire wounds & fatigue checkboxes
+    this._woundsFatigue.attach(this.element);
+
+    // Add click handler for weapon skill rolls in gear list
+    const weaponSkillLinks = this.element.querySelectorAll('.weapon-skill-roll');
+    for (const link of weaponSkillLinks) {
+      link.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const itemId = link.dataset.itemId;
+        const weaponType = link.dataset.weaponType;
+        // Find the correct skill name
+  let skillName = weaponType === 'ranged' ? 'shooting' : 'brawling';
+        // Try to find the skill item on the actor
+        let skillItem = this.actor.items.find(i => i.type === 'skill' && i.name.toLowerCase() === skillName);
+        // If not found, fall back to untrained
+        if (!skillItem) {
+          skillName = 'untrained';
+          skillItem = this.actor.items.find(i => i.type === 'skill' && i.name.toLowerCase() === 'untrained');
+        }
+        if (skillItem && skillItem.roll) {
+          // Use the same roll popup as other rolls
+          await skillItem.roll();
+        } else {
+          ui.notifications?.warn(`No skill found for ${skillName}`);
+        }
+      });
+    }
+    // Handle armor equip checkboxes in gear list (one per slot)
+    const armorEquipInputs = this.element.querySelectorAll('.items-armor-sub input[name="system.equipped"]');
+    for (const input of armorEquipInputs) {
+      input.addEventListener('change', async (event) => {
+        // Prevent the sheet's submit-on-change from racing; we'll update directly
+        event.stopPropagation();
+        event.preventDefault();
+        try {
+          const li = input.closest('li[data-item-id]');
+          const itemId = input.dataset.itemId || li?.dataset.itemId;
+          const item = itemId ? this.actor.items.get(itemId) : null;
+          if (!item) return;
+          await item.update({ 'system.equipped': input.checked });
+        } catch (e) {
+          console.warn('LORE | Failed to toggle armor equipped state', e);
+        }
+      });
+    }
+
+    // Handle two-handed weapon equip checkboxes in weapon list
+    const weaponEquipInputs = this.element.querySelectorAll('.items-weapons input[name="system.equipped"]');
+    for (const input of weaponEquipInputs) {
+      const li = input.closest('li.item[data-item-id]');
+      const itemId = li?.dataset?.itemId;
+      const item = itemId ? this.actor.items.get(itemId) : null;
+      if (!item || item.type !== 'weapon') continue;
+      const handed = item.system?.handedness;
+      if (handed !== 'two') continue; // Only intercept two-handed weapon checkboxes
+
+      input.addEventListener('change', async (event) => {
+        // Intercept default submit and handle custom equip logic
+        event.stopPropagation();
+        event.preventDefault();
+        try {
+          const checked = input.checked === true;
+          const actor = this.actor;
+          const slots = actor.system?.equippedWeapons || {};
+
+          if (checked) {
+            // If equipping a two-handed weapon: clear both slots of any other items first
+            const prevMain = slots.mainhand && slots.mainhand !== item.id ? this.actor.items.get(slots.mainhand) : null;
+            const prevOff = slots.offhand && slots.offhand !== item.id ? this.actor.items.get(slots.offhand) : null;
+            try { await prevMain?.update?.({ 'system.equipped': false }); } catch (e) {}
+            try { await prevOff?.update?.({ 'system.equipped': false }); } catch (e) {}
+
+            // Equip this weapon to both hands
+            await actor.update({
+              'system.equippedWeapons.mainhand': item.id,
+              'system.equippedWeapons.offhand': item.id,
+            });
+            await item.update({ 'system.equipped': true });
+            // Ensure immediate visual state reflects the change before re-render
+            input.checked = true;
+          } else {
+            // Unchecking: if this item occupies either slot, clear both; mark it unequipped
+            const updates = {};
+            if (slots.mainhand === item.id) updates['system.equippedWeapons.mainhand'] = null;
+            if (slots.offhand === item.id) updates['system.equippedWeapons.offhand'] = null;
+            if (Object.keys(updates).length) await actor.update(updates);
+            await item.update({ 'system.equipped': false });
+            // Ensure immediate visual state reflects the change before re-render
+            input.checked = false;
+          }
+        } catch (e) {
+          console.warn('LORE | Failed to toggle two-handed weapon equipped state', e);
+        }
+      });
+    }
+    // Attach tab navigation (primary + gear sub-tabs)
+    this._tabNavigation.attach(this.element);
+
+    // Lore Coins click handlers (left click: use/decrement, right click: add/increment)
+    try {
+      if (['player', 'legend'].includes(this.document.type)) {
+        const coinBox = this.element.querySelector('.lore-coin-box');
+        if (coinBox) {
+          coinBox.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const current = Number(this.actor.system?.loreCoin ?? 0) || 0;
+            const next = Math.max(0, current - 1);
+            if (next !== current) await this.actor.update({ 'system.loreCoin': next });
+          });
+          coinBox.addEventListener('contextmenu', async (event) => {
+            event.preventDefault();
+            const current = Number(this.actor.system?.loreCoin ?? 0) || 0;
+            const next = current + 1;
+            await this.actor.update({ 'system.loreCoin': next });
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('LORE | Failed binding lore coin handlers', e);
     }
   }
 
@@ -399,8 +606,15 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   static async _viewDoc(event, target) {
+    // Prevent anchor default navigation (which can open a new tab/window depending on the environment)
+    try { event?.preventDefault?.(); } catch (e) {}
+    try {
+      // Stop propagation so no outer handlers or default behaviors interfere
+      event?.stopPropagation?.();
+      if (event?.stopImmediatePropagation) event.stopImmediatePropagation();
+    } catch (e) {}
     const doc = this._getEmbeddedDocument(target);
-    doc.sheet.render(true);
+    doc?.sheet?.render?.(true);
   }
 
   /**
@@ -428,20 +642,28 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     // Retrieve the configured document class for Item or ActiveEffect
     const docCls = getDocumentClass(target.dataset.documentClass);
     // Prepare the document creation data by initializing it a default name.
+    let defaultName;
+    if (target.dataset.documentClass === 'Item') {
+      const baseType = target.dataset.type;
+      if (baseType === 'weapon') defaultName = 'New Weapon';
+      else if (baseType === 'gear') defaultName = 'New Gear';
+    }
     const docData = {
-      name: docCls.defaultName({
-        // defaultName handles an undefined type gracefully
-        type: target.dataset.type,
-        parent: this.actor,
-      }),
+      name:
+        defaultName ??
+        docCls.defaultName({
+          // defaultName handles an undefined type gracefully
+          type: target.dataset.type,
+          parent: this.actor,
+        }),
     };
     // Loop through the dataset and add it to our docData
     for (const [dataKey, value] of Object.entries(target.dataset)) {
       // These data attributes are reserved for the action handling
       if (['action', 'documentClass'].includes(dataKey)) continue;
       // Nested properties require dot notation in the HTML, e.g. anything with `system`
-      // An example exists in spells.hbs, with `data-system.spell-level`
-      // which turns into the dataKey 'system.spellLevel'
+      // An example exists in magicks.hbs, with `data-system.magick-level`
+      // which turns into the dataKey 'system.magickLevel'
       foundry.utils.setProperty(docData, dataKey, value);
     }
 
@@ -481,26 +703,26 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
         if (item) return item.roll();
     }
 
-    // Handle rolls that supply the formula directly.
+    // Handle rolls that supply the formula directly via the centralized handler.
     if (dataset.roll) {
-      let label = dataset.label ? `[attribute] ${dataset.label}` : '';
-      // Append morale modifier to formula if actor has morale (non-zero).
-      const morale = this.actor?.system?.morale ?? 0;
-      const buildMoraleFormula = (formula, moraleVal) => {
-        if (!Number.isFinite(moraleVal) || moraleVal === 0) return formula;
-        const sign = moraleVal >= 0 ? '+' : '-';
-        return `(${formula}) ${sign} ${Math.abs(moraleVal)}`;
-      };
-      const finalFormula = buildMoraleFormula(dataset.roll, morale);
-      let roll = new Roll(finalFormula, this.actor.getRollData());
-      const moraleFlavor = morale ? ` (Morale ${morale >= 0 ? '+' : ''}${morale})` : '';
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `${label}${moraleFlavor}`,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
+      const label = dataset.label ?? '';
+      return await RollHandler.rollInline({ actor: this.actor, formula: dataset.roll, label });
     }
+  }
+
+  /**
+   * Handle opening the context menu for one-handed weapon equipping.
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
+   */
+  static _onWeaponEquipContext(event, target) {
+    // The `actions` framework in ApplicationV2 is based on click events.
+    // We'll prevent the default behavior and pass the event to our dedicated context menu handler.
+    event.preventDefault();
+
+    // Delegate to the context menu controller
+    this._contextMenus.onWeaponEquipClick(event, target);
   }
 
   /** Helper Functions */
@@ -583,7 +805,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   async _onDrop(event) {
-  const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     const actor = this.actor;
     const allowed = Hooks.call('dropActorSheetData', actor, this, data);
     if (allowed === false) return;
@@ -646,7 +868,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     }
 
     // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(effect, {
+  const sortUpdates = foundry.utils.performIntegerSort(effect, {
       target,
       siblings,
     });
@@ -700,14 +922,38 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    */
   async _onDropItem(event, data) {
     if (!this.actor.isOwner) return false;
-    const item = await Item.implementation.fromDropData(data);
+    const ItemCls = getDocumentClass('Item');
+    const item = await ItemCls.fromDropData(data);
+    
+    // Special handling: ancestry item occupies a single slot on the actor
+    if (item?.type === 'ancestry') {
+      let embedded = item;
+      // If not already on this actor, create it first
+      if (this.actor.uuid !== item.parent?.uuid) {
+        const source = item.toObject?.() ?? item;
+        const created = await this.actor.createEmbeddedDocuments('Item', [source]);
+        embedded = created && created[0] ? this.actor.items.get(created[0]._id ?? created[0].id) : null;
+      }
+      if (!embedded) return false;
+      // Map ancestry slot to this item ID
+      await this.actor.update({ 'system.equippedAncestry': embedded.id });
+      return [embedded];
+    }
 
     // Handle item sorting within the same Actor
     if (this.actor.uuid === item.parent?.uuid)
       return this._onSortItem(event, item);
 
-    // Create the owned item
+    // Create the owned item (default behavior)
     return this._onDropItemCreate(item, event);
+  }
+
+  /**
+   * Clear the ancestry slot mapping on the actor.
+   */
+  static async _onClearAncestry(event, target) {
+    event.preventDefault();
+    await this.actor.update({ 'system.equippedAncestry': '' });
   }
 
   /**
@@ -720,12 +966,14 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    */
   async _onDropFolder(event, data) {
     if (!this.actor.isOwner) return [];
-    const folder = await Folder.implementation.fromDropData(data);
+    const FolderCls = getDocumentClass('Folder');
+    const folder = await FolderCls.fromDropData(data);
     if (folder.type !== 'Item') return [];
     const droppedItemData = await Promise.all(
       folder.contents.map(async (item) => {
         if (!(document instanceof Item)) item = await fromUuid(item.uuid);
-        return item;
+        // Always convert to source data for creation
+        return item?.toObject?.() ?? item;
       })
     );
     return this._onDropItemCreate(droppedItemData, event);
@@ -740,8 +988,10 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
    * @private
    */
   async _onDropItemCreate(itemData, event) {
-    itemData = itemData instanceof Array ? itemData : [itemData];
-    return this.actor.createEmbeddedDocuments('Item', itemData);
+    const arr = Array.isArray(itemData) ? itemData : [itemData];
+    // Normalize to plain source objects
+    const sources = arr.map((it) => (it?.toObject?.() ? it.toObject() : it));
+    return this.actor.createEmbeddedDocuments('Item', sources);
   }
 
   /**
@@ -769,7 +1019,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     }
 
     // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(item, {
+  const sortUpdates = foundry.utils.performIntegerSort(item, {
       target,
       siblings,
     });
@@ -797,6 +1047,18 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
   // for subclasses or external hooks to mess with it directly
   #dragDrop;
 
+  // Active context menu DOM element and cleanup handlers
+
+  /**
+   * Handle actions triggered from the attribute context menu.
+   * Replace these with real behaviors as desired.
+   * @param {string} action
+   * @param {string} attributeKey
+   * @param {HTMLElement} rowEl
+   * @private
+   */
+  
+
   /**
    * Create drag-and-drop workflow handlers for this Application
    * @returns {DragDrop[]}     An array of DragDrop handlers
@@ -813,7 +1075,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
         dragover: this._onDragOver.bind(this),
         drop: this._onDrop.bind(this),
       };
-  return new foundry.applications.ux.DragDrop.implementation(d);
+      // Use DragDrop directly; using .implementation prevents handlers from binding on some versions
+      return new foundry.applications.ux.DragDrop(d);
     });
   }
 
@@ -837,6 +1100,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(
     for (let k of Object.keys(overrides)) delete submitData[k];
     await this.document.update(submitData);
   }
+
+
 
   /**
    * Disables inputs subject to active effects

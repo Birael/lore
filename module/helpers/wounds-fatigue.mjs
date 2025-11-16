@@ -93,12 +93,7 @@ export class LoreWoundsFatigue {
     let next = current;
     if (input.checked) next = idx; else next = Math.min(current, idx - 1);
     next = Math.max(0, Math.min(next, max));
-  if (next !== current) await this.sheet.actor.update({ 'system.wounds.value': next }, { renderSheet: false });
-
-    // If wounds reach 3, set unconscious to true (do not unset if below 3)
-    if (next === 3 && !this.sheet.actor.system?.unconscious) {
-      await this.sheet.actor.update({ 'system.unconscious': true }, { renderSheet: false });
-    }
+    if (next !== current) await this.sheet.actor.update({ 'system.wounds.value': next });
 
     // Reflect immediately
     const boxes = this.sheet.element.querySelectorAll('input.wounds-checkbox');
@@ -122,12 +117,7 @@ export class LoreWoundsFatigue {
     let next = current;
     if (input.checked) next = idx; else next = Math.min(current, idx - 1);
     next = Math.max(0, Math.min(next, max));
-  if (next !== current) await this.sheet.actor.update({ 'system.fatigue.value': next }, { renderSheet: false });
-
-    // If fatigue reaches 3, set incapacitated to true (do not unset if below 3)
-    if (next === 3 && !this.sheet.actor.system?.incapacitated) {
-      await this.sheet.actor.update({ 'system.incapacitated': true }, { renderSheet: false });
-    }
+    if (next !== current) await this.sheet.actor.update({ 'system.fatigue.value': next });
 
     // Reflect immediately
     const boxes = this.sheet.element.querySelectorAll('input.fatigue-checkbox');
@@ -148,7 +138,7 @@ export class LoreWoundsFatigue {
     try {
       const current = !!this.sheet.actor.system?.unconscious;
       const next = !!input.checked;
-  if (next !== current) await this.sheet.actor.update({ 'system.unconscious': next }, { renderSheet: false });
+      if (next !== current) await this.sheet.actor.update({ 'system.unconscious': next });
 
       // Reflect immediately
       const boxes = this.sheet.element.querySelectorAll('input.unconscious-checkbox');
@@ -169,7 +159,7 @@ export class LoreWoundsFatigue {
     try {
       const current = !!this.sheet.actor.system?.incapacitated;
       const next = !!input.checked;
-  if (next !== current) await this.sheet.actor.update({ 'system.incapacitated': next }, { renderSheet: false });
+      if (next !== current) await this.sheet.actor.update({ 'system.incapacitated': next });
 
       // Reflect immediately
       const boxes = this.sheet.element.querySelectorAll('input.incapacitated-checkbox');
@@ -190,7 +180,7 @@ export class LoreWoundsFatigue {
     try {
       const current = !!this.sheet.actor.system?.stunned;
       const next = !!input.checked;
-  if (next !== current) await this.sheet.actor.update({ 'system.stunned': next }, { renderSheet: false });
+      if (next !== current) await this.sheet.actor.update({ 'system.stunned': next });
 
       // Reflect immediately
       const boxes = this.sheet.element.querySelectorAll('input.stunned-checkbox');

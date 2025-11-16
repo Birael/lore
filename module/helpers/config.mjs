@@ -5,21 +5,21 @@ export const LORE = {};
  * @type {Object}
  */
 LORE.attributes = {
-  ref: 'LORE.Actor.Attribute.Ref.long',
-  int: 'LORE.Actor.Attribute.Int.long',
-  gri: 'LORE.Actor.Attribute.Gri.long',
-  mig: 'LORE.Actor.Attribute.Mig.long',
-  tou: 'LORE.Actor.Attribute.Tou.long',
-  cha: 'LORE.Actor.Attribute.Cha.long',
+  ref: 'LORE.Attribute.Ref.long',
+  int: 'LORE.Attribute.Int.long',
+  gri: 'LORE.Attribute.Gri.long',
+  mig: 'LORE.Attribute.Mig.long',
+  phy: 'LORE.Attribute.Phy.long',
+  cha: 'LORE.Attribute.Cha.long',
 };
 
 LORE.attributeAbbreviations = {
-  ref: 'LORE.Actor.Attribute.Ref.abbr',
-  int: 'LORE.Actor.Attribute.Int.abbr',
-  gri: 'LORE.Actor.Attribute.Gri.abbr',
-  mig: 'LORE.Actor.Attribute.Mig.abbr',
-  tou: 'LORE.Actor.Attribute.Tou.abbr',
-  cha: 'LORE.Actor.Attribute.Cha.abbr',
+  ref: 'LORE.Attribute.Ref.abbr',
+  int: 'LORE.Attribute.Int.abbr',
+  gri: 'LORE.Attribute.Gri.abbr',
+  mig: 'LORE.Attribute.Mig.abbr',
+  phy: 'LORE.Attribute.Phy.abbr',
+  cha: 'LORE.Attribute.Cha.abbr',
 };
 
 /**
