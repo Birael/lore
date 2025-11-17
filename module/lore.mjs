@@ -570,7 +570,7 @@ Hooks.once('ready', function () {
         {
           name: 'Untrained',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'ref', 
@@ -579,7 +579,7 @@ Hooks.once('ready', function () {
         {
           name: 'Athletics',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'ref', 
@@ -588,7 +588,7 @@ Hooks.once('ready', function () {
         {
           name: 'Basic Knowledge',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'int', 
@@ -597,7 +597,7 @@ Hooks.once('ready', function () {
         {
           name: 'Insight',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'int', 
@@ -606,7 +606,7 @@ Hooks.once('ready', function () {
         {
           name: 'Persuasion',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'cha', 
@@ -615,7 +615,7 @@ Hooks.once('ready', function () {
         {
           name: 'Stealth',
           type: 'skill',
-          img: 'systems/lore/assets/icons/D6Icon.svg', 
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
             tiedAttribute: 'ref', 

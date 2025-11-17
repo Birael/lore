@@ -6,14 +6,11 @@
 
 .actor-header-first {
     margin: 0 0 0 0;
-    border-top: 1px solid var(--lore-c-bg2);
-    border-bottom: 1px solid var(--lore-c-bg2);
-    border-right: 1px solid var(--lore-c-bg2);
 }
 
 .actor-name-input {
-    border-radius: 0px;
     background: none;
+    font-family: @font-primary;
     font-weight: bold;
     font-size: 1.5em;
     box-shadow: none;
@@ -25,7 +22,6 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    border-left: 1px solid var(--lore-c-bg2);
     padding-left: 5px;
 
     label {
@@ -42,10 +38,12 @@
     }
 }
 
+.actor-header-second {
+    margin: 0;
+}
 
 /* Tags row in header */
 .tags-container {
-    border-right: 1px solid var(--lore-c-bg2);
 }
 
 .tags-empty {
@@ -92,12 +90,33 @@
     color: var(--lore-c-txt1);
 }
 
+.lore-coins-container {
+    display: flex;
+    align-items: center; /* vertically center label + icons */
+}
+
+.lore-coins-label {
+    color: var(--lore-c-txt1);
+}
+
+/* Coin icons next to coin count */
+.lore-coins-list {
+    display: inline-flex;
+    gap: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.lore-coin-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+}
+
 /* Combat stats (wounds, etc.) */
 .combat-stats-container {
     padding: 0.5rem 0.5rem;
     margin: 0;
-    border-right: 1px solid var(--lore-c-bg2);
-    border-top: 1px solid var(--lore-c-bg2);
 }
 
 /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
@@ -347,7 +366,6 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-bottom: 10px;
-    border-right: 1px solid var(--lore-c-bg2);
 }
 .morale-slider {
     position: relative;
@@ -356,6 +374,8 @@
 
 .morale-input {
     width: 100%;
+    position: relative; /* enable z-index stacking over ticks */
+    z-index: 2;
     color: var(--lore-c-bg2);
     &::-webkit-slider-runnable-track {
         background: var(--lore-c-bg2);
@@ -421,16 +441,17 @@
     position: absolute;
     left: 9px;
     right: 9px;
-    height: 8px;
-    bottom: -6px;
+    height: 15px;
+    top: 8px; // align visually with track; render underneath via z-index
     box-sizing: border-box;
     pointer-events: none;
+    z-index: 1;
 }
 
 .morale-tick {
     position: absolute;
     top: 0;
-    width: 2px;
+    width: 3px;
     height: 100%;
     background: var(--lore-c-txt2);
     transform: translateX(-1px);

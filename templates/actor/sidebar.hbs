@@ -5,33 +5,6 @@
             <img class="profile-img" src="{{actor.img}}" data-edit="img" data-action="onEditImage" title="{{actor.name}}" />
         </div>
 
-        <div class='attributes flexcol'>
-            <label class='attribute-label'>{{localize 'LORE.SheetLabels.Attributes'}}</label>
-            {{#each system.attributes as |attribute key|}}
-                <div class='attribute flexrow flex-between' data-attribute='{{key}}'>
-                    <label
-                        class='attribute-roll-label rollable align-left'
-                        data-action='roll'
-                        data-roll='{{attribute.value}}d6khx+@attributes.{{key}}.mod'
-                        data-label='{{localize (lookup @root.config.attributes key)}}'
-                    >
-                        {{localize (lookup @root.config.attributes key)}}
-                    </label>
-                    {{#if (eq ../editingAttribute key)}}
-                        <input type='number' class='attribute-rank-input' value='{{attribute.value}}' min='0' style='width:3em;text-align:right;' data-key='{{key}}'>
-                    {{else}}
-                        <label
-                            class='attribute-formula-label roll-summary align-right'
-                            data-label='{{localize (lookup @root.config.attributes key)}}'
-                        >
-                            {{attribute.value}}d6{{numberFormat attribute.mod decimals=0 sign=true}}
-                        </label>
-                    {{/if}}
-                </div>
-            {{/each}}
-        </div>
-        <div class="horizontal-line"></div>
-
         <div class='stats-container'>
             <div class='stat-container grid grid-2col'>
                 <label for='system.movement' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.movement.label"}}'>
@@ -70,5 +43,82 @@
 	            />
             </div>
         </div>
+
+        <div class='attributes flexcol'>
+            <label class='attribute-label'>{{localize 'LORE.SheetLabels.Attributes'}}</label>
+            {{#each system.attributes as |attribute key|}}
+                <div class='attribute flexrow flex-between' data-attribute='{{key}}'>
+                    <label
+                        class='attribute-roll-label rollable align-left'
+                        data-action='roll'
+                        data-roll='{{attribute.value}}d6khx+@attributes.{{key}}.mod'
+                        data-label='{{localize (lookup @root.config.attributes key)}}'
+                    >
+                        {{localize (lookup @root.config.attributes key)}}
+                    </label>
+                    {{#if (eq ../editingAttribute key)}}
+                        <input type='number' class='attribute-rank-input' value='{{attribute.value}}' min='0' style='width:3em;text-align:right;' data-key='{{key}}'>
+                    {{else}}
+                        <label
+                            class='attribute-formula-label roll-summary align-right'
+                            data-label='{{localize (lookup @root.config.attributes key)}}'
+                        >
+                            {{attribute.value}}d6{{numberFormat attribute.mod decimals=0 sign=true}}
+                        </label>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
+
+        <ol class='items-list'>
+            <li class='item flexrow items-header'>
+                <div class='item-name'>{{localize 'LORE.Item.Boons.label'}}</div>
+                <div class='item-controls'>
+                    {{#if @root.editable}}
+            
+                    {{/if}}
+                </div>
+            </li>
+            {{#each boons as |item id|}}
+                <li
+                    class='item flexrow'
+                    data-item-id='{{item._id}}'
+                    data-drag='true'
+                    data-document-class='Item'
+                >
+                <div class='item-name'>
+                    <div class='item-image'>
+                        <img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
+                    </div>
+                    <div>{{item.name}}</div>
+                </div>
+            </li>
+          {{/each}}
+        </ol>
+        <ol class='items-list'>
+          <li class='item flexrow items-header'>
+            <div class='item-name'>{{localize 'LORE.Item.Banes.label'}}</div>
+            <div class='item-controls'>
+              {{#if @root.editable}}
+
+              {{/if}}
+            </div>
+          </li>
+          {{#each banes as |item id|}}
+            <li
+              class='item flexrow'
+              data-item-id='{{item._id}}'
+              data-drag='true'
+              data-document-class='Item'
+            >
+              <div class='item-name'>
+                <div class='item-image'>
+                  <img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
+                </div>
+                <div>{{item.name}}</div>
+              </div>
+            </li>
+          {{/each}}
+        </ol>
     </div>
 </aside>

@@ -30,25 +30,38 @@
 
   </div>
 
-  <div class='tags-container' aria-label="Tags">
+  <div class='actor-header-second grid grid-3col'>
+    <div class='tags-container grid-span-2' aria-label="Tags">
 
-    {{#if system.tags}}
-      {{#if system.tags.length}}
-        <ul class="tag-list" role="list">
-          {{#each system.tags as |tag|}}
-            {{#if tag}}
-              <li class="tag-chip {{#if (isAncestryTag tag)}}is-ancestry{{/if}} {{#if (isSizeTag tag)}}is-size{{/if}}" role="listitem" data-tag="{{tag}}">{{tagLabel tag}}</li>
-            {{/if}}
-          {{/each}}
-        </ul>
+      {{#if system.tags}}
+        {{#if system.tags.length}}
+          <ul class="tag-list" role="list">
+            {{#each system.tags as |tag|}}
+              {{#if tag}}
+                <li class="tag-chip {{#if (isAncestryTag tag)}}is-ancestry{{/if}} {{#if (isSizeTag tag)}}is-size{{/if}}" role="listitem" data-tag="{{tag}}">{{tagLabel tag}}</li>
+              {{/if}}
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="tags-empty">No tags</div>
+        {{/if}}
       {{else}}
-        <div class="tags-empty">No tags</div>
-      {{/if}}
-    {{else}}
       <div class="tags-empty">No tags</div>
-    {{/if}}
+      {{/if}}
 
+    </div>
+
+    <div class='lore-coins-container grid-span-1'>
+      <label class='lore-coins-label'>Coins: {{system.loreCoin}}</label>
+      <span class="lore-coins-list" aria-hidden="true">
+        {{#each (range 0 system.loreCoin)}}
+          <img src="systems/lore/assets/icons/LoreCoin.svg" class="lore-coin-icon" alt=""/>
+        {{/each}}
+      </span>
+    </div>
   </div>
+
+  
   
   <div class='combat-stats-container grid grid-5col'>
 
@@ -77,14 +90,9 @@
     </div>
 
     <div class='stunned-container grid-span-1'>
-      <label class='stunned-label center-text'>
-	      {{localize 'LORE.Actor.base.FIELDS.stunned.label'}}
+      <label for='system.morale' class='morale-label'>
+        {{localize 'LORE.Actor.base.FIELDS.morale.label'}}: {{system.morale}}
       </label>
-      <div class='stunned-content flexrow flex-center flex-between center-text'>
-        <label style="position:relative;display:inline-block;">
-          <input type='checkbox' name='system.stunned.checkboxes' value='{{this}}' class='stunned-checkbox'/><span class='custom-circle'></span>
-        </label>
-      </div>
     </div>
 
     <div class='incapacitated-container grid-span-1'>
@@ -114,11 +122,9 @@
   </div>
 
   <div class='morale-slider-container'>
-    <label for='system.morale' class='morale-label'>
-      {{localize 'LORE.Actor.base.FIELDS.morale.label'}}: {{system.morale}}
-    </label>
     
-    <div class='morale-slider flexrow flex-center' style='gap: 8px;'>
+    
+    <div class='morale-slider'>
       <input
         type='range'
         class='morale-input'

@@ -1,17 +1,17 @@
 // main: "../lore.less", out: false
 
 .lore-sidebar {
-    width: 160px;
-    border-right: 1px solid var(--lore-c-bg2);
+    width: 180px;
     height: 100%;
     overflow: visible;
     background: var(--lore-c-bg1);
+    border: 2px solid var(--lore-c-bg2);
 }
 &.actor {
     &.application .window-content,
     &.window-app .window-content {
         display: grid;
-        grid-template-columns: 160px 1fr;
+        grid-template-columns: 180px 1fr;
         grid-template-rows: auto auto minmax(0, 1fr);
         align-items: start;
         height: 100%;
@@ -43,17 +43,19 @@
     }
 }
 .profile-img {
-    width: 160px;
-    height: 160px;
+    width: 180px;
+    height: 180px;
     object-fit: cover;
     border-bottom: 1px solid var(--lore-c-bg2);
 }
 .attributes {
-    padding: 10px;
+    padding: 5px;
+    border-bottom: 1px solid var(--lore-c-bg2);
 }
 .attribute {
     margin: 0px;
-    height: 30px;
+    height: 20px;
+    padding-left: 10px;
     color: var(--lore-c-txt2);
 }
 .attribute-label {
@@ -69,20 +71,26 @@
 
 .attribute-formula-label {
     color: var(--lore-c-txt2);
+    padding-right: 10px;
 }
 
 .stats-container {
-    padding: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    gap: 0px;
+    border-bottom: 1px solid var(--lore-c-bg2);
 }
 .stat-container {
-    padding: 0px;
+    margin: 0;
+    padding-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 .stat-label {
-    padding-right: 20px;
+    padding-right: 0;
     display: flex;
     align-items: center;
     color: var(--lore-c-txt1);
@@ -94,8 +102,46 @@
     display: inline-block;
 }
 .stat-input {
-    width: 50px;
-    text-align: center;
+    width: 30px;
+    text-align: left;
     color: var(--lore-c-txt2);
-    background: var(--lore-c-bg2);
+    background: none;
+    padding-left: 2px;
+}
+
+// Tighter boon/bane lists in the sidebar
+.lore-sidebar .items-list {
+    padding: 0px;
+}
+
+.lore-sidebar .items-list .items-header {
+    min-height: 22px;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+
+.lore-sidebar .items-list .item {
+    min-height: 22px;
+    padding: 2px 4px;
+    gap: 6px;
+    align-items: center;
+}
+
+.lore-sidebar .items-list .item .item-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 18px;
+    font-size: 12px;
+}
+
+.lore-sidebar .items-list .item .item-image {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.lore-sidebar .items-list .item .item-image img {
+    width: 18px;
+    height: 18px;
 }

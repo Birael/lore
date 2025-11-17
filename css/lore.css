@@ -55,6 +55,13 @@ body.theme-light {
   --lore-c-gold: #daa520;
   --lore-c-green: #3cb371;
 }
+@font-face {
+  font-family: 'Dusk Till Dawn Risen';
+  src: url("../assets/fonts/dusk-till-dawn-risen.otf") format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 .lore-context-menu {
   position: absolute;
   z-index: 1000;
@@ -456,6 +463,7 @@ body.theme-light {
 }
 .lore {
   /* Tags row in header */
+  /* Coin icons next to coin count */
   /* Combat stats (wounds, etc.) */
   /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
   /* Conditions (Unconscious, Stunned, Incapacitated) styling when used directly in the grid */
@@ -463,7 +471,7 @@ body.theme-light {
   /* Ancestry slot styling */
 }
 .lore .window-app {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Dusk Till Dawn Risen', 'Roboto', sans-serif;
 }
 .lore .rollable:hover,
 .lore .rollable:focus {
@@ -907,7 +915,6 @@ body.theme-light {
   align-items: center;
   padding: 4px 6px;
   background: var(--lore-c-bg1);
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content nav.tabs.main-tabs a.main-tab,
 .lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab {
@@ -935,8 +942,6 @@ body.theme-light {
   align-items: center;
   padding: 4px 6px;
   background: var(--lore-c-bg1);
-  border-top: 1px solid var(--lore-c-bg2);
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content nav.tabs.sub-tabs,
 .lore.actor.window-app .window-content nav.tabs.sub-tabs {
@@ -947,7 +952,6 @@ body.theme-light {
   padding: 2px 4px;
   border-top: none;
   background: var(--lore-c-bg1);
-  border-bottom: 1px solid var(--lore-c-bg2);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -999,16 +1003,16 @@ body.theme-light {
   overflow: auto;
 }
 .lore .lore-sidebar {
-  width: 160px;
-  border-right: 1px solid var(--lore-c-bg2);
+  width: 180px;
   height: 100%;
   overflow: visible;
   background: var(--lore-c-bg1);
+  border: 2px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content,
 .lore.actor.window-app .window-content {
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 180px 1fr;
   grid-template-rows: auto auto minmax(0, 1fr);
   align-items: start;
   height: 100%;
@@ -1037,17 +1041,19 @@ body.theme-light {
   height: 100%;
 }
 .lore .profile-img {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   object-fit: cover;
   border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .attributes {
-  padding: 10px;
+  padding: 5px;
+  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .attribute {
   margin: 0px;
-  height: 30px;
+  height: 20px;
+  padding-left: 10px;
   color: var(--lore-c-txt2);
 }
 .lore .attribute-label {
@@ -1061,19 +1067,25 @@ body.theme-light {
 }
 .lore .attribute-formula-label {
   color: var(--lore-c-txt2);
+  padding-right: 10px;
 }
 .lore .stats-container {
-  padding: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 0px;
+  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .stat-container {
-  padding: 0px;
+  margin: 0;
+  padding-left: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .lore .stat-label {
-  padding-right: 20px;
+  padding-right: 0;
   display: flex;
   align-items: center;
   color: var(--lore-c-txt1);
@@ -1084,23 +1096,51 @@ body.theme-light {
   display: inline-block;
 }
 .lore .stat-input {
-  width: 50px;
-  text-align: center;
+  width: 30px;
+  text-align: left;
   color: var(--lore-c-txt2);
-  background: var(--lore-c-bg2);
+  background: none;
+  padding-left: 2px;
+}
+.lore .lore-sidebar .items-list {
+  padding: 0px;
+}
+.lore .lore-sidebar .items-list .items-header {
+  min-height: 22px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+.lore .lore-sidebar .items-list .item {
+  min-height: 22px;
+  padding: 2px 4px;
+  gap: 6px;
+  align-items: center;
+}
+.lore .lore-sidebar .items-list .item .item-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 18px;
+  font-size: 12px;
+}
+.lore .lore-sidebar .items-list .item .item-image {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+.lore .lore-sidebar .items-list .item .item-image img {
+  width: 18px;
+  height: 18px;
 }
 .lore .sheet-header {
   background: var(--lore-c-bg1);
 }
 .lore .actor-header-first {
   margin: 0 0 0 0;
-  border-top: 1px solid var(--lore-c-bg2);
-  border-bottom: 1px solid var(--lore-c-bg2);
-  border-right: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-name-input {
-  border-radius: 0px;
   background: none;
+  font-family: 'Dusk Till Dawn Risen', 'Roboto', sans-serif;
   font-weight: bold;
   font-size: 1.5em;
   box-shadow: none;
@@ -1111,7 +1151,6 @@ body.theme-light {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-left: 1px solid var(--lore-c-bg2);
   padding-left: 5px;
 }
 .lore .actor-level label {
@@ -1125,8 +1164,8 @@ body.theme-light {
   color: var(--lore-c-txt1);
   background: none;
 }
-.lore .tags-container {
-  border-right: 1px solid var(--lore-c-bg2);
+.lore .actor-header-second {
+  margin: 0;
 }
 .lore .tags-empty {
   opacity: 0.7;
@@ -1167,11 +1206,28 @@ body.theme-light {
   background-color: rgba(218, 165, 32, 0.22);
   color: var(--lore-c-txt1);
 }
+.lore .lore-coins-container {
+  display: flex;
+  align-items: center;
+  /* vertically center label + icons */
+}
+.lore .lore-coins-label {
+  color: var(--lore-c-txt1);
+}
+.lore .lore-coins-list {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.lore .lore-coin-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
 .lore .combat-stats-container {
   padding: 0.5rem 0.5rem;
   margin: 0;
-  border-right: 1px solid var(--lore-c-bg2);
-  border-top: 1px solid var(--lore-c-bg2);
 }
 .lore .combat-stats-container.grid-5col {
   /* Make Wounds and Fatigue narrow; let center conditions flex */
@@ -1422,7 +1478,6 @@ body.theme-light {
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 10px;
-  border-right: 1px solid var(--lore-c-bg2);
 }
 .lore .morale-slider {
   position: relative;
@@ -1430,6 +1485,9 @@ body.theme-light {
 }
 .lore .morale-input {
   width: 100%;
+  position: relative;
+  /* enable z-index stacking over ticks */
+  z-index: 2;
   color: var(--lore-c-bg2);
   height: 30px;
 }
@@ -1495,15 +1553,16 @@ body.theme-light {
   position: absolute;
   left: 9px;
   right: 9px;
-  height: 8px;
-  bottom: -6px;
+  height: 15px;
+  top: 8px;
   box-sizing: border-box;
   pointer-events: none;
+  z-index: 1;
 }
 .lore .morale-tick {
   position: absolute;
   top: 0;
-  width: 2px;
+  width: 3px;
   height: 100%;
   background: var(--lore-c-txt2);
   transform: translateX(-1px);
