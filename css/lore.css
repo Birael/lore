@@ -942,6 +942,9 @@ body.theme-light {
   align-items: center;
   padding: 4px 6px;
   background: var(--lore-c-bg1);
+  border-bottom: 1px solid var(--lore-c-bg2);
+  border-top: 1px solid var(--lore-c-bg2);
+  border-right: 2px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content nav.tabs.sub-tabs,
 .lore.actor.window-app .window-content nav.tabs.sub-tabs {
@@ -1134,9 +1137,12 @@ body.theme-light {
 }
 .lore .sheet-header {
   background: var(--lore-c-bg1);
+  border-top: 2px solid var(--lore-c-bg2);
+  border-right: 2px solid var(--lore-c-bg2);
 }
 .lore .actor-header-first {
   margin: 0 0 0 0;
+  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-name-input {
   background: none;
@@ -1146,6 +1152,7 @@ body.theme-light {
   box-shadow: none;
   margin: 0;
   color: var(--lore-c-txt1);
+  border-right: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-level {
   display: flex;
@@ -1166,6 +1173,7 @@ body.theme-light {
 }
 .lore .actor-header-second {
   margin: 0;
+  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .tags-empty {
   opacity: 0.7;
