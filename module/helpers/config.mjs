@@ -9,8 +9,8 @@ LORE.attributes = {
   int: 'LORE.Attribute.Int.long',
   gri: 'LORE.Attribute.Gri.long',
   mig: 'LORE.Attribute.Mig.long',
-  phy: 'LORE.Attribute.Phy.long',
-  cha: 'LORE.Attribute.Cha.long',
+  tou: 'LORE.Attribute.Tou.long',
+  pre: 'LORE.Attribute.Pre.long',
 };
 
 LORE.attributeAbbreviations = {
@@ -18,8 +18,8 @@ LORE.attributeAbbreviations = {
   int: 'LORE.Attribute.Int.abbr',
   gri: 'LORE.Attribute.Gri.abbr',
   mig: 'LORE.Attribute.Mig.abbr',
-  phy: 'LORE.Attribute.Phy.abbr',
-  cha: 'LORE.Attribute.Cha.abbr',
+  tou: 'LORE.Attribute.Tou.abbr',
+  pre: 'LORE.Attribute.Pre.abbr',
 };
 
 /**
@@ -31,8 +31,8 @@ LORE.attributeTypes = {
   int: 'mental',
   gri: 'mental',
   mig: 'physical',
-  phy: 'physical',
-  cha: 'mental',
+  tou: 'physical',
+  pre: 'mental',
 };
 
 /**

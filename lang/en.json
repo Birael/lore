@@ -5,8 +5,8 @@
       "Int": { "long": "Intellect", "abbr": "int" },
       "Gri": { "long": "Grit", "abbr": "gri" },
       "Mig": { "long": "Might", "abbr": "mig" },
-      "Phy": { "long": "Physique", "abbr": "phy" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
+      "Tou": { "long": "Tough", "abbr": "tou" },
+      "Pre": { "long": "Presence", "abbr": "pre" }
     },
     "SheetLabels": {
       "Actor": "lore Actor Sheet",
@@ -88,6 +88,32 @@
         "FIELDS": {
           "rank": {"label": "Rank"},
           "attribute": {"label": "Linked Attribute"}
+        },
+        "DefaultSkills": {
+          "athletics": { 
+            "name": "Athletics",
+            "description": "The Athletics skill represents your character's ability to perform physical tasks like climbing, swimming, jumping, throwing, and catching. While the skill is normally governed by Reflexes, the players  can change the governing skill to Might using a Boon, for strength as opposed to dexterity focused characters."
+          },
+          "basicKnowledge": { 
+            "name": "Basic Knowledge",
+            "description": "The Basic Knowledge skill represents your character’s ability to recall common facts about the world they reside in."
+          },
+          "insight": { 
+            "name": "Insight",
+            "description": "The insight skill represents a character’s ability to perceive the world around them and process that information."
+          },
+          "persuasion": { 
+            "name": "Persuasion",
+            "description": "The Persuasion skill represents your character’s ability to make friends and influence people. This skill can represent a character’s physical attractiveness or their personality, as determined by the associated Boons."
+          },
+          "Stealth": { 
+            "name": "Stealth",
+            "description": "The Stealth skill represents a character’s ability to hide, sneak or perform actions covertly, like sleight of hand."
+          },
+          "untrained": { 
+            "name": "Untrained",
+            "description": "The Untrained skill represents a character’s ability to attempt to perform any given task, whether or not they’re skilled in it or not. After all, anyone can *attempt* brain surgery. The base modifier for this roll is a -3, but this can be negated or even inverted using certain Boons; some folks have all the luck!"
+          }
         }
       },
       "Boons": { "label": "Boons" },

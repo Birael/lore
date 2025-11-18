@@ -568,15 +568,6 @@ Hooks.once('ready', function () {
   // Build the default skills list
   const defaultSkills = [
         {
-          name: 'Untrained',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'ref', 
-          }
-        },
-        {
           name: 'Athletics',
           type: 'skill',
           img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
@@ -609,11 +600,20 @@ Hooks.once('ready', function () {
           img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {
             rank: { value: 1, max: 5 },
-            tiedAttribute: 'cha', 
+            tiedAttribute: 'pre', 
           }
         },
         {
           name: 'Stealth',
+          type: 'skill',
+          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
+          system: {
+            rank: { value: 1, max: 5 },
+            tiedAttribute: 'ref', 
+          }
+        },
+        {
+          name: 'Untrained',
           type: 'skill',
           img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
           system: {

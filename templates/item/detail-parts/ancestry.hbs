@@ -7,9 +7,17 @@
         <p class='hint'>Optional. If set, this ancestry will add a tag to the actor when applied. Keep it simple: lowercase, no spaces if you plan to reference it in rules later.</p>
       </div>
       <div class='item-options grid-span-2'>
-        <label class='resource-label'>Size Tag</label>
-        <input class='resource-input' type='text' name='system.sizeTag' value='{{system.sizeTag}}' placeholder='e.g. small, medium, large' />
-        <p class='hint'>Optional. If set, a size tag is added to the actor. Size tags are highlighted in gold on actor sheets.</p>
+        <label class='resource-label'>Size</label>
+        <select class='resource-select' name='system.sizeTag'>
+          <option value=''>-- Select Size --</option>
+          <option value='Tiny' {{#if (eq system.sizeTag 'Tiny')}}selected{{/if}}>Tiny</option>
+          <option value='Small' {{#if (eq system.sizeTag 'Small')}}selected{{/if}}>Small</option>
+          <option value='Medium' {{#if (eq system.sizeTag 'Medium')}}selected{{/if}}>Medium</option>
+          <option value='Large' {{#if (eq system.sizeTag 'Large')}}selected{{/if}}>Large</option>
+          <option value='Huge' {{#if (eq system.sizeTag 'Huge')}}selected{{/if}}>Huge</option>
+          <option value='Gargantuan' {{#if (eq system.sizeTag 'Gargantuan')}}selected{{/if}}>Gargantuan</option>
+        </select>
+          <p class='hint'><!-- Size tag is now managed by the dropdown above --></p>
       </div>
       <div class='item-options grid-span-2'>
         <label class='resource-label'>Additional Tags</label>

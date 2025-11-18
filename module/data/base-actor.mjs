@@ -51,12 +51,13 @@ export default class loreActorBase extends foundry.abstract
       }, {})
     );
 
-  // Single-item slot for Ancestry: stores the embedded Item ID or empty string
-  schema.equippedAncestry = new fields.StringField({ initial: "" });
+    // Single-item slot for Ancestry: stores the embedded Item ID or empty string
+    schema.equippedAncestry = new fields.StringField({ initial: "" });
     schema.gender = new fields.StringField({ initial: "" });
     schema.age = new fields.StringField({ initial: "" });
     schema.height = new fields.StringField({ initial: "" });
     schema.weight = new fields.StringField({ initial: "" });
+    schema.mass = new fields.NumberField({ initial: 0 });
 
     schema.biography = new fields.HTMLField();
 

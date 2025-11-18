@@ -110,7 +110,9 @@ export class loreActor extends Actor {
       let ancestryItem = null;
       if (eqId) ancestryItem = this.items.get(eqId) ?? null;
       const tagKey = String(ancestryItem?.system?.tag ?? '').trim();
-      const sizeKey = String(ancestryItem?.system?.sizeTag ?? '').trim();
+      // Normalize size to lowercase for tag
+      const sizeKeyRaw = String(ancestryItem?.system?.sizeTag ?? '').trim();
+      const sizeKey = sizeKeyRaw ? sizeKeyRaw.toLowerCase() : '';
 
       // Collect extra non-ancestry tags from ancestry (comma/space separated string)
       const extra = ancestryItem?.system?.extraTags;
