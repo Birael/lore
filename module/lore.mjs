@@ -567,61 +567,61 @@ Hooks.once('ready', function () {
 
   // Build the default skills list
   const defaultSkills = [
-        {
-          name: 'Athletics',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'ref', 
-          }
-        },
-        {
-          name: 'Basic Knowledge',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'int', 
-          }
-        },
-        {
-          name: 'Insight',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'int', 
-          }
-        },
-        {
-          name: 'Persuasion',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'pre', 
-          }
-        },
-        {
-          name: 'Stealth',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'ref', 
-          }
-        },
-        {
-          name: 'Untrained',
-          type: 'skill',
-          img: 'systems/lore/assets/icons/dice/black/d6-6.svg', 
-          system: {
-            rank: { value: 1, max: 5 },
-            tiedAttribute: 'ref', 
-          }
-        },
-      ];
+    {
+      key: 'athletics',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'ref',
+      }
+    },
+    {
+      key: 'basicKnowledge',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'int',
+      }
+    },
+    {
+      key: 'insight',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'int',
+      }
+    },
+    {
+      key: 'persuasion',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'pre',
+      }
+    },
+    {
+      key: 'Stealth',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'ref',
+      }
+    },
+    {
+      key: 'untrained',
+      type: 'skill',
+      img: 'systems/lore/assets/icons/dice/black/d6-6.svg',
+      system: {
+        rank: { value: 1, max: 5 },
+        tiedAttribute: 'ref',
+      }
+    },
+  ];
       // Prevent duplicates: skip if we've already seeded on this actor or if skills already exist
       const alreadySeeded = !!actor.getFlag?.('lore', 'skillsSeeded');
       const existingSkillNames = new Set(
@@ -633,12 +633,23 @@ Hooks.once('ready', function () {
       // Only create any skills that are missing by name
       const skillsToCreate = alreadySeeded
         ? []
-        : defaultSkills.filter(s => !existingSkillNames.has(String(s.name).trim().toLowerCase()));
+        : defaultSkills.filter(s => !existingSkillNames.has(
+            String(game.i18n.localize(`LORE.Item.Skill.DefaultSkills.${s.key}.name`)).trim().toLowerCase()
+          ));
 
       if (skillsToCreate.length) {
         // Create each missing skill item for the actor
         for (const skillData of skillsToCreate) {
-          await actor.createEmbeddedDocuments('Item', [skillData]);
+          const localizedName = game.i18n.localize(`LORE.Item.Skill.DefaultSkills.${skillData.key}.name`);
+          const localizedDescription = game.i18n.localize(`LORE.Item.Skill.DefaultSkills.${skillData.key}.description`);
+          await actor.createEmbeddedDocuments('Item', [{
+            ...skillData,
+            name: localizedName,
+            system: {
+              ...skillData.system,
+              description: localizedDescription
+            }
+          }]);
         }
         // Mark as seeded so subsequent create events or reloads won't duplicate
         try { await actor.setFlag?.('lore', 'skillsSeeded', true); } catch {}
