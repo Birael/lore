@@ -4,24 +4,41 @@
   data-group='primary'
   data-tab='details'
 >
+
   <div class="skill-form-group">
-    <label class='skill-rank-label' for="system.rank.value">{{localize 'LORE.Item.Skill.Rank'}}</label>
-    <input class='skill-rank-input' type="number" name="system.rank.value" value="{{system.rank.value}}" min="1" max="{{system.rank.max}}"/>
+    <label class="checkbox" for="system.untrained">
+      <input type="checkbox" name="system.untrained" id="system.untrained" {{checked system.untrained}}/>
+      {{localize 'LORE.Item.Skill.Untrained'}}
+    </label>
   </div>
 
   <div class="skill-form-group">
-    <label class='skill-attribute-label' for="system.tiedAttribute">{{localize 'LORE.Item.Skill.Attribute'}}</label>
-    <select class='skill-attribute-select' name="system.tiedAttribute" id="system.tiedAttribute">
-      {{#each config.attributeTypes as |type key|}}
-        <option value="{{key}}" {{#if (eq ../system.tiedAttribute key)}}selected{{/if}}>
-          {{localize (lookup ../config.attributes key)}}
-        </option>
-      {{/each}}
-    </select>
+    <label class="checkbox" for="system.brawling">
+      <input type="checkbox" name="system.brawling" id="system.brawling" {{checked system.brawling}}/>
+      Brawling
+    </label>
   </div>
 
-  <div class="skill-form-group">
-    <label class='skill-rank-label' for="system.modifier">{{localize 'LORE.Item.Skill.Modifier'}}</label>
-    <input class='skill-rank-input' type="number" name="system.modifier" id="system.modifier" value="{{system.modifier}}" step="1" data-dtype="Number" />
-  </div>
+  {{#unless system.untrained}}
+    <div class="skill-form-group">
+      <label class='skill-rank-label' for="system.rank.value">{{localize 'LORE.Item.Skill.Rank'}}</label>
+      <input class='skill-rank-input' type="number" name="system.rank.value" value="{{system.rank.value}}" min="1" max="{{system.rank.max}}"/>
+    </div>
+
+    <div class="skill-form-group">
+      <label class='skill-attribute-label' for="system.tiedAttribute">{{localize 'LORE.Item.Skill.Attribute'}}</label>
+      <select class='skill-attribute-select' name="system.tiedAttribute" id="system.tiedAttribute">
+        {{#each config.attributeTypes as |type key|}}
+          <option value="{{key}}" {{#if (eq ../system.tiedAttribute key)}}selected{{/if}}>
+            {{localize (lookup ../config.attributes key)}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="skill-form-group">
+      <label class='skill-rank-label' for="system.modifier">{{localize 'LORE.Item.Skill.Modifier'}}</label>
+      <input class='skill-rank-input' type="number" name="system.modifier" id="system.modifier" value="{{system.modifier}}" step="1" data-dtype="Number" />
+    </div>
+  {{/unless}}
 </section>

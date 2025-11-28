@@ -19,10 +19,10 @@ export class loreItem extends Item {
       weapon: "icons/svg/sword.svg",
       armor: "icons/svg/shield.svg",
       magick: "icons/svg/book.svg",
-      skill: "systems/lore/assets/icons/D6Icon.svg",
+      skill: "../assets/icons/dice/black/d6-6.svg",
       boon: "icons/svg/upgrade.svg",
       bane: "icons/svg/downgrade.svg",
-      ancestry: "systems/lore/assets/default-item.png",
+      ancestry: "icons/svg/mystery-man.svg",
       default: "systems/lore/assets/default-item.png"
     };
     return { img: defaultImages[type] || defaultImages.default };

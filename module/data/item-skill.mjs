@@ -1,6 +1,22 @@
 import loreItemBase from './base-item.mjs';
 
 export default class loreSkill extends loreItemBase {
+    /**
+     * Always fetch the current total modifier from the actor's attribute and skill modifier.
+     */
+    get currentTotalModifier() {
+        // In a DataModel on an Item, parent is the Item; parent.parent is the Actor
+        const actor = this.parent?.parent;
+      let attributeMod = 0;
+        const tiedAttr = this.tiedAttribute || 'ref';
+        if (actor && actor.system?.attributes && tiedAttr in actor.system.attributes) {
+          const attr = actor.system.attributes[tiedAttr];
+        attributeMod = typeof attr.mod === 'number' ? attr.mod : Number(attr.mod ?? 0);
+      }
+      let skillMod = Number(this.modifier ?? 0);
+      if (this.untrained) skillMod = -3;
+      return skillMod + attributeMod;
+    }
   static LOCALIZATION_PREFIXES = [
     'LORE.Item.base',
     'LORE.Item.Skill',
@@ -33,22 +49,54 @@ export default class loreSkill extends loreItemBase {
       step: 1,
     });
 
+    // Untrained skill checkbox
+    schema.untrained = new fields.BooleanField({
+      required: true,
+      initial: false,
+    });
+
+      // Brawling skill checkbox
+      schema.brawling = new fields.BooleanField({
+        required: true,
+        initial: false,
+      });
+
     return schema;
   }
 
   prepareDerivedData() {
     super.prepareDerivedData();
-    
+
     // this.parent should be the Item's parent (the Actor)
-    const actor = this.parent.parent;
-    if (!actor || !this.tiedAttribute) return 0;
+    const actor = this.parent?.parent;
+    if (!actor) return 0;
     // Defensive: check if attributes exist and have the tied attribute
-    const attr = actor.system.attributes?.[this.tiedAttribute];
+    let attributeMod = 0;
+    const tiedAttr = this.tiedAttribute || 'ref';
+    if (actor.system?.attributes && tiedAttr in actor.system.attributes) {
+      const attr = actor.system.attributes[tiedAttr];
+      attributeMod = typeof attr.mod === 'number' ? attr.mod : Number(attr.mod ?? 0);
+    } else {
+      console.warn(`LORE | Skill '${this.name}' could not find tied attribute '${this.tiedAttribute}' on actor '${actor.name}'.`);
+    }
 
-    // Build the formula dynamically using string interpolation
-    const roll = this.roll;
-    let diceNum = this.rank.value;
+    let diceNum = Number(this.rank?.value ?? 1);
+    let skillMod = Number(this.modifier ?? 0);
 
-    this.formula = `${diceNum}d6khx`;
+    // If untrained, override certain properties
+    if (this.untrained) {
+      this.rank.value = 1;
+      skillMod = -3;
+      // Untrained skills ignore attribute modifiers, so do not use attr
+      this.totalModifier = skillMod;
+      // Base formula contains only dice+keep/explode flags; flat mods are applied by the roll handler
+      this.formula = `1d6khx`;
+    } else {
+      // Add attribute modifier to skill modifier
+      const total = skillMod + attributeMod;
+      this.totalModifier = total;
+      // Base formula contains only dice+keep/explode flags; flat mods are applied by the roll handler
+      this.formula = `${diceNum}d6khx`;
+    }
   }
 }

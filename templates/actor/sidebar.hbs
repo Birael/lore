@@ -7,16 +7,16 @@
 
         <div class='stats-container'>
             <div class='stat-container grid grid-2col'>
-                <label for='system.movement' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.movement.label"}}'>
-                    <img src="icons/svg/wingfoot.svg" alt='{{localize "LORE.Actor.base.FIELDS.movement.label"}}' class="stat-icon"/>
+                <label for='system.pace' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.pace.label"}}'>
+                    <img src="icons/svg/wingfoot.svg" alt='{{localize "LORE.Actor.base.FIELDS.pace.label"}}' class="stat-icon"/>
                 </label>
                 <input
                     class='stat-input text-center'
-		            type='text'
-		            name='system.movement'
-		            value='{{system.movement}}'
-		            data-dtype='Number'
-	            />
+                    type='text'
+                    name='system.pace'
+                    value='{{system.pace}}'
+                    data-dtype='Number'
+                />
             </div>
             <div class='stat-container grid grid-2col'>
                 <label for='system.parry' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.parry.label"}}'>
@@ -31,16 +31,16 @@
 	            />
             </div>
             <div class='stat-container grid grid-2col'>
-                <label for='system.toughness' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.toughness.label"}}'>
-	                <img src="icons/svg/tower.svg" alt='{{localize "LORE.Actor.base.FIELDS.toughness.label"}}' class="stat-icon"/>
+                <label for='system.resist' class='stat-label' title='{{localize "LORE.Actor.base.FIELDS.resist.label"}}'>
+                	<img src="icons/svg/tower.svg" alt='{{localize "LORE.Actor.base.FIELDS.resist.label"}}' class="stat-icon"/>
                 </label>
                 <input
                     class='stat-input text-center'
-		            type='text'
-		            name='system.toughness'
-		            value='{{system.toughness}}'
-		            data-dtype='Number'
-	            />
+                    type='text'
+                    name='system.resist'
+                    value='{{system.resist}}'
+                    data-dtype='Number'
+                />
             </div>
         </div>
 
@@ -71,7 +71,7 @@
         </div>
 
         <ol class='items-list'>
-            <li class='item flexrow items-header'>
+            <li class='item flexrow items-header' data-item-type='boon'>
                 <div class='item-name'>{{localize 'LORE.Item.Boons.label'}}</div>
                 <div class='item-controls'>
                     {{#if @root.editable}}
@@ -96,7 +96,7 @@
           {{/each}}
         </ol>
         <ol class='items-list'>
-          <li class='item flexrow items-header'>
+                    <li class='item flexrow items-header' data-item-type='bane'>
             <div class='item-name'>{{localize 'LORE.Item.Banes.label'}}</div>
             <div class='item-controls'>
               {{#if @root.editable}}

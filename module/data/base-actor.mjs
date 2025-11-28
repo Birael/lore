@@ -27,9 +27,9 @@ export default class loreActorBase extends foundry.abstract
 
     schema.stunned = new fields.BooleanField({ initial: false });
 
-    schema.movement = new fields.NumberField({ ...requiredInteger, initial: 5, min: 0 });
+    schema.pace = new fields.NumberField({ ...requiredInteger, initial: 5, min: 0 });
     schema.parry = new fields.NumberField({ ...requiredInteger, initial: 2, min: 0 });
-    schema.toughness = new fields.NumberField({ ...requiredInteger, initial: 2, min: 0 });
+    schema.resist = new fields.NumberField({ ...requiredInteger, initial: 2, min: 0 });
 
     schema.morale = new fields.NumberField({ ...requiredInteger, initial: 0, min: -6, max: 6 });
 
@@ -137,10 +137,24 @@ export default class loreActorBase extends foundry.abstract
     
     console.log(this.tags);
 
-  // Parry and Toughness: leave as-is unless/ until explicit derived formula is implemented.
+  // Parry and Resist: leave as-is unless/ until explicit derived formula is implemented.
   // Any future calculation should respect active effects and only override when a rule applies.
 
   // Do defense calculation here once implemented.
+      // --- Automated Parry Calculation ---
+      // Find brawling skill rank
+      let brawlingRank = 0;
+      if (Array.isArray(this.parent?.items)) {
+        const brawlingSkill = this.parent.items.find(
+          (i) => i.type === 'skill' && i.system?.brawling === true
+        );
+        brawlingRank = Number(brawlingSkill?.system?.rank ?? 0);
+      }
+      // Get Reflexes modifier
+      const reflexesMod = Number(this.attributes?.ref?.mod ?? 0) || 0;
+      // Parry formula: 3 + brawling rank + Reflexes modifier
+      this.parry = 3 + brawlingRank + reflexesMod;
+      // -----------------------------------
   }
   
 

@@ -80,17 +80,16 @@ export class LoreContextMenus {
       header.addEventListener('contextmenu', this._onGearHeaderContextMenuBound);
     }
 
-    // Boons/Banes headers (in Details tab)
-    // Find the Boons and Banes headers by their label text
-    const boonsHeader = Array.from(rootEl.querySelectorAll('.tab.skills .boons-banes-sub .items-header')).find(h => h.textContent.includes('Boons'));
-    if (boonsHeader) {
-      boonsHeader.removeEventListener('contextmenu', this._onBoonsHeaderContextMenuBound);
-      boonsHeader.addEventListener('contextmenu', this._onBoonsHeaderContextMenuBound);
+    // Boons/Banes headers (Details tab and Sidebar) via data-item-type attribute
+    const boonHeaders = rootEl.querySelectorAll('.items-header[data-item-type="boon"]');
+    for (const header of boonHeaders) {
+      header.removeEventListener('contextmenu', this._onBoonsHeaderContextMenuBound);
+      header.addEventListener('contextmenu', this._onBoonsHeaderContextMenuBound);
     }
-    const banesHeader = Array.from(rootEl.querySelectorAll('.tab.skills .boons-banes-sub .items-header')).find(h => h.textContent.includes('Banes'));
-    if (banesHeader) {
-      banesHeader.removeEventListener('contextmenu', this._onBanesHeaderContextMenuBound);
-      banesHeader.addEventListener('contextmenu', this._onBanesHeaderContextMenuBound);
+    const baneHeaders = rootEl.querySelectorAll('.items-header[data-item-type="bane"]');
+    for (const header of baneHeaders) {
+      header.removeEventListener('contextmenu', this._onBanesHeaderContextMenuBound);
+      header.addEventListener('contextmenu', this._onBanesHeaderContextMenuBound);
     }
   }
 

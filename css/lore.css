@@ -409,6 +409,9 @@ body.theme-light {
   text-align: center;
   font-weight: 700;
 }
+.lore-dv-widget .dv-input {
+  width: 50px;
+}
 .lore-dv-widget .dv-btn {
   /* Reset native button styling across browsers */
   appearance: none;
@@ -1146,7 +1149,6 @@ body.theme-light {
 }
 .lore .actor-name-input {
   background: none;
-  font-family: 'Dusk Till Dawn Risen', 'Roboto', sans-serif;
   font-weight: bold;
   font-size: 1.5em;
   box-shadow: none;

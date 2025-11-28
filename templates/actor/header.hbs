@@ -52,12 +52,16 @@
     </div>
 
     <div class='lore-coins-container grid-span-1'>
-      <label class='lore-coins-label'>Coins:</label>
-      <span class="lore-coins-list" aria-hidden="true">
-        {{#each (range 0 system.loreCoin)}}
-          <img src="systems/lore/assets/icons/LoreCoin.svg" class="lore-coin-icon" alt=""/>
-        {{/each}}
-      </span>
+      {{#if (or (eq actor.type "player") (eq actor.type "legend"))}}
+        <span class="lore-coins-label-wrapper">
+          <label class='lore-coins-label' tabindex="0" style="cursor:pointer;">Coins:</label>
+          <span class="lore-coins-list" aria-hidden="true">
+            {{#each (range 0 system.loreCoin)}}
+              <img src="systems/lore/assets/icons/LoreCoin.svg" class="lore-coin-icon" alt=""/>
+            {{/each}}
+          </span>
+        </span>
+      {{/if}}
     </div>
   </div>
 

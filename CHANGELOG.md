@@ -7,6 +7,26 @@
 
 - Actor sheet: clicking the equipped Ancestry now opens the item sheet reliably instead of opening a new browser window/tab. Prevented default link navigation in the action handler.
 
+### Features & Changes
+
+- Refactored Target Number hotbar widget to use `gm-panel.hbs` and `gm-panel.less` (replacing `hotbar-target-number.hbs` and its LESS).
+- Target Number widget now uses an input field for direct value entry and disables controls for non-GMs.
+- Improved GM panel styling and logic for the Target Number widget.
+- Sidebar and header templates updated to use `pace` and `resist` (formerly `movement` and `toughness`).
+- Skills tab and skill sheet refactored:
+    - Untrained skills now have a dedicated checkbox and logic.
+    - Brawling skill is now exclusive (only one per actor), enforced in UI and backend.
+    - Skill modifiers and formulas now correctly reflect untrained status and attribute modifiers.
+- Only one brawling skill can be checked per actor; UI and backend enforce this.
+- Boons/Banes headers in sidebar and details tab now use `data-item-type` for context menu targeting.
+- Coin label in actor header is now clickable for increment/decrement (left/right click) and only shown for Player/Legend actors.
+- Improved derived data for actor defense stats: Parry now auto-calculates from brawling skill and Reflexes modifier.
+- LESS/CSS cleanup: removed font-family override from actor name input, updated imports to use `gm-panel.less`.
+- Removed obsolete `hotbar-target-number.hbs` and LESS files.
+- Updated item default artwork paths for skills and ancestry.
+- Skills tab simplified: removed sub-tabs, now lists only skills.
+- Skill sheet now shows untrained and brawling checkboxes at top, hides rank/attribute/modifier for untrained skills.
+
 
 ## 0.0.3 - 2025-10-31
 
@@ -42,7 +62,7 @@
 ### Internal
 
 - Added dedicated data modules for actor subtypes: `actor-lackey.mjs` and `actor-legend.mjs`.
-- Introduced a dedicated hotbar Target Number component and styles: `templates/components/hotbar-target-number.hbs`, `src/less/components/hotbar-target-number.less`.
+- Introduced a dedicated hotbar Target Number component and styles: `templates/components/gm-panel.hbs`, `src/less/components/gm-panel.less`.
 - General CSS cleanup and variable usage improvements across LESS/CSS.
 - Removed obsolete stylesheet `css/item-armor-fix.css`.
 - Added `equipWeapon` helper on the base actor data model to enforce one-/two-handed rules and maintain `mainhand`/`offhand` slots consistently.

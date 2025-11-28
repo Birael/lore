@@ -34,6 +34,20 @@ globalThis.lore = {
 };
 
 Hooks.once('init', function () {
+    // Enforce only one brawling skill per actor
+    Hooks.on('preUpdateItem', async (item, update, options, userId) => {
+      // Only run for skills and only if brawling is being set to true
+      if (item.type !== 'skill') return;
+      if (!('system' in update) || !('brawling' in update.system) || !update.system.brawling) return;
+      const actor = item.parent;
+      if (!actor) return;
+      // Unset brawling on all other skills for this actor
+      for (const other of actor.items) {
+        if (other.type === 'skill' && other.id !== item.id && other.system?.brawling) {
+          await other.update({ 'system.brawling': false });
+        }
+      }
+    });
   // Add custom constants for configuration.
   CONFIG.LORE = LORE;
 
@@ -173,7 +187,7 @@ Hooks.once('ready', function () {
     if (typeof load === 'function') {
       load([
         'systems/lore/templates/chat/message.hbs',
-        'systems/lore/templates/components/hotbar-target-number.hbs',
+        'systems/lore/templates/components/gm-panel.hbs',
       ]);
     } else {
       console.warn('Lore | No Handlebars template loader available. Skipping template preload.');
@@ -220,7 +234,7 @@ Hooks.once('ready', function () {
     let el = document.getElementById('lore-dv-widget');
     if (!el) {
       try {
-        const tplPath = 'systems/lore/templates/components/hotbar-target-number.hbs';
+        const tplPath = 'systems/lore/templates/components/gm-panel.hbs';
         const compiled = await foundry.applications.handlebars.renderTemplate(tplPath, {
           value: Math.max(0, Number(game.settings.get('lore', 'targetNumberValue') || 0)),
           isGM: !!game.user?.isGM,
@@ -230,7 +244,7 @@ Hooks.once('ready', function () {
         el = tmp.firstElementChild;
         if (el) document.body.appendChild(el);
       } catch (e) {
-        console.error('Lore | Failed to render hotbar-target-number.hbs, falling back to DOM creation', e);
+        console.error('Lore | Failed to render gm-panel.hbs, falling back to DOM creation', e);
         el = document.createElement('div');
         el.id = 'lore-dv-widget';
         el.className = 'lore-dv-widget';
@@ -246,6 +260,7 @@ Hooks.once('ready', function () {
       // Events
       const dec = el.querySelector('.dv-dec');
       const inc = el.querySelector('.dv-inc');
+      const input = el.querySelector('.dv-input');
       dec?.addEventListener('click', () => {
         if (!game.user.isGM) return;
         const curr = getDV();
@@ -258,6 +273,20 @@ Hooks.once('ready', function () {
         setDV(curr + 1);
         updateDVWidget();
       });
+      if (input) {
+        input.addEventListener('change', (ev) => {
+          if (!game.user.isGM) return;
+          let v = Number(input.value);
+          if (isNaN(v) || v < 0) v = 0;
+          setDV(v);
+          updateDVWidget();
+        });
+        input.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter') {
+            input.blur();
+          }
+        });
+      }
     }
     updateDVWidget();
     positionDVWidget();
@@ -267,18 +296,18 @@ Hooks.once('ready', function () {
   function updateDVWidget() {
     const el = document.getElementById('lore-dv-widget');
     if (!el) return;
-    const valEl = el.querySelector('.dv-value');
+    const input = el.querySelector('.dv-input');
     const dec = el.querySelector('.dv-dec');
     const inc = el.querySelector('.dv-inc');
     const dv = getDV();
-    if (valEl) valEl.textContent = String(dv > 0 ? dv : 0);
+    if (input) input.value = String(dv > 0 ? dv : 0);
     const gm = !!game.user?.isGM;
-    [dec, inc].forEach(btn => {
-      if (!btn) return;
-      btn.disabled = !gm;
-      btn.setAttribute('aria-disabled', String(!gm));
+    [dec, inc, input].forEach(ctrl => {
+      if (!ctrl) return;
+      ctrl.disabled = !gm;
+      ctrl.setAttribute('aria-disabled', String(!gm));
     });
-    // Set a class to visually indicate non-GM users (buttons appear disabled)
+    // Set a class to visually indicate non-GM users (buttons/input appear disabled)
     el.classList.toggle('is-gm', gm);
   }
 
@@ -619,6 +648,7 @@ Hooks.once('ready', function () {
       system: {
         rank: { value: 1, max: 5 },
         tiedAttribute: 'ref',
+        untrained: true
       }
     },
   ];

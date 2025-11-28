@@ -22,7 +22,7 @@
     "Actor": {
       "Tabs": {
         "Biography": "Biography",
-        "Details": "Details",
+        "Skills": "Skills",
         "Gear": "Gear",
         "Magicks": "Magicks",
         "Effects": "Effects"
@@ -53,8 +53,8 @@
           },
           "unconscious": {"label": "Unc"},
           "stunned": {"label": "Stn"},
-          "movement": {"label": "Movement"},
-          "toughness": {"label": "Toughness"},
+          "pace": {"label": "Pace"},
+          "resist": {"label": "Resist"},
           "parry": {"label": "Parry"},
           "morale": {"label": "Morale"}
         }
@@ -85,6 +85,7 @@
         "Rank": "Rank",
         "Attribute": "Attribute",
         "Modifier": "Modifier",
+        "Untrained": "Untrained (ignores attribute, always rank 1, -3 modifier)",
         "FIELDS": {
           "rank": {"label": "Rank"},
           "attribute": {"label": "Linked Attribute"}

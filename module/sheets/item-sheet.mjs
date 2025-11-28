@@ -12,6 +12,23 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+      // Enforce only one brawling skill checkbox per actor when editing a skill
+      Hooks.on('renderItemSheet', (app, html, data) => {
+        if (app.document.type !== 'skill') return;
+        const input = html[0].querySelector('input[name="system.brawling"]');
+        if (!input) return;
+        input.addEventListener('change', async (event) => {
+          if (input.checked) {
+            const actor = app.document.parent;
+            if (!actor) return;
+            for (const item of actor.items) {
+              if (item.type === 'skill' && item.id !== app.document.id && item.system?.brawling) {
+                await item.update({ 'system.brawling': false });
+              }
+            }
+          }
+        });
+      });
   }
 
   /** @override */

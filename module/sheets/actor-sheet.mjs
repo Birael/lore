@@ -272,8 +272,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
     // If you have sub-tabs this is necessary to change
     const tabGroup = 'primary';
     // Determine a sensible default tab based on available parts
-  const candidateOrder = ['skills', 'gear', 'magicks', 'effects', 'biography'];
-    
+    const candidateOrder = ['skills', 'gear', 'magicks', 'effects', 'biography'];
     const firstAvailable = candidateOrder.find((p) => parts.includes(p));
     const current = this.tabGroups[tabGroup];
     // Initialize or correct the current tab if it's missing from available parts
@@ -295,7 +294,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
           return tabs;
         case 'skills':
           tab.id = 'skills';
-          tab.label += 'Details';
+          tab.label += 'Skills';
           break;
         case 'gear':
           tab.id = 'gear';
@@ -351,8 +350,10 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
         armor.push(i);
       }
       // Append to skills.
-      else if (i.type === 'skill') {
-        skills.push(i);
+        else if (i.type === 'skill') {
+          // Ensure the Skill DataModel recomputes derived fields for display
+          try { i.system?.prepareDerivedData?.(); } catch (e) {}
+          skills.push(i);
       }
       // Append to magicks.
       else if (i.type === 'magick') {
@@ -487,6 +488,36 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
       });
     }
 
+      // Enforce only one brawling skill checkbox per actor
+      const brawlingInputs = this.element.querySelectorAll('input[name="system.brawling"]');
+      for (const input of brawlingInputs) {
+        input.addEventListener('change', async (event) => {
+          if (input.checked) {
+            // Uncheck all other brawling checkboxes
+            for (const other of brawlingInputs) {
+              if (other !== input && other.checked) {
+                const li = other.closest('li[data-item-id], [data-item-id]');
+                const itemId = li?.dataset?.itemId;
+                const item = itemId ? this.actor.items.get(itemId) : null;
+                if (item) await item.update({ 'system.brawling': false });
+                other.checked = false;
+              }
+            }
+            // Update the checked item
+            const li = input.closest('li[data-item-id], [data-item-id]');
+            const itemId = li?.dataset?.itemId;
+            const item = itemId ? this.actor.items.get(itemId) : null;
+            if (item) await item.update({ 'system.brawling': true });
+          } else {
+            // Unchecking, just update the item
+            const li = input.closest('li[data-item-id], [data-item-id]');
+            const itemId = li?.dataset?.itemId;
+            const item = itemId ? this.actor.items.get(itemId) : null;
+            if (item) await item.update({ 'system.brawling': false });
+          }
+        });
+      }
+
     // Handle two-handed weapon equip checkboxes in weapon list
     const weaponEquipInputs = this.element.querySelectorAll('.items-weapons input[name="system.equipped"]');
     for (const input of weaponEquipInputs) {
@@ -541,17 +572,21 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
 
     // Lore Coins click handlers (left click: use/decrement, right click: add/increment)
     try {
-      if (['player', 'legend'].includes(this.document.type)) {
-        const coinBox = this.element.querySelector('.lore-coin-box');
-        if (coinBox) {
-          coinBox.addEventListener('click', async (event) => {
+      if (["player", "legend"].includes(this.document.type)) {
+        const coinLabel = this.element.querySelector('.lore-coins-label');
+        if (coinLabel) {
+          coinLabel.addEventListener('click', async (event) => {
             event.preventDefault();
-            const current = Number(this.actor.system?.loreCoin ?? 0) || 0;
-            const next = Math.max(0, current - 1);
-            if (next !== current) await this.actor.update({ 'system.loreCoin': next });
+            // Left click: remove a coin
+            if (event.button === 0) {
+              const current = Number(this.actor.system?.loreCoin ?? 0) || 0;
+              const next = Math.max(0, current - 1);
+              if (next !== current) await this.actor.update({ 'system.loreCoin': next });
+            }
           });
-          coinBox.addEventListener('contextmenu', async (event) => {
+          coinLabel.addEventListener('contextmenu', async (event) => {
             event.preventDefault();
+            // Right click: add a coin
             const current = Number(this.actor.system?.loreCoin ?? 0) || 0;
             const next = current + 1;
             await this.actor.update({ 'system.loreCoin': next });
