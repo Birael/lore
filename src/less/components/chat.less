@@ -1,13 +1,8 @@
 // main: "../lore.less", out: false
 
-.chat-sidebar:not(.sidebar-popout) {
-  background: var(--lore-c-bg1);
-}
-
 .lore-chat {
   padding: 0;
   border-radius: 10px;
-  background: var(--lore-c-bg1);
 }
 
 .lore-chat-message {
@@ -15,10 +10,6 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px 12px;
-  background: var(--lore-c-bg1);
-  border: 1px solid var(--lore-c-bg2);
-  border-radius: 10px;
-  color: var(--lore-c-txt1);
 }
 
 .lcm-header {
@@ -38,10 +29,7 @@
 .lcm-avatar {
   width: 34px;
   height: 34px;
-  border-radius: 20%;
   object-fit: cover;
-  border: 1px solid var(--lore-c-slate);
-  box-shadow: 0 0 0 2px var(--lore-c-charcoal);
 }
 
 .lcm-meta {
@@ -57,7 +45,6 @@
 
 .lcm-rolltype {
   font-size: 0.85em;
-  color: var(--lore-c-ash);
 }
 
 .lcm-right {
@@ -75,10 +62,6 @@
 .lcm-tag {
   font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 999px;
-  color: var(--lore-c-blue);
-  background: color-mix(in srgb, var(--lore-c-blue) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--lore-c-blue) 25%, transparent);
 }
 
 .lcm-controls {
@@ -89,18 +72,6 @@
 
 .lcm-content {
   padding: 10px 12px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--lore-c-ivory) 3%, transparent);
-
-  border: 1px solid var(--lore-c-slate);
-}
-
-.chat-sidebar,
-#sidebar .tab[data-tab="chat"],
-.chat-popout .window-content,
-#chat-log {
-  --color-scrollbar: var(--lore-c-bg2) !important;
-  --color-scrollbar-track: var(--lore-c-bg1) !important;
 }
 
 

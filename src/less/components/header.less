@@ -1,24 +1,11 @@
 // main: "../lore.less", out: false
 
-.sheet-header {
-    background: var(--lore-c-bg1);
-    border-top: 2px solid var(--lore-c-bg2);
-    border-right: 2px solid var(--lore-c-bg2);
-}
-
 .actor-header-first {
     margin: 0 0 0 0;
-    border-bottom: 1px solid var(--lore-c-bg2);
 }
 
 .actor-name-input {
-    background: none;
-    font-weight: bold;
-    font-size: 1.5em;
-    box-shadow: none;
     margin: 0;
-    color: var(--lore-c-txt1);
-    border-right: 1px solid var(--lore-c-bg2);
 }
 
 .actor-level {
@@ -30,29 +17,16 @@
     label {
         margin: 0;
         white-space: nowrap;
-        color: var(--lore-c-txt2);
     }
 
     .actor-level-input {
         margin: 0;
         width: 34px;
-        color: var(--lore-c-txt1);
-        background: none;
     }
 }
 
 .actor-header-second {
     margin: 0;
-    border-bottom: 1px solid var(--lore-c-bg2);
-}
-
-/* Tags row in header */
-.tags-container {
-}
-
-.tags-empty {
-    opacity: 0.7;
-    font-size: 12px;
 }
 
 .tag-list {
@@ -72,10 +46,6 @@
     height: 22px;
     padding-left: 2px;
     padding-right: 2px;
-    border: 1px solid var(--lore-c-slate);
-    background: var(--lore-c-charcoal);
-    color: var(--lore-c-txt1);
-    font-size: 12px;
     /* Content box height is 20px (22px minus 2px borders) => set line-height to 20px to vertically center text */
     line-height: 20px;
     vertical-align: middle;
@@ -83,24 +53,9 @@
     margin: 0;
 }
 
-.tag-chip.is-ancestry {
-    border-color: var(--lore-c-green);
-    background-color: rgba(60, 179, 113, 0.2); // #3cb371 @ 20% for readability
-}
-
-.tag-chip.is-size {
-    border-color: var(--lore-c-gold);
-    background-color: rgba(218, 165, 32, 0.22); // #daa520 @ ~22% for contrast
-    color: var(--lore-c-txt1);
-}
-
 .lore-coins-container {
     display: flex;
     align-items: center; /* vertically center label + icons */
-}
-
-.lore-coins-label {
-    color: var(--lore-c-txt1);
 }
 
 /* Coin icons next to coin count */
@@ -132,8 +87,6 @@
 
 .wounds-container {
     .wounds-label {
-        font-weight: 600;
-        color: var(--lore-c-txt2);
         margin-bottom: 2px;
         display: block;
     }
@@ -169,38 +122,13 @@
             height: 18px;
             box-sizing: border-box;
             border-radius: 50%;
-            border: 2px solid var(--lore-c-slate);
-            background: transparent;
             vertical-align: middle;
-            transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-        }
-
-        /* States */
-        .wounds-checkbox:focus-visible + .custom-circle {
-            box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-            border-color: var(--lore-c-blue);
-        }
-
-        .wounds-checkbox:hover + .custom-circle {
-            border-color: var(--lore-c-txt1);
-        }
-
-        .wounds-checkbox:checked + .custom-circle {
-            background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-            border-color: var(--lore-c-red);
-        }
-
-        .wounds-checkbox:disabled + .custom-circle {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
     }
 }
 
 .fatigue-container {
     .fatigue-label {
-        font-weight: 600;
-        color: var(--lore-c-txt2);
         margin-bottom: 2px;
         display: block;
     }
@@ -236,30 +164,7 @@
             height: 18px;
             box-sizing: border-box;
             border-radius: 50%;
-            border: 2px solid var(--lore-c-slate);
-            background: transparent;
             vertical-align: middle;
-            transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-        }
-
-        /* States */
-        .fatigue-checkbox:focus-visible + .custom-circle {
-            box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-            border-color: var(--lore-c-blue);
-        }
-
-        .fatigue-checkbox:hover + .custom-circle {
-            border-color: var(--lore-c-txt1);
-        }
-
-        .fatigue-checkbox:checked + .custom-circle {
-            background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-            border-color: var(--lore-c-red);
-        }
-
-        .fatigue-checkbox:disabled + .custom-circle {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
     }
 }
@@ -279,8 +184,6 @@
 .stunned-label,
 .incapacitated-label {
     margin: 0;
-    font-weight: 600;
-    color: var(--lore-c-txt2);
     display: block; /* appear above the circle */
     line-height: 1;
     text-align: center;
@@ -308,10 +211,7 @@
         height: 18px;
         box-sizing: border-box;
         border-radius: 50%;
-        border: 2px solid var(--lore-c-slate);
-        background: transparent;
         vertical-align: middle;
-        transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
     }
 
     /* Hide native checkbox but keep it interactive */
@@ -328,41 +228,12 @@
         cursor: pointer;
         z-index: 1;
     }
-
-    /* States */
-    .unconscious-checkbox:focus-visible + .custom-circle,
-    .stunned-checkbox:focus-visible + .custom-circle,
-    .incapacitated-checkbox:focus-visible + .custom-circle {
-        box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-        border-color: var(--lore-c-blue);
-    }
-
-    .unconscious-checkbox:hover + .custom-circle,
-    .stunned-checkbox:hover + .custom-circle,
-    .incapacitated-checkbox:hover + .custom-circle {
-        border-color: var(--lore-c-txt1);
-    }
-
-    .unconscious-checkbox:checked + .custom-circle,
-    .stunned-checkbox:checked + .custom-circle,
-    .incapacitated-checkbox:checked + .custom-circle {
-        background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-        border-color: var(--lore-c-red);
-    }
-
-    .unconscious-checkbox:disabled + .custom-circle,
-    .stunned-checkbox:disabled + .custom-circle,
-    .incapacitated-checkbox:disabled + .custom-circle {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
 }
 
 .morale-label {
     display: block;
     width: 100%;
     text-align: center;
-    color: var(--lore-c-txt1);
 }
 
 .morale-slider-container {
@@ -373,22 +244,17 @@
 }
 .morale-slider {
     position: relative;
-    color: var(--lore-c-bg2);
 }
 
 .morale-input {
     width: 100%;
     position: relative; /* enable z-index stacking over ticks */
     z-index: 2;
-    color: var(--lore-c-bg2);
     &::-webkit-slider-runnable-track {
-        background: var(--lore-c-bg2);
         height: 6px;
         border-radius: 3px;
     }
     &::-webkit-slider-thumb {
-        background: var(--lore-c-txt1);
-        border: 2px solid var(--lore-c-bg2);
         border-radius: 50%;
         width: 18px;
         height: 18px;
@@ -396,48 +262,22 @@
         cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
-        transition: background 0.2s, border 0.2s;
-    }
-    &::-ms-fill-lower {
-        background: var(--lore-c-bg2);
-    }
-    &::-ms-fill-upper {
-        background: var(--lore-c-bg2);
     }
     &::-moz-range-track {
-        background: var(--lore-c-bg2);
         height: 6px;
         border-radius: 3px;
     }
     &::-moz-range-thumb {
-        background: var(--lore-c-txt1);
-        border: 2px solid var(--lore-c-bg2);
         border-radius: 50%;
         width: 18px;
         height: 18px;
         cursor: pointer;
-        transition: background 0.2s, border 0.2s;
     }
     &::-ms-thumb {
-        background: var(--lore-c-txt1);
-        border: 2px solid var(--lore-c-bg2);
         border-radius: 50%;
         width: 18px;
         height: 18px;
         cursor: pointer;
-        transition: background 0.2s, border 0.2s;
-    }
-    &::-ms-tooltip {
-        display: none;
-    }
-    &:focus {
-        outline: none;
-    }
-    &::-moz-focus-outer {
-        border: 0;
-    }
-    &::-moz-focus-inner {
-        border: 0;
     }
     height: 30px;
 }
@@ -457,23 +297,22 @@
     top: 0;
     width: 3px;
     height: 100%;
-    background: var(--lore-c-txt2);
     transform: translateX(-1px);
 }
 
-.morale-ticks .morale-tick:nth-child(1)  { left: 0%; background-color: var(--lore-c-red); }
-.morale-ticks .morale-tick:nth-child(2)  { left: 8.333%; background-color: var(--lore-c-red); }
-.morale-ticks .morale-tick:nth-child(3)  { left: 16.666%; background-color: var(--lore-c-red); }
-.morale-ticks .morale-tick:nth-child(4)  { left: 25%; background-color: var(--lore-c-red); }
-.morale-ticks .morale-tick:nth-child(5)  { left: 33.333%; background-color: var(--lore-c-red); }
-.morale-ticks .morale-tick:nth-child(6)  { left: 41.666%; background-color: var(--lore-c-red); }
+.morale-ticks .morale-tick:nth-child(1)  { left: 0%; }
+.morale-ticks .morale-tick:nth-child(2)  { left: 8.333%; }
+.morale-ticks .morale-tick:nth-child(3)  { left: 16.666%; }
+.morale-ticks .morale-tick:nth-child(4)  { left: 25%; }
+.morale-ticks .morale-tick:nth-child(5)  { left: 33.333%; }
+.morale-ticks .morale-tick:nth-child(6)  { left: 41.666%; }
 .morale-ticks .morale-tick:nth-child(7)  { left: 50%; }
-.morale-ticks .morale-tick:nth-child(8)  { left: 58.333%;  background-color: var(--lore-c-green); }
-.morale-ticks .morale-tick:nth-child(9)  { left: 66.666%; background-color: var(--lore-c-green); }
-.morale-ticks .morale-tick:nth-child(10) { left: 75%; background-color: var(--lore-c-green); }
-.morale-ticks .morale-tick:nth-child(11) { left: 83.333%; background-color: var(--lore-c-green); }
-.morale-ticks .morale-tick:nth-child(12) { left: 91.666%; background-color: var(--lore-c-green); }
-.morale-ticks .morale-tick:nth-child(13) { left: 100%;  background-color: var(--lore-c-green);}
+.morale-ticks .morale-tick:nth-child(8)  { left: 58.333%; }
+.morale-ticks .morale-tick:nth-child(9)  { left: 66.666%; }
+.morale-ticks .morale-tick:nth-child(10) { left: 75%; }
+.morale-ticks .morale-tick:nth-child(11) { left: 83.333%; }
+.morale-ticks .morale-tick:nth-child(12) { left: 91.666%; }
+.morale-ticks .morale-tick:nth-child(13) { left: 100%; }
 .morale-ticks::after {
     content: "";
     position: absolute;
@@ -481,5 +320,4 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background-color: var(--lore-c-bg2);
 }

@@ -3,19 +3,11 @@
 .gear {
 	height: 100%;
 	overflow: hidden;
-	background: var(--lore-c-bg1);
 }
 
 .gear-content {
-	background: none;
-	border: none;
 	height: 100%;
 	overflow-y: auto;
-	scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
-
-	.item {
-		color: var(--lore-c-txt2);
-	}
 }
 
 &.actor {
@@ -41,33 +33,16 @@
 	&.window-app .window-content > .tab.gear.active .sub-tab.active {
 		flex: 1 1 auto;
 		min-height: 0;
-		color: var(--lore-c-txt2);
 		padding: 5px;
 	}
-}
-
-.weapon-skill-roll {
-	&:hover,
-	&.active {
-		color: var(--lore-c-red);
-		text-shadow: 0 0 8px var(--lore-c-red);
-	}
-}
-
-.items-list.items-weapons .rollable.item-formula:hover,
-.items-list.items-weapons .rollable.item-formula.active {
-	color: var(--lore-c-red) !important;
-	text-shadow: 0 0 8px var(--lore-c-red);
 }
 
 .item-armor {
 	padding-right: 10px;
 }
 .items-sub-header {
-	background-color: var(--lore-c-bg1);
 	height: 30px;
 	margin-left: 5px;
-	border: 1px solid var(--lore-c-bg2);
 }
 
 .items-sublist {
@@ -96,7 +71,6 @@
 	min-width: 0;
     padding-left: 10px;
     padding-right: 10px;
-	color: var(--lore-c-txt1);
 }
 
 .items-list .item .item-image {
@@ -118,15 +92,12 @@
 }
 
 .items-list .items-header {
-    background-color: var(--lore-c-bg2);
     padding-top: 5px;
     padding-bottom: 5px;
 	margin-bottom: 5px;
     
 }
-.items-list, .items-header .item-formula {
-	color: var(--lore-c-txt1);
-}
+
 .items-list > .items-header.is-collapsible {
 	cursor: pointer;
 	position: relative;
@@ -178,18 +149,13 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    border-radius: 50%;
     box-sizing: border-box;
-    border: 2px solid var(--lore-c-bg2);
     background-color: transparent;
     transition: background-color 120ms ease, border-color 120ms ease, transform 60ms ease;
     pointer-events: none;
 	position: relative;
 }
-.item-equip .custom-circle.checked {
-	background-color: var(--lore-c-blue);
-	border-color: var(--lore-c-blue);
-}
+
 .item-equip .custom-circle::after {
 	content: "";
 	position: absolute;
@@ -199,7 +165,6 @@
 	font-size: 12px;
 	font-weight: 700;
 	line-height: 1;
-	color: #fff;
 	pointer-events: none;
 }
 .item-equip .custom-circle.mainhand::after {
@@ -208,22 +173,11 @@
 .item-equip .custom-circle.offhand::after {
 	content: "O";
 }
-.item-equip input[type="checkbox"]:checked + .custom-circle {
-    background-color: var(--lore-c-blue);
-    border-color: var(--lore-c-blue);
-}
-.item-equip label:hover .custom-circle {
-    border-color: var(--lore-c-bg2);
-}
+
 .item-equip input[type="checkbox"]:active + .custom-circle {
     transform: scale(0.95);
 }
-.item-equip input[type="checkbox"]:focus-visible + .custom-circle {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), 0 0 0 4px var(--lore-c-bg2);
-}
 .weapon-roll-formula {
-	color: var(--lore-c-blue);
-	text-decoration: underline;
 	cursor: pointer;
 }
 .item-controls {
@@ -237,11 +191,9 @@
 	margin-left: auto;
 	padding-right: 1.25em;
 	white-space: nowrap;
-	color: var(--lore-c-txt2);
 }
 
 .items-list .items-header .item-formula {
-	font-weight: 600;
 	opacity: 0.9;
 }
 
@@ -264,11 +216,6 @@
 .items-list.items-weapons .item .item-range {
 	padding-right: 0.5em;
 	white-space: nowrap;
-}
-
-.items-list.items-weapons .item .item-formula,
-.items-list.items-weapons .items-header .item-formula {
-	color: var(--lore-c-txt1);
 }
 
 .items-list.items-weapons .item .item-controls,

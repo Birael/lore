@@ -6,14 +6,14 @@
 */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 :root {
-  --lore-c-bg1: #2e2e2e;
-  --lore-c-bg2: #6e6e6e;
-  --lore-c-txt1: #fdfdfd;
-  --lore-c-txt2: #b9b9b9;
-  --lore-c-slate: var(--color-border-light, #8a8a8a);
-  --lore-c-charcoal: var(--color-bg, #1e1e1e);
-  --lore-c-ash: var(--color-text-dark-4, #9a9a9a);
-  --lore-c-ivory: var(--color-bg-alt, #f5f5f0);
+  --lore-c-bg1: var(--color-bg);
+  --lore-c-bg2: var(--color-bg-alt);
+  --lore-c-txt1: var(--color-text-light-primary);
+  --lore-c-txt2: var(--color-text-light-secondary);
+  --lore-c-slate: var(--color-border-light-1);
+  --lore-c-charcoal: var(--color-bg);
+  --lore-c-ash: var(--color-text-dark-4);
+  --lore-c-ivory: var(--color-bg-alt);
   --lore-c-blue: #3a6ea5;
   --lore-c-red: #c23b22;
   --lore-c-gold: #daa520;
@@ -21,46 +21,11 @@
   --lore-window-bg: var(--lore-c-bg1);
   --lore-sidebar-bg: var(--lore-c-bg1);
 }
-/* Dark theme overrides - apply broadly */
-:root[data-theme="dark"],
-html[data-theme="dark"],
-body.theme-dark {
-  --lore-c-bg1: #2e2e2e;
-  --lore-c-bg2: #6e6e6e;
-  --lore-c-txt1: #fdfdfd;
-  --lore-c-txt2: #b9b9b9;
-  --lore-c-slate: #7a7a7a;
-  --lore-c-charcoal: #1e1e1e;
-  --lore-c-ash: #a6a6a6;
-  --lore-c-ivory: #f5f5f0;
-  --lore-c-blue: #3a6ea5;
-  --lore-c-red: #c23b22;
-  --lore-c-gold: #daa520;
-  --lore-c-green: #3cb371;
-}
-/* Light theme overrides - apply broadly */
+/* Light theme overrides - Foundry handles this automatically now */
 :root[data-theme="light"],
-html[data-theme="light"],
-body.theme-light {
-  --lore-c-bg1: #d1d1d1;
-  --lore-c-bg2: #b0b0b0;
-  --lore-c-txt1: #2e2e2e;
-  --lore-c-txt2: #4a4a4a;
-  --lore-c-slate: #d0d0d0;
-  --lore-c-charcoal: #f7f7f7;
-  --lore-c-ash: #666666;
-  --lore-c-ivory: #ffffff;
-  --lore-c-blue: #3a6ea5;
-  --lore-c-red: #c23b22;
-  --lore-c-gold: #daa520;
-  --lore-c-green: #3cb371;
-}
-@font-face {
-  font-family: 'Dusk Till Dawn Risen';
-  src: url("../assets/fonts/dusk-till-dawn-risen.otf") format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+html[data-theme="light"] {
+  --lore-c-txt1: var(--color-text-dark-primary);
+  --lore-c-txt2: var(--color-text-dark-secondary);
 }
 .lore-context-menu {
   position: absolute;
@@ -75,23 +40,15 @@ body.theme-light {
   padding: 4px 16px;
   cursor: pointer;
 }
-.chat-sidebar:not(.sidebar-popout) {
-  background: var(--lore-c-bg1);
-}
 .lore-chat {
   padding: 0;
   border-radius: 10px;
-  background: var(--lore-c-bg1);
 }
 .lore-chat-message {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 10px 12px;
-  background: var(--lore-c-bg1);
-  border: 1px solid var(--lore-c-bg2);
-  border-radius: 10px;
-  color: var(--lore-c-txt1);
 }
 .lcm-header {
   display: flex;
@@ -108,10 +65,7 @@ body.theme-light {
 .lcm-avatar {
   width: 34px;
   height: 34px;
-  border-radius: 20%;
   object-fit: cover;
-  border: 1px solid var(--lore-c-slate);
-  box-shadow: 0 0 0 2px var(--lore-c-charcoal);
 }
 .lcm-meta {
   display: flex;
@@ -124,7 +78,6 @@ body.theme-light {
 }
 .lcm-rolltype {
   font-size: 0.85em;
-  color: var(--lore-c-ash);
 }
 .lcm-right {
   display: flex;
@@ -139,10 +92,6 @@ body.theme-light {
 .lcm-tag {
   font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 999px;
-  color: var(--lore-c-blue);
-  background: color-mix(in srgb, var(--lore-c-blue) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--lore-c-blue) 25%, transparent);
 }
 .lcm-controls {
   display: flex;
@@ -151,16 +100,6 @@ body.theme-light {
 }
 .lcm-content {
   padding: 10px 12px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--lore-c-ivory) 3%, transparent);
-  border: 1px solid var(--lore-c-slate);
-}
-.chat-sidebar,
-#sidebar .tab[data-tab="chat"],
-.chat-popout .window-content,
-#chat-log {
-  --color-scrollbar: var(--lore-c-bg2) !important;
-  --color-scrollbar-track: var(--lore-c-bg1) !important;
 }
 .lore-roll-card .lore-target {
   display: flex;
@@ -465,7 +404,6 @@ body.theme-light {
   --tn-scale: 1.25;
 }
 .lore {
-  /* Tags row in header */
   /* Coin icons next to coin count */
   /* Combat stats (wounds, etc.) */
   /* Make condition columns compact so Unconscious sits tight to Wounds and Incapacitated tight to Fatigue */
@@ -474,7 +412,10 @@ body.theme-light {
   /* Ancestry slot styling */
 }
 .lore .window-app {
-  font-family: 'Dusk Till Dawn Risen', 'Roboto', sans-serif;
+  font-family: var(--font-primary, 'Signika', sans-serif);
+}
+.lore .window-content {
+  padding: 0px;
 }
 .lore .rollable:hover,
 .lore .rollable:focus {
@@ -646,19 +587,6 @@ body.theme-light {
   justify-content: center;
   text-align: center;
 }
-.lore.application .window-content,
-.lore.window-app .window-content {
-  padding: 0;
-}
-.lore .resource .resource-checkbox {
-  accent-color: var(--lore-c-txt1);
-  --checkbox-checked-color: var(--lore-c-txt1);
-  --checkbox-unchecked-color: var(--lore-c-bg2);
-}
-.lore .resource .resource-checkbox::before {
-  color: var(--checkbox-unchecked-color);
-  border-color: var(--checkbox-unchecked-color);
-}
 .lore .tab.active {
   flex: 1 1 auto;
   min-height: 0;
@@ -670,7 +598,6 @@ body.theme-light {
   align-items: flex-start;
   gap: 12px;
   padding-right: 10px;
-  background: var(--lore-c-bg1);
 }
 .lore.item.application .window-content,
 .lore.item.window-app .window-content {
@@ -702,25 +629,11 @@ body.theme-light {
   gap: 6px 10px;
   align-items: center;
   padding: 4px 6px;
-  background: var(--lore-c-bg1);
-  border-top: 1px solid var(--lore-c-bg2);
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore.item.application .window-content nav.tabs.main-tabs a.main-tab,
 .lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab {
   padding: 4px 8px;
   line-height: 1.6;
-  color: var(--lore-c-txt1);
-}
-.lore.item.application .window-content nav.tabs.main-tabs a.main-tab:hover,
-.lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab:hover {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
-.lore.item.application .window-content nav.tabs.main-tabs a.main-tab.active,
-.lore.item.window-app .window-content nav.tabs.main-tabs a.main-tab.active {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
 }
 .lore.item.application .window-content nav.tabs.sub-tabs,
 .lore.item.window-app .window-content nav.tabs.sub-tabs {
@@ -729,8 +642,6 @@ body.theme-light {
   gap: 4px 6px;
   align-items: center;
   padding: 2px 4px;
-  background: var(--lore-c-bg1);
-  border-bottom: 1px solid var(--lore-c-bg2);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -739,22 +650,11 @@ body.theme-light {
   padding: 2px 6px;
   line-height: 1.3;
 }
-.lore.item.application .window-content nav.tabs.sub-tabs a.item:hover,
-.lore.item.window-app .window-content nav.tabs.sub-tabs a.item:hover {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
-.lore.item.application .window-content nav.tabs.sub-tabs a.item.active,
-.lore.item.window-app .window-content nav.tabs.sub-tabs a.item.active {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
 .lore .item-sheet-header .profile-img {
   flex: 0 0 auto;
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border: 2px solid var(--lore-c-bg2);
 }
 .lore .item-sheet-header .header-fields {
   flex: 1 1 auto;
@@ -766,37 +666,8 @@ body.theme-light {
 .lore .item-sheet-header .item-name-input {
   width: 100%;
   box-sizing: border-box;
-  background: transparent !important;
-}
-.lore .item-sheet-header .resource .resource-label {
-  color: var(--lore-c-txt1);
-}
-.lore .cost-input {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
-.lore .weight-input {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
-.lore .quantity-input {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
-.lore .item-options .resource-label {
-  color: var(--lore-c-txt1);
-}
-.lore .item-options .resource-select {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
-.lore .item-options .resource-input {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
 }
 .lore .weapon-damage-label {
-  color: var(--lore-c-txt1);
-  font-weight: bold;
   display: block;
   width: max-content;
   margin-left: auto;
@@ -804,20 +675,10 @@ body.theme-light {
   margin-bottom: 2px;
 }
 .lore .weapon-damage-formula {
-  color: var(--lore-c-txt2);
   display: block;
   width: max-content;
   margin-left: auto;
   margin-right: auto;
-}
-.lore .lore.item .tab[data-group="primary"] {
-  background: var(--lore-c-bg1);
-  color: var(--lore-c-txt1);
-}
-.lore .lore.item prose-mirror,
-.lore .lore.item .editor,
-.lore .lore.item .editor-content {
-  color: var(--lore-c-txt1);
 }
 .lore.item.application .window-content > .tab.gear,
 .lore.actor.application .window-content > .tab.gear,
@@ -846,18 +707,7 @@ body.theme-light {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
-.lore .tab {
-  background: var(--lore-c-bg1);
-}
-.lore .item .resource-label {
-  color: var(--lore-c-txt1);
-  background: var(--lore-c-bg2);
-}
-.lore .resource .resource-checkbox {
-  accent-color: var(--lore-c-bg2);
-}
 .lore .effects {
-  background: var(--lore-c-bg1);
   padding: 1px;
 }
 .lore .effects .effects-list,
@@ -868,7 +718,6 @@ body.theme-light {
   list-style: none;
 }
 .lore .effects .effects-list .effects-header {
-  background: var(--lore-c-bg2);
   padding: 1px;
 }
 .lore .effects .effects-list .effects-header > div {
@@ -876,18 +725,6 @@ body.theme-light {
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-.lore .effects .effects-list .effects-header .effect-name {
-  font-weight: bold;
-  color: var(--lore-c-txt1);
-}
-.lore .effects .effects-list .effects-header .effect-source {
-  font-weight: bold;
-  color: var(--lore-c-txt1);
-}
-.lore .effects .effects-list .effects-header .effect-controls {
-  font-weight: bold;
-  color: var(--lore-c-txt1);
 }
 .lore.actor.application .window-content,
 .lore.actor.window-app .window-content {
@@ -917,23 +754,11 @@ body.theme-light {
   gap: 6px 10px;
   align-items: center;
   padding: 4px 6px;
-  background: var(--lore-c-bg1);
 }
 .lore.actor.application .window-content nav.tabs.main-tabs a.main-tab,
 .lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab {
   padding: 4px 8px;
   line-height: 1.6;
-  color: var(--lore-c-txt1);
-}
-.lore.actor.application .window-content nav.tabs.main-tabs a.main-tab:hover,
-.lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab:hover {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
-.lore.actor.application .window-content nav.tabs.main-tabs a.main-tab.active,
-.lore.actor.window-app .window-content nav.tabs.main-tabs a.main-tab.active {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
 }
 .lore.actor.application .window-content nav.tabs.main-tabs,
 .lore.actor.window-app .window-content nav.tabs.main-tabs {
@@ -944,10 +769,6 @@ body.theme-light {
   gap: 6px 10px;
   align-items: center;
   padding: 4px 6px;
-  background: var(--lore-c-bg1);
-  border-bottom: 1px solid var(--lore-c-bg2);
-  border-top: 1px solid var(--lore-c-bg2);
-  border-right: 2px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content nav.tabs.sub-tabs,
 .lore.actor.window-app .window-content nav.tabs.sub-tabs {
@@ -957,7 +778,6 @@ body.theme-light {
   align-items: center;
   padding: 2px 4px;
   border-top: none;
-  background: var(--lore-c-bg1);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -966,16 +786,6 @@ body.theme-light {
   padding: 2px 6px;
   line-height: 1.3;
 }
-.lore.actor.application .window-content nav.tabs.sub-tabs a.item:hover,
-.lore.actor.window-app .window-content nav.tabs.sub-tabs a.item:hover {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
-.lore.actor.application .window-content nav.tabs.sub-tabs a.item.active,
-.lore.actor.window-app .window-content nav.tabs.sub-tabs a.item.active {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
 .lore.actor.application .window-content > .tab,
 .lore.actor.window-app .window-content > .tab {
   grid-row: 3;
@@ -983,7 +793,6 @@ body.theme-light {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--lore-c-txt2);
 }
 .lore.actor.application .window-content > .tab[data-group='primary'],
 .lore.actor.window-app .window-content > .tab[data-group='primary'] {
@@ -1012,8 +821,6 @@ body.theme-light {
   width: 180px;
   height: 100%;
   overflow: visible;
-  background: var(--lore-c-bg1);
-  border: 2px solid var(--lore-c-bg2);
 }
 .lore.actor.application .window-content,
 .lore.actor.window-app .window-content {
@@ -1050,29 +857,20 @@ body.theme-light {
   width: 180px;
   height: 180px;
   object-fit: cover;
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .attributes {
   padding: 5px;
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .attribute {
   margin: 0px;
   height: 20px;
   padding-left: 10px;
-  color: var(--lore-c-txt2);
 }
 .lore .attribute-label {
-  font-weight: bold;
   text-align: center;
   display: block;
-  color: var(--lore-c-txt1);
-}
-.lore .attribute-roll-label {
-  color: var(--lore-c-txt1);
 }
 .lore .attribute-formula-label {
-  color: var(--lore-c-txt2);
   padding-right: 10px;
 }
 .lore .stats-container {
@@ -1081,7 +879,6 @@ body.theme-light {
   align-items: center;
   justify-content: center;
   gap: 0px;
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .stat-container {
   margin: 0;
@@ -1094,7 +891,6 @@ body.theme-light {
   padding-right: 0;
   display: flex;
   align-items: center;
-  color: var(--lore-c-txt1);
 }
 .lore .stat-label .stat-icon {
   width: 18px;
@@ -1104,8 +900,6 @@ body.theme-light {
 .lore .stat-input {
   width: 30px;
   text-align: left;
-  color: var(--lore-c-txt2);
-  background: none;
   padding-left: 2px;
 }
 .lore .lore-sidebar .items-list {
@@ -1138,23 +932,11 @@ body.theme-light {
   width: 18px;
   height: 18px;
 }
-.lore .sheet-header {
-  background: var(--lore-c-bg1);
-  border-top: 2px solid var(--lore-c-bg2);
-  border-right: 2px solid var(--lore-c-bg2);
-}
 .lore .actor-header-first {
   margin: 0 0 0 0;
-  border-bottom: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-name-input {
-  background: none;
-  font-weight: bold;
-  font-size: 1.5em;
-  box-shadow: none;
   margin: 0;
-  color: var(--lore-c-txt1);
-  border-right: 1px solid var(--lore-c-bg2);
 }
 .lore .actor-level {
   display: flex;
@@ -1165,21 +947,13 @@ body.theme-light {
 .lore .actor-level label {
   margin: 0;
   white-space: nowrap;
-  color: var(--lore-c-txt2);
 }
 .lore .actor-level .actor-level-input {
   margin: 0;
   width: 34px;
-  color: var(--lore-c-txt1);
-  background: none;
 }
 .lore .actor-header-second {
   margin: 0;
-  border-bottom: 1px solid var(--lore-c-bg2);
-}
-.lore .tags-empty {
-  opacity: 0.7;
-  font-size: 12px;
 }
 .lore .tag-list {
   display: flex;
@@ -1197,32 +971,16 @@ body.theme-light {
   height: 22px;
   padding-left: 2px;
   padding-right: 2px;
-  border: 1px solid var(--lore-c-slate);
-  background: var(--lore-c-charcoal);
-  color: var(--lore-c-txt1);
-  font-size: 12px;
   /* Content box height is 20px (22px minus 2px borders) => set line-height to 20px to vertically center text */
   line-height: 20px;
   vertical-align: middle;
   white-space: nowrap;
   margin: 0;
 }
-.lore .tag-chip.is-ancestry {
-  border-color: var(--lore-c-green);
-  background-color: rgba(60, 179, 113, 0.2);
-}
-.lore .tag-chip.is-size {
-  border-color: var(--lore-c-gold);
-  background-color: rgba(218, 165, 32, 0.22);
-  color: var(--lore-c-txt1);
-}
 .lore .lore-coins-container {
   display: flex;
   align-items: center;
   /* vertically center label + icons */
-}
-.lore .lore-coins-label {
-  color: var(--lore-c-txt1);
 }
 .lore .lore-coins-list {
   display: inline-flex;
@@ -1246,8 +1004,6 @@ body.theme-light {
   /* align content nicely across the row */
 }
 .lore .wounds-container .wounds-label {
-  font-weight: 600;
-  color: var(--lore-c-txt2);
   margin-bottom: 2px;
   display: block;
 }
@@ -1255,7 +1011,6 @@ body.theme-light {
   gap: 6px;
   /* Hide native checkbox but keep it accessible and clickable */
   /* Visual replacement */
-  /* States */
 }
 .lore .wounds-container .wounds-content label {
   /* Template adds position/display inline; keep here for resilience */
@@ -1282,29 +1037,9 @@ body.theme-light {
   height: 18px;
   box-sizing: border-box;
   border-radius: 50%;
-  border: 2px solid var(--lore-c-slate);
-  background: transparent;
   vertical-align: middle;
-  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-}
-.lore .wounds-container .wounds-content .wounds-checkbox:focus-visible + .custom-circle {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-  border-color: var(--lore-c-blue);
-}
-.lore .wounds-container .wounds-content .wounds-checkbox:hover + .custom-circle {
-  border-color: var(--lore-c-txt1);
-}
-.lore .wounds-container .wounds-content .wounds-checkbox:checked + .custom-circle {
-  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-  border-color: var(--lore-c-red);
-}
-.lore .wounds-container .wounds-content .wounds-checkbox:disabled + .custom-circle {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 .lore .fatigue-container .fatigue-label {
-  font-weight: 600;
-  color: var(--lore-c-txt2);
   margin-bottom: 2px;
   display: block;
 }
@@ -1312,7 +1047,6 @@ body.theme-light {
   gap: 6px;
   /* Hide native checkbox but keep it accessible and clickable */
   /* Visual replacement */
-  /* States */
 }
 .lore .fatigue-container .fatigue-content label {
   /* Template adds position/display inline; keep here for resilience */
@@ -1339,25 +1073,7 @@ body.theme-light {
   height: 18px;
   box-sizing: border-box;
   border-radius: 50%;
-  border: 2px solid var(--lore-c-slate);
-  background: transparent;
   vertical-align: middle;
-  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-}
-.lore .fatigue-container .fatigue-content .fatigue-checkbox:focus-visible + .custom-circle {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-  border-color: var(--lore-c-blue);
-}
-.lore .fatigue-container .fatigue-content .fatigue-checkbox:hover + .custom-circle {
-  border-color: var(--lore-c-txt1);
-}
-.lore .fatigue-container .fatigue-content .fatigue-checkbox:checked + .custom-circle {
-  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-  border-color: var(--lore-c-red);
-}
-.lore .fatigue-container .fatigue-content .fatigue-checkbox:disabled + .custom-circle {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 .lore .unconscious-container,
 .lore .stunned-container,
@@ -1373,8 +1089,6 @@ body.theme-light {
 .lore .stunned-label,
 .lore .incapacitated-label {
   margin: 0;
-  font-weight: 600;
-  color: var(--lore-c-txt2);
   display: block;
   /* appear above the circle */
   line-height: 1;
@@ -1388,7 +1102,6 @@ body.theme-light {
   justify-content: center;
   /* Visual circle */
   /* Hide native checkbox but keep it interactive */
-  /* States */
 }
 .lore .unconscious-content label,
 .lore .stunned-content label,
@@ -1406,10 +1119,7 @@ body.theme-light {
   height: 18px;
   box-sizing: border-box;
   border-radius: 50%;
-  border: 2px solid var(--lore-c-slate);
-  background: transparent;
   vertical-align: middle;
-  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
 .lore .unconscious-content .unconscious-checkbox,
 .lore .stunned-content .unconscious-checkbox,
@@ -1430,58 +1140,10 @@ body.theme-light {
   cursor: pointer;
   z-index: 1;
 }
-.lore .unconscious-content .unconscious-checkbox:focus-visible + .custom-circle,
-.lore .stunned-content .unconscious-checkbox:focus-visible + .custom-circle,
-.lore .incapacitated-content .unconscious-checkbox:focus-visible + .custom-circle,
-.lore .unconscious-content .stunned-checkbox:focus-visible + .custom-circle,
-.lore .stunned-content .stunned-checkbox:focus-visible + .custom-circle,
-.lore .incapacitated-content .stunned-checkbox:focus-visible + .custom-circle,
-.lore .unconscious-content .incapacitated-checkbox:focus-visible + .custom-circle,
-.lore .stunned-content .incapacitated-checkbox:focus-visible + .custom-circle,
-.lore .incapacitated-content .incapacitated-checkbox:focus-visible + .custom-circle {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--lore-c-blue), transparent 60%);
-  border-color: var(--lore-c-blue);
-}
-.lore .unconscious-content .unconscious-checkbox:hover + .custom-circle,
-.lore .stunned-content .unconscious-checkbox:hover + .custom-circle,
-.lore .incapacitated-content .unconscious-checkbox:hover + .custom-circle,
-.lore .unconscious-content .stunned-checkbox:hover + .custom-circle,
-.lore .stunned-content .stunned-checkbox:hover + .custom-circle,
-.lore .incapacitated-content .stunned-checkbox:hover + .custom-circle,
-.lore .unconscious-content .incapacitated-checkbox:hover + .custom-circle,
-.lore .stunned-content .incapacitated-checkbox:hover + .custom-circle,
-.lore .incapacitated-content .incapacitated-checkbox:hover + .custom-circle {
-  border-color: var(--lore-c-txt1);
-}
-.lore .unconscious-content .unconscious-checkbox:checked + .custom-circle,
-.lore .stunned-content .unconscious-checkbox:checked + .custom-circle,
-.lore .incapacitated-content .unconscious-checkbox:checked + .custom-circle,
-.lore .unconscious-content .stunned-checkbox:checked + .custom-circle,
-.lore .stunned-content .stunned-checkbox:checked + .custom-circle,
-.lore .incapacitated-content .stunned-checkbox:checked + .custom-circle,
-.lore .unconscious-content .incapacitated-checkbox:checked + .custom-circle,
-.lore .stunned-content .incapacitated-checkbox:checked + .custom-circle,
-.lore .incapacitated-content .incapacitated-checkbox:checked + .custom-circle {
-  background-color: color-mix(in oklab, var(--lore-c-red), black 8%);
-  border-color: var(--lore-c-red);
-}
-.lore .unconscious-content .unconscious-checkbox:disabled + .custom-circle,
-.lore .stunned-content .unconscious-checkbox:disabled + .custom-circle,
-.lore .incapacitated-content .unconscious-checkbox:disabled + .custom-circle,
-.lore .unconscious-content .stunned-checkbox:disabled + .custom-circle,
-.lore .stunned-content .stunned-checkbox:disabled + .custom-circle,
-.lore .incapacitated-content .stunned-checkbox:disabled + .custom-circle,
-.lore .unconscious-content .incapacitated-checkbox:disabled + .custom-circle,
-.lore .stunned-content .incapacitated-checkbox:disabled + .custom-circle,
-.lore .incapacitated-content .incapacitated-checkbox:disabled + .custom-circle {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 .lore .morale-label {
   display: block;
   width: 100%;
   text-align: center;
-  color: var(--lore-c-txt1);
 }
 .lore .morale-slider-container {
   width: 100%;
@@ -1491,24 +1153,19 @@ body.theme-light {
 }
 .lore .morale-slider {
   position: relative;
-  color: var(--lore-c-bg2);
 }
 .lore .morale-input {
   width: 100%;
   position: relative;
   /* enable z-index stacking over ticks */
   z-index: 2;
-  color: var(--lore-c-bg2);
   height: 30px;
 }
 .lore .morale-input::-webkit-slider-runnable-track {
-  background: var(--lore-c-bg2);
   height: 6px;
   border-radius: 3px;
 }
 .lore .morale-input::-webkit-slider-thumb {
-  background: var(--lore-c-txt1);
-  border: 2px solid var(--lore-c-bg2);
   border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -1516,48 +1173,22 @@ body.theme-light {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
-  transition: background 0.2s, border 0.2s;
-}
-.lore .morale-input::-ms-fill-lower {
-  background: var(--lore-c-bg2);
-}
-.lore .morale-input::-ms-fill-upper {
-  background: var(--lore-c-bg2);
 }
 .lore .morale-input::-moz-range-track {
-  background: var(--lore-c-bg2);
   height: 6px;
   border-radius: 3px;
 }
 .lore .morale-input::-moz-range-thumb {
-  background: var(--lore-c-txt1);
-  border: 2px solid var(--lore-c-bg2);
   border-radius: 50%;
   width: 18px;
   height: 18px;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s;
 }
 .lore .morale-input::-ms-thumb {
-  background: var(--lore-c-txt1);
-  border: 2px solid var(--lore-c-bg2);
   border-radius: 50%;
   width: 18px;
   height: 18px;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s;
-}
-.lore .morale-input::-ms-tooltip {
-  display: none;
-}
-.lore .morale-input:focus {
-  outline: none;
-}
-.lore .morale-input::-moz-focus-outer {
-  border: 0;
-}
-.lore .morale-input::-moz-focus-inner {
-  border: 0;
 }
 .lore .morale-ticks {
   position: absolute;
@@ -1574,59 +1205,46 @@ body.theme-light {
   top: 0;
   width: 3px;
   height: 100%;
-  background: var(--lore-c-txt2);
   transform: translateX(-1px);
 }
 .lore .morale-ticks .morale-tick:nth-child(1) {
   left: 0%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(2) {
   left: 8.333%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(3) {
   left: 16.666%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(4) {
   left: 25%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(5) {
   left: 33.333%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(6) {
   left: 41.666%;
-  background-color: var(--lore-c-red);
 }
 .lore .morale-ticks .morale-tick:nth-child(7) {
   left: 50%;
 }
 .lore .morale-ticks .morale-tick:nth-child(8) {
   left: 58.333%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks .morale-tick:nth-child(9) {
   left: 66.666%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks .morale-tick:nth-child(10) {
   left: 75%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks .morale-tick:nth-child(11) {
   left: 83.333%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks .morale-tick:nth-child(12) {
   left: 91.666%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks .morale-tick:nth-child(13) {
   left: 100%;
-  background-color: var(--lore-c-green);
 }
 .lore .morale-ticks::after {
   content: "";
@@ -1635,32 +1253,19 @@ body.theme-light {
   top: 0;
   bottom: 0;
   width: 1px;
-  background-color: var(--lore-c-bg2);
 }
 .lore .biography {
   padding: 10px;
   height: 100%;
   overflow: hidden;
-  background: var(--lore-c-bg1);
-  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
-}
-.lore .biography-label {
-  color: var(--lore-c-txt1);
-}
-.lore .biography-input {
-  color: var(--lore-c-txt2);
-  background: var(--lore-c-bg2);
 }
 .lore .biography-content {
-  background: none;
-  border: none;
   height: 100%;
   overflow-y: auto;
 }
 .lore .ancestry-slot {
   /* Match other input blocks in feel and width */
   display: block;
-  border-radius: 3px;
   padding: 4px 6px;
 }
 .lore .ancestry-list {
@@ -1676,10 +1281,6 @@ body.theme-light {
   /* push trash to right */
   gap: 8px;
 }
-.lore .ancestry-name a {
-  color: var(--lore-c-gold);
-  text-decoration: underline;
-}
 .lore .ancestry-clear {
   /* Small, unobtrusive icon button */
   appearance: none;
@@ -1687,7 +1288,6 @@ body.theme-light {
   -moz-appearance: none;
   border: none;
   background: transparent;
-  color: var(--lore-c-txt1);
   display: inline-grid;
   place-items: center;
   width: 18px;
@@ -1699,9 +1299,6 @@ body.theme-light {
 .lore .ancestry-clear i {
   font-size: 12px;
 }
-.lore .ancestry-clear:hover {
-  filter: brightness(1.1);
-}
 .lore .ancestry-empty {
   opacity: 0.75;
   font-style: italic;
@@ -1709,17 +1306,10 @@ body.theme-light {
 .lore .gear {
   height: 100%;
   overflow: hidden;
-  background: var(--lore-c-bg1);
 }
 .lore .gear-content {
-  background: none;
-  border: none;
   height: 100%;
   overflow-y: auto;
-  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
-}
-.lore .gear-content .item {
-  color: var(--lore-c-txt2);
 }
 .lore.actor.application .window-content > .tab.gear,
 .lore.actor.window-app .window-content > .tab.gear {
@@ -1739,27 +1329,14 @@ body.theme-light {
 .lore.actor.window-app .window-content > .tab.gear.active .sub-tab.active {
   flex: 1 1 auto;
   min-height: 0;
-  color: var(--lore-c-txt2);
   padding: 5px;
-}
-.lore .weapon-skill-roll:hover,
-.lore .weapon-skill-roll.active {
-  color: var(--lore-c-red);
-  text-shadow: 0 0 8px var(--lore-c-red);
-}
-.lore .items-list.items-weapons .rollable.item-formula:hover,
-.lore .items-list.items-weapons .rollable.item-formula.active {
-  color: var(--lore-c-red) !important;
-  text-shadow: 0 0 8px var(--lore-c-red);
 }
 .lore .item-armor {
   padding-right: 10px;
 }
 .lore .items-sub-header {
-  background-color: var(--lore-c-bg1);
   height: 30px;
   margin-left: 5px;
-  border: 1px solid var(--lore-c-bg2);
 }
 .lore .items-sublist {
   margin-left: 5px;
@@ -1785,7 +1362,6 @@ body.theme-light {
   min-width: 0;
   padding-left: 10px;
   padding-right: 10px;
-  color: var(--lore-c-txt1);
 }
 .lore .items-list .item .item-image {
   flex: 0 0 auto;
@@ -1804,14 +1380,9 @@ body.theme-light {
   border: none;
 }
 .lore .items-list .items-header {
-  background-color: var(--lore-c-bg2);
   padding-top: 5px;
   padding-bottom: 5px;
   margin-bottom: 5px;
-}
-.lore .items-list,
-.lore .items-header .item-formula {
-  color: var(--lore-c-txt1);
 }
 .lore .items-list > .items-header.is-collapsible {
   cursor: pointer;
@@ -1860,17 +1431,11 @@ body.theme-light {
   display: inline-block;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
   box-sizing: border-box;
-  border: 2px solid var(--lore-c-bg2);
   background-color: transparent;
   transition: background-color 120ms ease, border-color 120ms ease, transform 60ms ease;
   pointer-events: none;
   position: relative;
-}
-.lore .item-equip .custom-circle.checked {
-  background-color: var(--lore-c-blue);
-  border-color: var(--lore-c-blue);
 }
 .lore .item-equip .custom-circle::after {
   content: "";
@@ -1881,7 +1446,6 @@ body.theme-light {
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
   pointer-events: none;
 }
 .lore .item-equip .custom-circle.mainhand::after {
@@ -1890,22 +1454,10 @@ body.theme-light {
 .lore .item-equip .custom-circle.offhand::after {
   content: "O";
 }
-.lore .item-equip input[type="checkbox"]:checked + .custom-circle {
-  background-color: var(--lore-c-blue);
-  border-color: var(--lore-c-blue);
-}
-.lore .item-equip label:hover .custom-circle {
-  border-color: var(--lore-c-bg2);
-}
 .lore .item-equip input[type="checkbox"]:active + .custom-circle {
   transform: scale(0.95);
 }
-.lore .item-equip input[type="checkbox"]:focus-visible + .custom-circle {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), 0 0 0 4px var(--lore-c-bg2);
-}
 .lore .weapon-roll-formula {
-  color: var(--lore-c-blue);
-  text-decoration: underline;
   cursor: pointer;
 }
 .lore .item-controls {
@@ -1918,10 +1470,8 @@ body.theme-light {
   margin-left: auto;
   padding-right: 1.25em;
   white-space: nowrap;
-  color: var(--lore-c-txt2);
 }
 .lore .items-list .items-header .item-formula {
-  font-weight: 600;
   opacity: 0.9;
 }
 .lore .items-list.items-weapons .items-header,
@@ -1941,10 +1491,6 @@ body.theme-light {
 .lore .items-list.items-weapons .item .item-range {
   padding-right: 0.5em;
   white-space: nowrap;
-}
-.lore .items-list.items-weapons .item .item-formula,
-.lore .items-list.items-weapons .items-header .item-formula {
-  color: var(--lore-c-txt1);
 }
 .lore .items-list.items-weapons .item .item-controls,
 .lore .items-list.items-weapons .items-header .item-controls {
@@ -1967,7 +1513,6 @@ body.theme-light {
   gap: 12px;
   align-items: flex-start;
   flex-wrap: nowrap;
-  border-bottom: 1px solid var(--lore-c-bg2);
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
@@ -1987,13 +1532,9 @@ body.theme-light {
   position: absolute;
   width: var(--paper-doll-slot-size, 50px);
   height: var(--paper-doll-slot-size, 50px);
-  background: var(--lore-c-bg1);
-  border: 2px solid var(--lore-c-bg2);
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px #0001;
   box-sizing: border-box;
   padding: 3px;
 }
@@ -2058,16 +1599,10 @@ body.theme-light {
 .lore .weapon-slot img {
   width: var(--paper-doll-weapon-icon, 24px);
   height: var(--paper-doll-weapon-icon, 24px);
-  background: var(--lore-c-ash, #e6e2dc);
-  border: 2px solid var(--lore-c-slate, #6e6e6e);
-  border-radius: 5px;
-  box-shadow: 0 1px 3px #0001;
 }
 .lore .weapon-label {
   margin-top: 0.05rem;
   font-size: 0.7rem;
-  color: var(--lore-c-charcoal, #2e2e2e);
-  font-weight: 500;
 }
 .lore .paper-doll-layout {
   display: grid;
@@ -2084,16 +1619,10 @@ body.theme-light {
   --paper-doll-grid-slot-size: 28px;
   width: var(--paper-doll-grid-slot-size, 28px);
   height: var(--paper-doll-grid-slot-size, 28px);
-  background: var(--lore-c-ash, #e6e2dc);
-  border: 2px solid var(--lore-c-slate, #6e6e6e);
-  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
   font-size: 0.8rem;
-  color: var(--lore-c-charcoal, #2e2e2e);
-  box-shadow: 0 1px 3px #0001;
   user-select: none;
 }
 .lore .paper-doll-layout .slot img {
@@ -2125,14 +1654,10 @@ body.theme-light {
   margin: 0;
 }
 .lore .armor-summary {
-  background: var(--lore-c-bg1);
-  border-left: 1px solid var(--lore-c-bg2);
   padding: 8px 10px;
   min-width: 160px;
-  box-shadow: 0 2px 6px #0001;
 }
 .lore .armor-summary-title {
-  font-weight: 700;
   margin: 0 0 6px 0;
   font-size: 0.95rem;
 }
@@ -2148,20 +1673,11 @@ body.theme-light {
 .lore .armor-summary-list li {
   display: contents;
 }
-.lore .armor-summary-list .label {
-  color: var(--lore-c-txt1);
-}
 .lore .armor-summary-list .item-name {
-  color: var(--lore-c-txt1);
   opacity: 0.9;
 }
 .lore .armor-summary-list .value {
-  font-weight: 600;
   text-align: right;
-}
-.lore .skills {
-  background: var(--lore-c-bg1);
-  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
 }
 .lore .skills-list,
 .lore .skills-list .skill {
@@ -2169,16 +1685,11 @@ body.theme-light {
   margin: 0px;
   padding: 0px;
 }
-.lore .skill {
-  border-bottom: 1px solid var(--lore-c-bg2);
-}
 .lore .skills-list .skills-header {
-  border-bottom: 1px solid var(--lore-c-bg2);
   padding-top: 5px;
   padding-bottom: 5px;
   margin-bottom: 0px;
   width: 100%;
-  background: var(--lore-c-bg2);
 }
 .lore .skills-list .skill {
   padding-top: 5px;
@@ -2186,11 +1697,9 @@ body.theme-light {
 }
 .lore .skills-list .skills-header .skill-name {
   padding-left: 10px;
-  font-weight: bold;
 }
 .lore .skills-list .skills-header .skill-formula {
   margin-right: 15px;
-  font-weight: bold;
 }
 .lore .skills-list .skill .skill-image {
   width: 24px;
@@ -2213,11 +1722,9 @@ body.theme-light {
   flex: 1 1 auto;
   min-width: 0;
   padding-left: 10px;
-  color: var(--lore-c-txt2);
 }
 .lore .skills-list .skill .skill-formula {
   padding-right: 10px;
-  color: var(--lore-c-txt2);
 }
 .lore.actor .tab.skills nav.tabs.sub-tabs {
   display: flex;
@@ -2225,27 +1732,14 @@ body.theme-light {
   gap: 4px 6px;
   align-items: center;
   padding: 2px 4px;
-  background: var(--lore-c-bg1);
-  border-bottom: 1px solid var(--lore-c-bg2);
   font-size: 12px;
   line-height: 1.4;
 }
 .lore.actor .tab.skills nav.tabs.sub-tabs a.item {
   padding: 2px 6px;
   line-height: 1.3;
-  color: var(--lore-c-txt1);
-  font-family: inherit;
-  font-weight: 500;
   border-radius: 3px;
   transition: color 0.15s, text-shadow 0.15s;
-}
-.lore.actor .tab.skills nav.tabs.sub-tabs a.item:hover {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
-}
-.lore.actor .tab.skills nav.tabs.sub-tabs a.item.active {
-  color: var(--lore-c-txt1);
-  text-shadow: 0 0 8px var(--lore-c-txt1);
 }
 .lore.actor .tab.skills .sub-tab[data-group='details-sub'] {
   display: none;
@@ -2253,22 +1747,10 @@ body.theme-light {
 .lore.actor .tab.skills .sub-tab[data-group='details-sub'].active {
   display: block;
 }
-.lore .skill-form-group .skill-rank-label,
-.lore .skill-form-group .skill-attribute-label {
-  color: var(--lore-c-txt2);
-  font-weight: bold;
-}
-.lore .skill-form-group .skill-rank-input,
-.lore .skill-form-group .skill-attribute-select {
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
 .lore .magicks {
   padding-top: 10px;
   height: 100%;
   overflow: hidden;
-  background: var(--lore-c-bg1);
-  scrollbar-color: var(--lore-c-bg2) var(--lore-c-bg1);
 }
 .lore .magicks-resource {
   gap: 8px;
@@ -2280,9 +1762,4 @@ body.theme-light {
 .lore .magicks-resource-values input[type='number'] {
   width: 3.5ch;
   text-align: center;
-  background: var(--lore-c-bg2);
-  color: var(--lore-c-txt1);
-}
-.lore .magicks-resource-label {
-  font-weight: 700;
 }
