@@ -12,6 +12,20 @@ export class loreItemSheet extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    // Debug: log form data on submit
+    Hooks.on('renderItemSheet', (app, html, data) => {
+      if (app.document.type !== 'skill') return;
+      const form = html[0].querySelector('form');
+      if (!form) return;
+      form.addEventListener('submit', (event) => {
+        const formData = new FormData(form);
+        const entries = {};
+        for (const [key, value] of formData.entries()) {
+          entries[key] = value;
+        }
+        console.log('[LORE] ItemSheet form submit data:', entries);
+      });
+    });
       // Enforce only one brawling skill checkbox per actor when editing a skill
       Hooks.on('renderItemSheet', (app, html, data) => {
         if (app.document.type !== 'skill') return;

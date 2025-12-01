@@ -1,4 +1,3 @@
-
 const { api, sheets } = foundry.applications;
 import { RollPopup } from "../apps/roll-popup.mjs";
 import { RollHandler } from "../helpers/roll-handler.mjs";
@@ -14,9 +13,11 @@ import { prepareActiveEffectCategories } from "../helpers/effects.mjs";
  */
 export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
   
+  #dragDrop;
+
   constructor(options = {}) {
     super(options);
-    this._dragDrop = this.#createDragDropHandlers();
+    this.#dragDrop = this.#createDragDropHandlers();
     // Context menu controller
     this._contextMenus = new LoreContextMenus(this);
     // Wounds & Fatigue controller
@@ -43,9 +44,8 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
       deleteDoc: this._deleteDoc,
       toggleEffect: this._toggleEffect,
       roll: this._onRoll,
-      // Handle left-click on one-handed weapon equip control
+      sprint: this._onSprint,
       'weapon-equip-context': this._onWeaponEquipContext,
-      // Clear ancestry slot
       'clear-ancestry': this._onClearAncestry,
     },
     // Custom property that's merged into `this.options`
@@ -445,6 +445,14 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
     // Initialize and wire wounds & fatigue checkboxes
     this._woundsFatigue.attach(this.element);
 
+    // Wire up Sprint roll for pace icon
+    const paceLabel = this.element.querySelector('.stat-label[data-action="sprint"]');
+    if (paceLabel) {
+      paceLabel.addEventListener('click', async (event) => {
+        await this._onSprint(event, paceLabel);
+      });
+    }
+
     // Add click handler for weapon skill rolls in gear list
     const weaponSkillLinks = this.element.querySelectorAll('.weapon-skill-roll');
     for (const link of weaponSkillLinks) {
@@ -453,7 +461,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
         const itemId = link.dataset.itemId;
         const weaponType = link.dataset.weaponType;
         // Find the correct skill name
-  let skillName = weaponType === 'ranged' ? 'shooting' : 'brawling';
+        let skillName = weaponType === 'ranged' ? 'shooting' : 'brawling';
         // Try to find the skill item on the actor
         let skillItem = this.actor.items.find(i => i.type === 'skill' && i.name.toLowerCase() === skillName);
         // If not found, fall back to untrained
@@ -1080,7 +1088,7 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
 
   // This is marked as private because there's no real need
   // for subclasses or external hooks to mess with it directly
-  #dragDrop;
+  // #dragDrop is now declared at the top of the class
 
   // Active context menu DOM element and cleanup handlers
 
@@ -1149,5 +1157,18 @@ export class loreActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorS
         input.disabled = true;
       }
     }
+  }
+
+  async _onSprint(event, target) {
+    event?.preventDefault?.();
+    const actor = this.actor;
+    if (!actor) return;
+    const reflexMod = Number(actor.system?.attributes?.ref?.mod ?? 0);
+    const roll = new Roll(`1d6 + ${reflexMod}`);
+    await roll.evaluate();
+    roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flavor: "Sprint Roll (Pace)",
+    });
   }
 }

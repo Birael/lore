@@ -23,6 +23,8 @@ export default class loreAncestry extends loreItemBase {
       height: new fields.BooleanField({ initial: true }),
       weight: new fields.BooleanField({ initial: true }),
     });
+     // Add default pace field
+     schema.pace = new fields.NumberField({ initial: 5 });
     
     return schema;
   }

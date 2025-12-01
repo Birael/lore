@@ -27,7 +27,7 @@ export default class loreActorBase extends foundry.abstract
 
     schema.stunned = new fields.BooleanField({ initial: false });
 
-    schema.pace = new fields.NumberField({ ...requiredInteger, initial: 5, min: 0 });
+    schema.pace = new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 });
     schema.parry = new fields.NumberField({ ...requiredInteger, initial: 2, min: 0 });
     schema.resist = new fields.NumberField({ ...requiredInteger, initial: 2, min: 0 });
 
@@ -128,33 +128,37 @@ export default class loreActorBase extends foundry.abstract
       } else if(this.attributes[key].type === 'mental') {
         mod -= this.fatigue.value;
       }
-
       this.attributes[key].mod = mod;
       // Handle attribute label localization.
       this.attributes[key].label =
         game.i18n.localize(CONFIG.LORE.attributes[key]) ?? key;
     }
-    
-    console.log(this.tags);
 
-  // Parry and Resist: leave as-is unless/ until explicit derived formula is implemented.
-  // Any future calculation should respect active effects and only override when a rule applies.
+    // --- Automated Parry Calculation ---
+    let brawlingRank = 0;
+    if (this.parent?.items) {
+      const skillItems = Array.from(this.parent.items).filter(i => i.type === 'skill');
+      const brawlingSkill = skillItems.find(i => i.system?.brawling === true);
+      brawlingRank = Number(brawlingSkill?.system?.rank?.value ?? 0);
+    }
+    const reflexesMod = Number(this.attributes?.ref?.mod ?? 0) || 0;
+    const baseParry = 3 + brawlingRank + reflexesMod;
+    this.parry = baseParry;
 
-  // Do defense calculation here once implemented.
-      // --- Automated Parry Calculation ---
-      // Find brawling skill rank
-      let brawlingRank = 0;
-      if (Array.isArray(this.parent?.items)) {
-        const brawlingSkill = this.parent.items.find(
-          (i) => i.type === 'skill' && i.system?.brawling === true
-        );
-        brawlingRank = Number(brawlingSkill?.system?.rank ?? 0);
+      // --- Automated Resist Calculation ---
+      const toughMod = Number(this.attributes?.tou?.mod ?? 0) || 0;
+      this.resist = 4 + toughMod;
+
+    // --- Automated Pace Calculation ---
+    let ancestryPace = 0;
+    if (this.parent?.items && this.equippedAncestry) {
+      const ancestryItem = this.parent.items.get(this.equippedAncestry);
+      if (ancestryItem && ancestryItem.system?.pace != null) {
+        ancestryPace = Number(ancestryItem.system.pace) || 0;
       }
-      // Get Reflexes modifier
-      const reflexesMod = Number(this.attributes?.ref?.mod ?? 0) || 0;
-      // Parry formula: 3 + brawling rank + Reflexes modifier
-      this.parry = 3 + brawlingRank + reflexesMod;
-      // -----------------------------------
+    }
+    this.pace = ancestryPace + reflexesMod;
+    // -----------------------------------
   }
   
 

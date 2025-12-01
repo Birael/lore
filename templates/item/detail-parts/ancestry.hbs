@@ -24,6 +24,11 @@
         <input class='resource-input' type='text' name='system.extraTags' value='{{system.extraTags}}' placeholder='e.g. humanoid, aquatic, feline' />
         <p class='hint'>Comma- or space-separated list of non-ancestry tags this ancestry applies (e.g., humanoid, feline). These appear as plain tags on the actor.</p>
       </div>
+        <div class='item-options grid-span-2'>
+          <label class='resource-label'>Pace</label>
+          <input class='resource-input' type='number' name='system.pace' value='{{system.pace}}' min='0' step='1' />
+          <p class='hint'>Default movement pace for this ancestry. Usually 5.</p>
+        </div>
     </div>
   </div>
   <div class='details ancestry-details'>
